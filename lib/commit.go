@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/user"
 	"path"
@@ -17,16 +18,20 @@ import (
 var currentTime = util.GetTime()
 var currentUser, _ = user.Current()
 var currentPath, _ = os.Getwd()
-var message = "author " + currentUser.Username + "\ntime " + currentTime
+var branchesPath = path.Join(".svcs", "branches.txt")
+var currentSum, _ = ioutil.ReadFile(branchesPath)
+var message = "author " + currentUser.Username + "\ntime " + currentTime + "\nparent " + fmt.Sprintf("%x", currentSum)
 var sum = sha1.Sum([]byte(message))
 var commitPath = path.Join(".svcs", fmt.Sprintf("%x", sum))
-var messagePath = path.Join(commitPath, "message.txt")
+var messagePath = path.Join(commitPath, "commit-info.txt")
 
 func Commit() error {
 	exists := util.VCSExists(".svcs")
 	if !exists {
 		return errors.New("not initialized")
 	}
+	branchesFile, _ := os.Create(branchesPath)
+	branchesFile.Write([]byte(fmt.Sprintf("%x", sum)))
 	os.Mkdir(commitPath, 0700)
 	file, _ := os.Create(messagePath)
 	file.Write([]byte(message))

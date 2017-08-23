@@ -16,5 +16,6 @@ func InitRepo(repoName string) error {
 	os.Mkdir(".svcs", 0700)
 	file, _ := os.Create(path.Join(".svcs", "settings.txt"))
 	file.Write([]byte("name " + repoName))
+	os.Create(path.Join(".svcs", "branches.txt"))
 	return nil
 }

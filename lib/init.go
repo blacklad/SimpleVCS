@@ -8,13 +8,13 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
-func InitRepo(dir string, repoName string) error {
-	exists := util.VCSExists(dir)
+func InitRepo(repoName string) error {
+	exists := util.VCSExists(".svcs")
 	if exists {
 		return errors.New("already initialized")
 	}
-	os.Mkdir(dir, 0700)
-	file, _ := os.Create(path.Join(dir, "settings.txt"))
+	os.Mkdir(".svcs", 0700)
+	file, _ := os.Create(path.Join(".svcs", "settings.txt"))
 	file.Write([]byte("name " + repoName))
 	return nil
 }

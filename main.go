@@ -4,6 +4,8 @@ import (
 	"flag"
 	"os"
 	"path"
+
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 const (
@@ -17,4 +19,10 @@ func main() {
 	currentDir, _ := os.Getwd()
 	storageDir := path.Join(currentDir, vcsDir)
 	executedCommand := flag.Arg(0)
+	if executedCommand == "init" {
+		lib.InitRepo(storageDir)
+	} else {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 }

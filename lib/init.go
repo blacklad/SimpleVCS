@@ -14,6 +14,8 @@ func InitRepo(repoName string) error {
 		return errors.New("already initialized")
 	}
 	os.Mkdir(".svcs", 0700)
+	os.Mkdir(".svcs/files", 0700)
+	os.Mkdir(".svcs/history", 0700)
 	file, _ := os.Create(path.Join(".svcs", "settings.txt"))
 	file.Write([]byte("name " + repoName))
 	os.Create(path.Join(".svcs", "branches.txt"))

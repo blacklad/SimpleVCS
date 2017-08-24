@@ -10,18 +10,18 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-var currentTime = util.GetTime()
+var currentTime = lib.GetTime()
 var branch string
 
 func Commit(currentBranch string) error {
 	branch = currentBranch
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	message, sumString := util.CreateMessage(currentTime, branch)
+	message, sumString := lib.CreateMessage(currentTime, branch)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	os.Create(fileEntriesPath)
 	infoFile, _ := os.Create(path.Join(".svcs/history", sumString+".txt"))
@@ -65,7 +65,7 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	newPath := path.Join(".svcs/files", contentSum)
 	newFile, _ := os.Create(newPath)
 	newFile.Write(fileContent)
-	_, sumString := util.CreateMessage(currentTime, branch)
+	_, sumString := lib.CreateMessage(currentTime, branch)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	fileEntriesFile, _ := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
 	fileEntriesFile.WriteString(relativePath + " " + contentSum + "\n")

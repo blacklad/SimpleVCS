@@ -6,11 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func Merge(fromBranch string, toBranch string) error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	branchesContentByte, _ := ioutil.ReadFile(".svcs/branches.txt")
@@ -43,7 +43,7 @@ func checkForFastForward(fromBranch string, toBranch string, branchesContent str
 		if currentSha == toSha {
 			return true
 		}
-		currentSha = util.GetParent(currentSha)
+		currentSha = lib.GetParent(currentSha)
 		if currentSha == "" {
 			break
 		}

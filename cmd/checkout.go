@@ -7,11 +7,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func Checkout(commitHash string) error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")

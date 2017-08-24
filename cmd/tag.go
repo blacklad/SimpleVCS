@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func CreateTag(tag string, sha string) error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")
@@ -35,7 +35,7 @@ func CreateTag(tag string, sha string) error {
 	return nil
 }
 func ListTags() error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")

@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func Log(branch string) error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	var commits []string
@@ -27,7 +27,7 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		currentSha = util.GetParent(currentSha)
+		currentSha = lib.GetParent(currentSha)
 		if currentSha == "" {
 			break
 		}

@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func CreateBranch(branch string, sha string) error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	branchesContent, _ := ioutil.ReadFile(".svcs/branches.txt")
@@ -35,7 +35,7 @@ func CreateBranch(branch string, sha string) error {
 	return nil
 }
 func ListBranches() error {
-	if !util.VCSExists(".svcs") {
+	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	branchesContent, _ := ioutil.ReadFile(".svcs/branches.txt")

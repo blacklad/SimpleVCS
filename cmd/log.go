@@ -10,7 +10,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
-func Log() error {
+func Log(branch string) error {
 	if !util.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
@@ -22,7 +22,7 @@ func Log() error {
 			continue
 		}
 		lineArr := strings.Split(line, " ")
-		if lineArr[0] == "master" {
+		if lineArr[0] == branch {
 			lastSha = lineArr[1]
 		}
 	}

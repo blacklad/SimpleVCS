@@ -21,7 +21,7 @@ func main() {
 	} else if executedCommand == "checkout" {
 		err = cmd.Checkout(flag.Arg(1))
 	} else if executedCommand == "log" {
-		err = cmd.Log()
+		err = cmd.Log(branch)
 	} else if executedCommand == "branch" {
 		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
 	} else {

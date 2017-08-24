@@ -22,10 +22,7 @@ func Commit(currentBranch string) error {
 		return errors.New("not initialized")
 	}
 	message, sumString := lib.CreateMessage(currentTime, branch)
-	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
-	os.Create(fileEntriesPath)
-	infoFile, _ := os.Create(path.Join(".svcs/history", sumString+".txt"))
-	infoFile.WriteString(message)
+	lib.CreateCommitInfo(message, sumString)
 	filepath.Walk(".", visit)
 	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
 	branchesArr := strings.Split(string(branches), "\n")

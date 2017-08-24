@@ -24,6 +24,8 @@ func main() {
 		err = cmd.Log(branch)
 	} else if executedCommand == "branch" {
 		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
+	} else if executedCommand == "tag" {
+		err = cmd.CreateTag(flag.Arg(1), flag.Arg(2))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

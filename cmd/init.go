@@ -18,5 +18,6 @@ func InitRepo(repoName string) error {
 	settingsFile.WriteString("name " + repoName)
 	branchesFile, _ := os.Create(".svcs/branches.txt")
 	branchesFile.WriteString("master ")
+	os.Create(".svcs/tags.txt")
 	return nil
 }

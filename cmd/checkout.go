@@ -11,8 +11,7 @@ import (
 )
 
 func Checkout(commitHash string) error {
-	var exists = util.VCSExists(".svcs")
-	if !exists {
+	if !util.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")

@@ -16,8 +16,7 @@ import (
 var currentTime = util.GetTime()
 
 func Commit() error {
-	exists := util.VCSExists(".svcs")
-	if !exists {
+	if !util.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
 

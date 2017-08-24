@@ -18,6 +18,8 @@ func main() {
 		err = cmd.Commit()
 	} else if executedCommand == "checkout" {
 		err = cmd.Checkout(flag.Arg(1))
+	} else if executedCommand == "log" {
+		err = cmd.Log()
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

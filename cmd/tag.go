@@ -2,12 +2,18 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 func CreateTag(tag string, sha string) error {
+	if !util.VCSExists(".svcs") {
+		return errors.New("not initialized")
+	}
 	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")
 	tagsArr := strings.Split(string(tagsContent), "\n")
 	var tags []string
@@ -25,6 +31,24 @@ func CreateTag(tag string, sha string) error {
 	tagsFile, _ := os.Create(".svcs/tags.txt")
 	for _, line := range tags {
 		tagsFile.WriteString(line + "\n")
+	}
+	return nil
+}
+func ListTags() error {
+	if !util.VCSExists(".svcs") {
+		return errors.New("not initialized")
+	}
+	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")
+	tagsArr := strings.Split(string(tagsContent), "\n")
+	var tags []string
+	for _, line := range tagsArr {
+		if line == "" {
+			continue
+		}
+		tags = append(tags, line)
+	}
+	for _, line := range tags {
+		fmt.Println(line)
 	}
 	return nil
 }

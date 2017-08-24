@@ -26,6 +26,8 @@ func main() {
 		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
 	} else if executedCommand == "tag" {
 		err = cmd.CreateTag(flag.Arg(1), flag.Arg(2))
+	} else if executedCommand == "tags" {
+		err = cmd.ListTags()
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

@@ -16,10 +16,12 @@ func Merge(fromBranch string, toBranch string) error {
 	fastForward := lib.CheckForFastForward(fromBranch, toBranch, branchesContent)
 	if fastForward {
 		lib.PerformFastForward(fromBranch, toBranch, branchesContent)
+		return nil
 	}
-	recursive := lib.CheckForRecursive(fromBranch, toBranch, branchesContent)
-	if recursive {
-		lib.PerformRecursive(fromBranch, toBranch, branchesContent)
+	parentSha := lib.CheckForRecursive(fromBranch, toBranch, branchesContent)
+	if parentSha != "" {
+		err := lib.PerformRecursive(fromBranch, toBranch, branchesContent, parentSha)
+		return err
 	}
-	return nil
+	return errors.New("could not merge")
 }

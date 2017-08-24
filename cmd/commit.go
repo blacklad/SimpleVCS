@@ -51,7 +51,7 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	fixedPath := strings.Replace(filePath, "\\", "/", -1)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
-		if pathPart == ".svcs" || pathPart == ".git" {
+		if pathPart == ".svcs" {
 			return nil
 		}
 	}

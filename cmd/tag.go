@@ -52,3 +52,26 @@ func ListTags() error {
 	}
 	return nil
 }
+func RemoveTag(tag string) error {
+	if !lib.VCSExists(".svcs") {
+		return errors.New("not initialized")
+	}
+	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")
+	tagsArr := strings.Split(string(tagsContent), "\n")
+	var tags []string
+	for _, line := range tagsArr {
+		if line == "" {
+			continue
+		}
+		lineSplit := strings.Split(line, " ")
+		if lineSplit[0] == tag {
+			continue
+		}
+		tags = append(tags, line)
+	}
+	tagsFile, _ := os.Create(".svcs/tags.txt")
+	for _, line := range tags {
+		tagsFile.WriteString(line)
+	}
+	return nil
+}

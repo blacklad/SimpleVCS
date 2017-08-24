@@ -32,6 +32,10 @@ func main() {
 		err = cmd.ListBranches()
 	} else if executedCommand == "merge" {
 		err = cmd.Merge(flag.Arg(1), flag.Arg(2))
+	} else if executedCommand == "rmbranch" {
+		err = cmd.RemoveBranch(flag.Arg(1))
+	} else if executedCommand == "rmtag" {
+		err = cmd.RemoveTag(flag.Arg(1))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

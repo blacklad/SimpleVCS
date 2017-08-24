@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"path"
 	"strings"
 
 	"github.com/MSathieu/SimpleVCS/util"
@@ -28,7 +27,7 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		currentSha = getParent(currentSha)
+		currentSha = util.GetParent(currentSha)
 		if currentSha == "" {
 			break
 		}
@@ -41,21 +40,4 @@ func Log(branch string) error {
 		fmt.Println(sha)
 	}
 	return nil
-}
-func getParent(currentSha string) string {
-	currentInfo, _ := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
-	splitFile := strings.Split(string(currentInfo), "\n")
-	for _, line := range splitFile {
-		if line == "" {
-			continue
-		}
-		splitLine := strings.Split(line, " ")
-		if splitLine[0] == "parent" {
-			if line == "parent " {
-				return ""
-			}
-			return splitLine[1]
-		}
-	}
-	return ""
 }

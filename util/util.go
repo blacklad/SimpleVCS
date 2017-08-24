@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"path"
 	"strings"
 	"time"
 )
@@ -38,4 +39,21 @@ func CreateMessage(time string, branch string) (string, string) {
 	message := "author " + currentUser.Username + "\ntime " + time + "\nparent " + parentSum
 	hash := sha1.Sum([]byte(message))
 	return message, fmt.Sprintf("%x", hash)
+}
+func GetParent(currentSha string) string {
+	currentInfo, _ := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
+	splitFile := strings.Split(string(currentInfo), "\n")
+	for _, line := range splitFile {
+		if line == "" {
+			continue
+		}
+		splitLine := strings.Split(line, " ")
+		if splitLine[0] == "parent" {
+			if line == "parent " {
+				return ""
+			}
+			return splitLine[1]
+		}
+	}
+	return ""
 }

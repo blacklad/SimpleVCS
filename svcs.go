@@ -30,6 +30,8 @@ func main() {
 		err = cmd.ListTags()
 	} else if executedCommand == "branches" {
 		err = cmd.ListBranches()
+	} else if executedCommand == "merge" {
+		err = cmd.Merge(flag.Arg(1), flag.Arg(2))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

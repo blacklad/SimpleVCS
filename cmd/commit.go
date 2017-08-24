@@ -24,11 +24,11 @@ func Commit() error {
 	message, sumString := util.CreateMessage(currentTime)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	os.Create(fileEntriesPath)
-	branchesFile, _ := os.Create(".svcs/branches.txt")
 	infoFile, _ := os.Create(path.Join(".svcs/history", sumString+".txt"))
-	branchesFile.WriteString(sumString)
 	infoFile.WriteString(message)
 	filepath.Walk(".", visit)
+	branchesFile, _ := os.Create(".svcs/branches.txt")
+	branchesFile.WriteString(sumString)
 	return nil
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {

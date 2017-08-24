@@ -9,17 +9,21 @@ import (
 )
 
 func main() {
+	var branch string
+	flag.StringVar(&branch, "branch", "master", "Specify the branch")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
 	if executedCommand == "init" {
 		err = cmd.InitRepo(flag.Arg(1))
 	} else if executedCommand == "commit" {
-		err = cmd.Commit()
+		err = cmd.Commit(branch)
 	} else if executedCommand == "checkout" {
 		err = cmd.Checkout(flag.Arg(1))
 	} else if executedCommand == "log" {
 		err = cmd.Log()
+	} else if executedCommand == "branch" {
+		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

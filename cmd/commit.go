@@ -14,20 +14,37 @@ import (
 )
 
 var currentTime = util.GetTime()
+var branch string
 
-func Commit() error {
+func Commit(currentBranch string) error {
+	branch = currentBranch
 	if !util.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-
-	message, sumString := util.CreateMessage(currentTime)
+	message, sumString := util.CreateMessage(currentTime, branch)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	os.Create(fileEntriesPath)
 	infoFile, _ := os.Create(path.Join(".svcs/history", sumString+".txt"))
 	infoFile.WriteString(message)
 	filepath.Walk(".", visit)
+	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
+	branchesArr := strings.Split(string(branches), "\n")
+	var branchesFileContent []string
+	for _, line := range branchesArr {
+		if line == "" {
+			continue
+		}
+		lineSplit := strings.Split(line, " ")
+		if lineSplit[0] == branch {
+			branchesFileContent = append(branchesFileContent, branch+" "+sumString)
+			continue
+		}
+		branchesFileContent = append(branchesFileContent, line)
+	}
 	branchesFile, _ := os.Create(".svcs/branches.txt")
-	branchesFile.WriteString(sumString)
+	for _, line := range branchesFileContent {
+		branchesFile.WriteString(line + "\n")
+	}
 	return nil
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {
@@ -48,7 +65,7 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	newPath := path.Join(".svcs/files", contentSum)
 	newFile, _ := os.Create(newPath)
 	newFile.Write(fileContent)
-	_, sumString := util.CreateMessage(currentTime)
+	_, sumString := util.CreateMessage(currentTime, branch)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	fileEntriesFile, _ := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
 	fileEntriesFile.WriteString(relativePath + " " + contentSum + "\n")

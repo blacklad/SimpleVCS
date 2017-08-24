@@ -15,8 +15,18 @@ func Log() error {
 		return errors.New("not initialized")
 	}
 	var commits []string
-	lastSha, _ := ioutil.ReadFile(".svcs/branches.txt")
-	for currentSha := string(lastSha); true; {
+	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
+	var lastSha string
+	for _, line := range strings.Split(string(branches), "\n") {
+		if line == "" {
+			continue
+		}
+		lineArr := strings.Split(line, " ")
+		if lineArr[0] == "master" {
+			lastSha = lineArr[1]
+		}
+	}
+	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
 		currentSha = getParent(currentSha)
 		if currentSha == "" {

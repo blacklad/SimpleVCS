@@ -28,6 +28,8 @@ func main() {
 		err = cmd.CreateTag(flag.Arg(1), flag.Arg(2))
 	} else if executedCommand == "tags" {
 		err = cmd.ListTags()
+	} else if executedCommand == "branches" {
+		err = cmd.ListBranches()
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

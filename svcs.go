@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/MSathieu/SimpleVCS/checkout"
-	"github.com/MSathieu/SimpleVCS/commit"
-	"github.com/MSathieu/SimpleVCS/initrepo"
+	"github.com/MSathieu/SimpleVCS/cmd"
 )
 
 func main() {
@@ -15,11 +13,11 @@ func main() {
 	executedCommand := flag.Arg(0)
 	var err error
 	if executedCommand == "init" {
-		err = initrepo.InitRepo(flag.Arg(1))
+		err = cmd.InitRepo(flag.Arg(1))
 	} else if executedCommand == "commit" {
-		err = commit.Commit()
+		err = cmd.Commit()
 	} else if executedCommand == "checkout" {
-		err = checkout.Checkout(flag.Arg(1))
+		err = cmd.Checkout(flag.Arg(1))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

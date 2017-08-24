@@ -1,4 +1,4 @@
-package checkout
+package cmd
 
 import (
 	"errors"
@@ -10,17 +10,12 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
-var exists = util.VCSExists(".svcs")
-var filesPath = ".svcs/files"
-var historyPath = ".svcs/history"
-var currentPath, _ = os.Getwd()
-var branchesPath = ".svcs/branches.txt"
-
 func Checkout(commitHash string) error {
+	var exists = util.VCSExists(".svcs")
 	if !exists {
 		return errors.New("not initialized")
 	}
-	filesEntryPath := path.Join(historyPath, commitHash+"_files.txt")
+	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
 	filesContent, _ := ioutil.ReadFile(filesEntryPath)
 	files := strings.Split(string(filesContent), "\n")
 	for _, fileEntry := range files {
@@ -28,7 +23,7 @@ func Checkout(commitHash string) error {
 			break
 		}
 		mapping := strings.Split(fileEntry, " ")
-		copyFrom := path.Join(filesPath, mapping[1])
+		copyFrom := path.Join(".svcs/files", mapping[1])
 		fileContent, _ := ioutil.ReadFile(copyFrom)
 		splitFileArr := strings.Split(mapping[0], "/")
 		splitFileArr = splitFileArr[:len(splitFileArr)-1]

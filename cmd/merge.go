@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"io/ioutil"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -11,16 +10,14 @@ func Merge(fromBranch string, toBranch string) error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	branchesContentByte, _ := ioutil.ReadFile(".svcs/branches.txt")
-	branchesContent := string(branchesContentByte)
-	fastForward := lib.CheckForFastForward(fromBranch, toBranch, branchesContent)
+	fastForward := lib.CheckForFastForward(fromBranch, toBranch)
 	if fastForward {
-		lib.PerformFastForward(fromBranch, toBranch, branchesContent)
+		lib.PerformFastForward(fromBranch, toBranch)
 		return nil
 	}
-	parentSha := lib.CheckForRecursive(fromBranch, toBranch, branchesContent)
+	parentSha := lib.CheckForRecursive(fromBranch, toBranch)
 	if parentSha != "" {
-		err := lib.PerformRecursive(fromBranch, toBranch, branchesContent, parentSha)
+		err := lib.PerformRecursive(fromBranch, toBranch, parentSha)
 		return err
 	}
 	return errors.New("could not merge")

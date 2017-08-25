@@ -5,10 +5,11 @@ import (
 	"strings"
 )
 
-func CheckForFastForward(fromBranch string, toBranch string, branchesContent string) bool {
+func CheckForFastForward(fromBranch string, toBranch string) bool {
 	var fromSha string
 	var toSha string
-	for _, line := range strings.Split(branchesContent, "\n") {
+	branchesArr := readBranches()
+	for _, line := range branchesArr {
 		if line == "" {
 			continue
 		}
@@ -34,9 +35,9 @@ func CheckForFastForward(fromBranch string, toBranch string, branchesContent str
 	}
 	return false
 }
-func PerformFastForward(fromBranch string, toBranch string, branchesContent string) {
+func PerformFastForward(fromBranch string, toBranch string) {
 	var fromSha string
-	branchesArr := strings.Split(branchesContent, "\n")
+	branchesArr := readBranches()
 	var branchesFileContent []string
 	for _, line := range branchesArr {
 		if line == "" {

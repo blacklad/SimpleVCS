@@ -1,14 +1,13 @@
 package lib
 
 import (
-	"errors"
 	"io/ioutil"
 	"path"
 	"strings"
 )
 
-func CheckForRecursive(fromBranch string, toBranch string, branchesContent string) string {
-	branchesArr := strings.Split(branchesContent, "\n")
+func CheckForRecursive(fromBranch string, toBranch string) string {
+	branchesArr := readBranches()
 	var fromCommits []string
 	var currentFromSha string
 	var currentToSha string
@@ -47,8 +46,8 @@ func CheckForRecursive(fromBranch string, toBranch string, branchesContent strin
 	}
 	return ""
 }
-func PerformRecursive(fromBranch string, toBranch string, branchesContent string, parentSha string) error {
-	branchesArr := strings.Split(branchesContent, "\n")
+func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
+	branchesArr := readBranches()
 	var currentFromSha string
 	var currentToSha string
 	for _, line := range branchesArr {
@@ -158,14 +157,9 @@ func PerformRecursive(fromBranch string, toBranch string, branchesContent string
 			fromChanges = append(fromChanges, changedStatus+" "+mapping[0])
 		}
 	}
-	for _, line := range toChanges {
-		mapping := strings.Split(line, " ")
-		for _, fromLine := range fromChanges {
-			fromMapping := strings.Split(fromLine, " ")
-			if mapping[1] == fromMapping[1] {
-				return errors.New("merge conflict")
-			}
-		}
-	}
+	filesArr := parentFilesArr
+	commitMessage, commitHash := CreateMessage(GetTime(), toBranch)
+	CreateCommitInfo(commitMessage, commitHash)
+	UpdateBranch(toBranch, commitHash)
 	return nil
 }

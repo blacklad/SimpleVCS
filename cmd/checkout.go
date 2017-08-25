@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"bytes"
+	"compress/gzip"
 	"errors"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -32,7 +35,11 @@ func Checkout(commitHash string) error {
 		}
 		os.MkdirAll(toDir, 666)
 		newFile, _ := os.Create(mapping[0])
-		newFile.Write(fileContent)
+		var compBytes bytes.Buffer
+		compBytes.Write(fileContent)
+		comp, _ := gzip.NewReader(&compBytes)
+		io.Copy(newFile, comp)
+		comp.Close()
 	}
 	return nil
 }

@@ -63,9 +63,6 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			currentToSha = lineSplit[1]
 		}
 	}
-	if parentSha == "" || currentFromSha == "" || currentToSha == "" {
-		return errors.New("no sha specified")
-	}
 	fromFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
 	fromFiles := string(fromFilesByte)
 	toFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", currentToSha+"_files.txt"))

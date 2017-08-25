@@ -17,7 +17,7 @@ func main() {
 	if executedCommand == "init" {
 		err = cmd.InitRepo(flag.Arg(1))
 	} else if executedCommand == "commit" {
-		err = cmd.Commit(branch)
+		err = cmd.Commit(branch, flag.Arg(1))
 	} else if executedCommand == "checkout" {
 		err = cmd.Checkout(flag.Arg(1))
 	} else if executedCommand == "log" {

@@ -10,13 +10,15 @@ import (
 	"strings"
 )
 
-func CreateCommitInfo(message string, hash string) {
+func CreateCommit(info string, hash string, message string) {
 	infoFile, _ := os.Create(path.Join(".svcs/history", hash+".txt"))
-	infoFile.WriteString(message)
+	infoFile.WriteString(info)
 	fileEntriesPath := path.Join(".svcs/history", hash+"_files.txt")
 	os.Create(fileEntriesPath)
+	messageFile, _ := os.Create(path.Join(".svcs/history", hash+"_message.txt"))
+	messageFile.WriteString(message)
 }
-func CreateMessage(time string, branch string) (string, string) {
+func CreateCommitInfo(time string, branch string) (string, string) {
 	currentUser, _ := user.Current()
 	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
 	var parentSum string

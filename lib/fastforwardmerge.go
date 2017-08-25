@@ -8,7 +8,7 @@ import (
 func CheckForFastForward(fromBranch string, toBranch string) bool {
 	var fromSha string
 	var toSha string
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -37,7 +37,7 @@ func CheckForFastForward(fromBranch string, toBranch string) bool {
 }
 func PerformFastForward(fromBranch string, toBranch string) {
 	var fromSha string
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	var branchesFileContent []string
 	for _, line := range branchesArr {
 		if line == "" {

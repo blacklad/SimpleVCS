@@ -8,7 +8,7 @@ import (
 
 func CreateBranch(branch string, sha string) {
 	var branches []string
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -20,10 +20,10 @@ func CreateBranch(branch string, sha string) {
 		}
 	}
 	branches = append(branches, branch+" "+sha)
-	writeBranches(branches)
+	WriteBranches(branches)
 }
 func UpdateBranch(branch string, sha string) {
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	var branchesFileContent []string
 	for _, line := range branchesArr {
 		if line == "" {
@@ -36,11 +36,11 @@ func UpdateBranch(branch string, sha string) {
 		}
 		branchesFileContent = append(branchesFileContent, line)
 	}
-	writeBranches(branchesFileContent)
+	WriteBranches(branchesFileContent)
 }
 func RemoveBranch(branch string) {
 	var branches []string
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -51,10 +51,10 @@ func RemoveBranch(branch string) {
 		}
 		branches = append(branches, line)
 	}
-	writeBranches(branches)
+	WriteBranches(branches)
 }
 func ListBranches() string {
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	var branches string
 	for _, line := range branchesArr {
 		if line == "" {
@@ -64,11 +64,11 @@ func ListBranches() string {
 	}
 	return branches
 }
-func readBranches() []string {
+func ReadBranches() []string {
 	branchesContent, _ := ioutil.ReadFile(".svcs/branches.txt")
 	return strings.Split(string(branchesContent), "\n")
 }
-func writeBranches(branches []string) {
+func WriteBranches(branches []string) {
 	branchesFile, _ := os.Create(".svcs/branches.txt")
 	for _, line := range branches {
 		branchesFile.WriteString(line + "\n")

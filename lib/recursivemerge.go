@@ -9,7 +9,7 @@ import (
 )
 
 func CheckForRecursive(fromBranch string, toBranch string) string {
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	var fromCommits []string
 	var currentFromSha string
 	var currentToSha string
@@ -49,7 +49,7 @@ func CheckForRecursive(fromBranch string, toBranch string) string {
 	return ""
 }
 func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
-	branchesArr := readBranches()
+	branchesArr := ReadBranches()
 	var currentFromSha string
 	var currentToSha string
 	for _, line := range branchesArr {
@@ -261,8 +261,8 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			}
 		}
 	}
-	commitMessage, commitHash := CreateMessage(GetTime(), toBranch)
-	CreateCommitInfo(commitMessage, commitHash)
+	commitMessage, commitHash := CreateCommitInfo(GetTime(), toBranch)
+	CreateCommit(commitMessage, commitHash, "Merged branch "+fromBranch)
 	UpdateBranch(toBranch, commitHash)
 	filesPath := path.Join(".svcs/history", commitHash+"_files.txt")
 	filesFile, _ := os.Create(filesPath)

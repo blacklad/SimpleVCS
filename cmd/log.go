@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"path"
 	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
@@ -14,9 +15,9 @@ func Log(branch string) error {
 		return errors.New("not initialized")
 	}
 	var commits []string
-	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
+	var commitMessages []string
 	var lastSha string
-	for _, line := range strings.Split(string(branches), "\n") {
+	for _, line := range lib.ReadBranches() {
 		if line == "" {
 			continue
 		}
@@ -27,6 +28,8 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
+		message, _ := ioutil.ReadFile(path.Join(".svcs/history", currentSha+"_message.txt"))
+		commitMessages = append(commitMessages, string(message))
 		currentSha = lib.GetParent(currentSha)
 		if currentSha == "" {
 			break
@@ -36,8 +39,12 @@ func Log(branch string) error {
 	for i := 0; i < len(commits)/2; i++ {
 		commits[i], commits[last-i] = commits[last-i], commits[i]
 	}
-	for _, sha := range commits {
+	for i := 0; i < len(commitMessages)/2; i++ {
+		commitMessages[i], commitMessages[last-i] = commitMessages[last-i], commitMessages[i]
+	}
+	for i, sha := range commits {
 		fmt.Println(sha)
+		fmt.Println(commitMessages[i])
 	}
 	return nil
 }

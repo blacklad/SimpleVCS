@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"errors"
 	"io/ioutil"
 	"path"
 	"strings"
@@ -61,6 +62,9 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 		if lineSplit[0] == toBranch {
 			currentToSha = lineSplit[1]
 		}
+	}
+	if parentSha == "" || currentFromSha == "" || currentToSha == "" {
+		return errors.New("no sha specified")
 	}
 	fromFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
 	fromFiles := string(fromFilesByte)
@@ -157,9 +161,18 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			fromChanges = append(fromChanges, changedStatus+" "+mapping[0])
 		}
 	}
-	filesArr := parentFilesArr
+	//filesArr := parentFilesArr
 	commitMessage, commitHash := CreateMessage(GetTime(), toBranch)
 	CreateCommitInfo(commitMessage, commitHash)
 	UpdateBranch(toBranch, commitHash)
+	for _, toChange := range toChanges {
+		toMapping := strings.Split(toChange, " ")
+		for _, fromChange := range fromChanges {
+			fromMapping := strings.Split(fromChange, " ")
+			if toMapping[1] == fromMapping[1] {
+				return errors.New("merge coflict")
+			}
+		}
+	}
 	return nil
 }

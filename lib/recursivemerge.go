@@ -3,6 +3,7 @@ package lib
 import (
 	"errors"
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 )
@@ -158,10 +159,7 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			fromChanges = append(fromChanges, changedStatus+" "+mapping[0])
 		}
 	}
-	//filesArr := parentFilesArr
-	commitMessage, commitHash := CreateMessage(GetTime(), toBranch)
-	CreateCommitInfo(commitMessage, commitHash)
-	UpdateBranch(toBranch, commitHash)
+	filesArr := parentFilesArr
 	for _, toChange := range toChanges {
 		toMapping := strings.Split(toChange, " ")
 		for _, fromChange := range fromChanges {
@@ -170,6 +168,106 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 				return errors.New("merge coflict")
 			}
 		}
+	}
+	for _, change := range toChanges {
+		mapping := strings.Split(change, " ")
+		if mapping[0] == "created" {
+			for _, file := range toFilesArr {
+				if file == "" {
+					continue
+				}
+				toMapping := strings.Split(file, " ")
+				if mapping[1] == toMapping[0] {
+					filesArr = append(filesArr, file)
+				}
+			}
+		}
+		if mapping[0] == "changed" {
+			var updatedLine string
+			for _, file := range toFilesArr {
+				if file == "" {
+					continue
+				}
+				toMapping := strings.Split(file, " ")
+				if mapping[1] == toMapping[0] {
+					updatedLine = file
+				}
+			}
+			for i, file := range filesArr {
+				if file == "" {
+					continue
+				}
+				fileMapping := strings.Split(file, " ")
+				if fileMapping[0] == mapping[1] {
+					filesArr[i] = updatedLine
+				}
+			}
+		}
+		if mapping[0] == "deleted" {
+			for i, file := range filesArr {
+				if file == "" {
+					continue
+				}
+				fileMapping := strings.Split(file, " ")
+				if fileMapping[0] == mapping[1] {
+					filesArr = append(filesArr[:i], filesArr[i+1:]...)
+				}
+			}
+		}
+	}
+	for _, change := range fromChanges {
+		mapping := strings.Split(change, " ")
+		if mapping[0] == "created" {
+			for _, file := range fromFilesArr {
+				if file == "" {
+					continue
+				}
+				fromMapping := strings.Split(file, " ")
+				if mapping[1] == fromMapping[0] {
+					filesArr = append(filesArr, file)
+				}
+			}
+		}
+		if mapping[0] == "changed" {
+			var updatedLine string
+			for _, file := range fromFilesArr {
+				if file == "" {
+					continue
+				}
+				fromMapping := strings.Split(file, " ")
+				if mapping[1] == fromMapping[0] {
+					updatedLine = file
+				}
+			}
+			for i, file := range filesArr {
+				if file == "" {
+					continue
+				}
+				fileMapping := strings.Split(file, " ")
+				if fileMapping[0] == mapping[1] {
+					filesArr[i] = updatedLine
+				}
+			}
+		}
+		if mapping[0] == "deleted" {
+			for i, file := range filesArr {
+				if file == "" {
+					continue
+				}
+				fileMapping := strings.Split(file, " ")
+				if fileMapping[0] == mapping[1] {
+					filesArr = append(filesArr[:i], filesArr[i+1:]...)
+				}
+			}
+		}
+	}
+	commitMessage, commitHash := CreateMessage(GetTime(), toBranch)
+	CreateCommitInfo(commitMessage, commitHash)
+	UpdateBranch(toBranch, commitHash)
+	filesPath := path.Join(".svcs/history", commitHash+"_files.txt")
+	filesFile, _ := os.Create(filesPath)
+	for _, file := range filesArr {
+		filesFile.WriteString(file + "\n")
 	}
 	return nil
 }

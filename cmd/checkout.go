@@ -19,7 +19,7 @@ func Checkout(commitHash string) error {
 	files := strings.Split(string(filesContent), "\n")
 	for _, fileEntry := range files {
 		if fileEntry == "" {
-			break
+			continue
 		}
 		mapping := strings.Split(fileEntry, " ")
 		copyFrom := path.Join(".svcs/files", mapping[1])

@@ -24,24 +24,7 @@ func Commit(currentBranch string) error {
 	message, sumString := lib.CreateMessage(currentTime, branch)
 	lib.CreateCommitInfo(message, sumString)
 	filepath.Walk(".", visit)
-	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
-	branchesArr := strings.Split(string(branches), "\n")
-	var branchesFileContent []string
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == branch {
-			branchesFileContent = append(branchesFileContent, branch+" "+sumString)
-			continue
-		}
-		branchesFileContent = append(branchesFileContent, line)
-	}
-	branchesFile, _ := os.Create(".svcs/branches.txt")
-	for _, line := range branchesFileContent {
-		branchesFile.WriteString(line + "\n")
-	}
+	lib.UpdateBranch(currentBranch, sumString)
 	return nil
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {

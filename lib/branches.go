@@ -53,17 +53,6 @@ func RemoveBranch(branch string) {
 	}
 	WriteBranches(branches)
 }
-func ListBranches() string {
-	branchesArr := ReadBranches()
-	var branches string
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		branches = branches + line + "\n"
-	}
-	return branches
-}
 func ReadBranches() []string {
 	branchesContent, _ := ioutil.ReadFile(".svcs/branches.txt")
 	return strings.Split(string(branchesContent), "\n")

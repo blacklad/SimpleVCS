@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -18,7 +19,7 @@ func ListBranches() error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	fmt.Print(lib.ListBranches())
+	fmt.Print(strings.Join(lib.ReadBranches(), "\n"))
 	return nil
 }
 func RemoveBranch(branch string) error {

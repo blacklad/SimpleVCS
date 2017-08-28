@@ -7,24 +7,24 @@ import (
 )
 
 func CreateBranch(branch string, sha string) {
-	RemoveBranch(branch)
-	CreateBranch(branch, sha)
-}
-func UpdateBranch(branch string, sha string) {
+	var branches []string
 	branchesArr := ReadBranches()
-	var branchesFileContent []string
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
 		}
 		lineSplit := strings.Split(line, " ")
+		branches = append(branches, line)
 		if lineSplit[0] == branch {
-			branchesFileContent = append(branchesFileContent, branch+" "+sha)
-			continue
+			return
 		}
-		branchesFileContent = append(branchesFileContent, line)
 	}
-	WriteBranches(branchesFileContent)
+	branches = append(branches, branch+" "+sha)
+	WriteBranches(branches)
+}
+func UpdateBranch(branch string, sha string) {
+	RemoveBranch(branch)
+	CreateBranch(branch, sha)
 }
 func RemoveBranch(branch string) {
 	var branches []string

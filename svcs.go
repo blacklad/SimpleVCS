@@ -36,6 +36,10 @@ func main() {
 		err = cmd.RemoveBranch(flag.Arg(1))
 	} else if executedCommand == "rmtag" {
 		err = cmd.RemoveTag(flag.Arg(1))
+	} else if executedCommand == "pull" {
+		err = cmd.Pull(flag.Arg(1))
+	} else if executedCommand == "push" {
+		err = cmd.Push(flag.Arg(1))
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)

@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"bufio"
 	"bytes"
 	"compress/gzip"
 	"io/ioutil"
@@ -49,7 +48,8 @@ func Unzip(text []byte) string {
 	var compBytes bytes.Buffer
 	compBytes.Write(text)
 	comp, _ := gzip.NewReader(&compBytes)
+	var outputBytes bytes.Buffer
+	outputBytes.ReadFrom(comp)
 	comp.Close()
-	reader := bufio.NewScanner(comp)
-	return reader.Text()
+	return outputBytes.String()
 }

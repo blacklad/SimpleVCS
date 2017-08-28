@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"bytes"
-	"compress/gzip"
 	"crypto/sha1"
 	"errors"
 	"fmt"
@@ -45,12 +43,9 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
 	contentSum := fmt.Sprintf("%x", sha1.Sum(fileContent))
 	newPath := path.Join(".svcs/files", contentSum)
-	var compBytes bytes.Buffer
-	comp := gzip.NewWriter(&compBytes)
-	comp.Write(fileContent)
-	comp.Close()
+	zippedContent := lib.Zip(fileContent)
 	newFile, _ := os.Create(newPath)
-	compBytes.WriteTo(newFile)
+	newFile.WriteString(zippedContent)
 	_, sumString := lib.CreateCommitInfo(currentTime, branch)
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
 	fileEntriesFile, _ := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)

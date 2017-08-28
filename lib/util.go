@@ -1,6 +1,9 @@
 package lib
 
 import (
+	"bufio"
+	"bytes"
+	"compress/gzip"
 	"io/ioutil"
 	"os"
 	"path"
@@ -34,4 +37,19 @@ func GetParent(currentSha string) string {
 		}
 	}
 	return ""
+}
+func Zip(text []byte) string {
+	var compBytes bytes.Buffer
+	comp := gzip.NewWriter(&compBytes)
+	comp.Write(text)
+	comp.Close()
+	return compBytes.String()
+}
+func Unzip(text []byte) string {
+	var compBytes bytes.Buffer
+	compBytes.Write(text)
+	comp, _ := gzip.NewReader(&compBytes)
+	comp.Close()
+	reader := bufio.NewScanner(comp)
+	return reader.Text()
 }

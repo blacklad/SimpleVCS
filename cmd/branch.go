@@ -27,7 +27,7 @@ func RemoveBranch(branch string) error {
 		return errors.New("not initialized")
 	}
 	if branch == "master" {
-		return errors.New("cant delete master branch")
+		return errors.New("can't delete master branch")
 	}
 	lib.RemoveBranch(branch)
 	return nil

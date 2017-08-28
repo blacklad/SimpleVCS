@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"os"
 	"strings"
 )
 
@@ -38,7 +37,6 @@ func CheckForFastForward(fromBranch string, toBranch string) bool {
 func PerformFastForward(fromBranch string, toBranch string) {
 	var fromSha string
 	branchesArr := ReadBranches()
-	var branchesFileContent []string
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -46,14 +44,8 @@ func PerformFastForward(fromBranch string, toBranch string) {
 		lineSplit := strings.Split(line, " ")
 		if lineSplit[0] == fromBranch {
 			fromSha = lineSplit[1]
-		}
-		if lineSplit[0] != toBranch {
-			branchesFileContent = append(branchesFileContent, line)
+			break
 		}
 	}
-	branchesFileContent = append(branchesFileContent, toBranch+" "+fromSha)
-	branchesFile, _ := os.Create(".svcs/branches.txt")
-	for _, line := range branchesFileContent {
-		branchesFile.WriteString(line + "\n")
-	}
+	UpdateBranch(toBranch, fromSha)
 }

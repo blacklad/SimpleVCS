@@ -7,20 +7,8 @@ import (
 )
 
 func CreateBranch(branch string, sha string) {
-	var branches []string
-	branchesArr := ReadBranches()
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		branches = append(branches, line)
-		if lineSplit[0] == branch {
-			return
-		}
-	}
-	branches = append(branches, branch+" "+sha)
-	WriteBranches(branches)
+	RemoveBranch(branch)
+	CreateBranch(branch, sha)
 }
 func UpdateBranch(branch string, sha string) {
 	branchesArr := ReadBranches()

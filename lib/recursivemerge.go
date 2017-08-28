@@ -8,8 +8,11 @@ import (
 	"strings"
 )
 
-func CheckForRecursive(fromBranch string, toBranch string) string {
-	branchesArr := ReadBranches()
+func CheckForRecursive(fromBranch string, toBranch string) (string, error) {
+	branchesArr, err := ReadBranches()
+	if err != nil {
+		return "", err
+	}
 	var fromCommits []string
 	var currentFromSha string
 	var currentToSha string
@@ -26,11 +29,14 @@ func CheckForRecursive(fromBranch string, toBranch string) string {
 		}
 	}
 	if currentToSha == "" || currentFromSha == "" {
-		return ""
+		return "", errors.New("branch not found")
 	}
 	for currentSha := currentFromSha; true; {
 		fromCommits = append(fromCommits, currentSha)
-		currentSha = GetParent(currentSha)
+		currentSha, err = GetParent(currentSha)
+		if err != nil {
+			return "", err
+		}
 		if currentSha == "" {
 			break
 		}
@@ -38,18 +44,24 @@ func CheckForRecursive(fromBranch string, toBranch string) string {
 	for currentSha := currentToSha; true; {
 		for _, fromCommit := range fromCommits {
 			if fromCommit == currentSha {
-				return currentSha
+				return currentSha, nil
 			}
 		}
-		currentSha = GetParent(currentSha)
+		currentSha, err = GetParent(currentSha)
+		if err != nil {
+			return "", err
+		}
 		if currentSha == "" {
 			break
 		}
 	}
-	return ""
+	return "", nil
 }
 func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
-	branchesArr := ReadBranches()
+	branchesArr, err := ReadBranches()
+	if err != nil {
+		return err
+	}
 	var currentFromSha string
 	var currentToSha string
 	for _, line := range branchesArr {
@@ -64,11 +76,20 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			currentToSha = lineSplit[1]
 		}
 	}
-	fromFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
+	fromFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
+	if err != nil {
+		return err
+	}
 	fromFiles := string(fromFilesByte)
-	toFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", currentToSha+"_files.txt"))
+	toFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", currentToSha+"_files.txt"))
+	if err != nil {
+		return err
+	}
 	toFiles := string(toFilesByte)
-	parentFilesByte, _ := ioutil.ReadFile(path.Join(".svcs/history", parentSha+"_files.txt"))
+	parentFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", parentSha+"_files.txt"))
+	if err != nil {
+		return err
+	}
 	parentFiles := string(parentFilesByte)
 	fromFilesArr := strings.Split(fromFiles, "\n")
 	toFilesArr := strings.Split(toFiles, "\n")
@@ -261,13 +282,28 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			}
 		}
 	}
-	commitMessage, commitHash := CreateCommitInfo(GetTime(), toBranch)
-	CreateCommit(commitMessage, commitHash, "Merged branch "+fromBranch)
-	UpdateBranch(toBranch, commitHash)
+	commitMessage, commitHash, err := CreateCommitInfo(GetTime(), toBranch)
+	if err != nil {
+		return err
+	}
+	err = CreateCommit(commitMessage, commitHash, "Merged branch "+fromBranch)
+	if err != nil {
+		return err
+	}
+	err = UpdateBranch(toBranch, commitHash)
+	if err != nil {
+		return err
+	}
 	filesPath := path.Join(".svcs/history", commitHash+"_files.txt")
-	filesFile, _ := os.Create(filesPath)
+	filesFile, err := os.Create(filesPath)
+	if err != nil {
+		return err
+	}
 	for _, file := range filesArr {
-		filesFile.WriteString(file + "\n")
+		_, err = filesFile.WriteString(file + "\n")
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

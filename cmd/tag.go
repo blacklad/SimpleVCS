@@ -12,20 +12,21 @@ func CreateTag(tag string, sha string) error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	lib.CreateTag(tag, sha)
-	return nil
+	err := lib.CreateTag(tag, sha)
+	return err
 }
 func ListTags() error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	fmt.Print(strings.Join(lib.ReadTags(), "\n"))
-	return nil
+	tags, err := lib.ReadTags()
+	fmt.Print(strings.Join(tags, "\n"))
+	return err
 }
 func RemoveTag(tag string) error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	lib.RemoveTag(tag)
-	return nil
+	err := lib.RemoveTag(tag)
+	return err
 }

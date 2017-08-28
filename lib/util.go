@@ -20,8 +20,11 @@ func VCSExists(dir string) bool {
 func GetTime() string {
 	return time.Now().Format("20060102150405")
 }
-func GetParent(currentSha string) string {
-	currentInfo, _ := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
+func GetParent(currentSha string) (string, error) {
+	currentInfo, err := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
+	if err != nil {
+		return "", err
+	}
 	splitFile := strings.Split(string(currentInfo), "\n")
 	for _, line := range splitFile {
 		if line == "" {
@@ -30,12 +33,12 @@ func GetParent(currentSha string) string {
 		splitLine := strings.Split(line, " ")
 		if splitLine[0] == "parent" {
 			if line == "parent " {
-				return ""
+				return "", nil
 			}
-			return splitLine[1]
+			return splitLine[1], nil
 		}
 	}
-	return ""
+	return "", nil
 }
 func Zip(text []byte) string {
 	var compBytes bytes.Buffer

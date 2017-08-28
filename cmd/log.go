@@ -17,7 +17,11 @@ func Log(branch string) error {
 	var commits []string
 	var commitMessages []string
 	var lastSha string
-	for _, line := range lib.ReadBranches() {
+	branches, err := lib.ReadBranches()
+	if err != nil {
+		return err
+	}
+	for _, line := range branches {
 		if line == "" {
 			continue
 		}
@@ -28,9 +32,15 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		message, _ := ioutil.ReadFile(path.Join(".svcs/history", currentSha+"_message.txt"))
+		message, err := ioutil.ReadFile(path.Join(".svcs/history", currentSha+"_message.txt"))
+		if err != nil {
+			return err
+		}
 		commitMessages = append(commitMessages, string(message))
-		currentSha = lib.GetParent(currentSha)
+		currentSha, err = lib.GetParent(currentSha)
+		if err != nil {
+			return err
+		}
 		if currentSha == "" {
 			break
 		}

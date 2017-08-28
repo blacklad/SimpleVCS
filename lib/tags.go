@@ -6,9 +6,12 @@ import (
 	"strings"
 )
 
-func CreateTag(tag string, sha string) {
+func CreateTag(tag string, sha string) error {
 	var tags []string
-	tagsArr := ReadTags()
+	tagsArr, err := ReadTags()
+	if err != nil {
+		return err
+	}
 	for _, line := range tagsArr {
 		if line == "" {
 			continue
@@ -16,15 +19,19 @@ func CreateTag(tag string, sha string) {
 		lineSplit := strings.Split(line, " ")
 		tags = append(tags, line)
 		if lineSplit[0] == tag {
-			return
+			return nil
 		}
 	}
 	tags = append(tags, tag+" "+sha)
-	WriteTags(tags)
+	err = WriteTags(tags)
+	return err
 }
-func RemoveTag(tag string) {
+func RemoveTag(tag string) error {
 	var tags []string
-	tagsArr := ReadTags()
+	tagsArr, err := ReadTags()
+	if err != nil {
+		return err
+	}
 	for _, line := range tagsArr {
 		if line == "" {
 			continue
@@ -35,15 +42,21 @@ func RemoveTag(tag string) {
 		}
 		tags = append(tags, line)
 	}
-	WriteTags(tags)
+	err = WriteTags(tags)
+	return err
 }
-func ReadTags() []string {
-	tagsContent, _ := ioutil.ReadFile(".svcs/tags.txt")
-	return strings.Split(string(tagsContent), "\n")
+func ReadTags() ([]string, error) {
+	tagsContent, err := ioutil.ReadFile(".svcs/tags.txt")
+	return strings.Split(string(tagsContent), "\n"), err
 }
-func WriteTags(tags []string) {
-	tagsFile, _ := os.Create(".svcs/tags.txt")
-	for _, line := range tags {
-		tagsFile.WriteString(line + "\n")
+func WriteTags(tags []string) error {
+	tagsFile, err := os.Create(".svcs/tags.txt")
+	if err != nil {
+		return err
 	}
+	for _, line := range tags {
+		_, err = tagsFile.WriteString(line + "\n")
+		return err
+	}
+	return nil
 }

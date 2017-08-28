@@ -21,11 +21,20 @@ func Commit(currentBranch string, message string) error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	info, sumString := lib.CreateCommitInfo(currentTime, branch)
-	lib.CreateCommit(info, sumString, message)
-	filepath.Walk(".", visit)
-	lib.UpdateBranch(currentBranch, sumString)
-	return nil
+	info, sumString, err := lib.CreateCommitInfo(currentTime, branch)
+	if err != nil {
+		return err
+	}
+	err = lib.CreateCommit(info, sumString, message)
+	if err != nil {
+		return err
+	}
+	err = filepath.Walk(".", visit)
+	if err != nil {
+		return err
+	}
+	err = lib.UpdateBranch(currentBranch, sumString)
+	return err
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	fixedPath := strings.Replace(filePath, "\\", "/", -1)
@@ -38,17 +47,35 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	if fileInfo.IsDir() {
 		return nil
 	}
-	fileContent, _ := ioutil.ReadFile(filePath)
-	currentPath, _ := os.Getwd()
+	fileContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	currentPath, err := os.Getwd()
+	if err != nil {
+		return err
+	}
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
 	contentSum := fmt.Sprintf("%x", sha1.Sum(fileContent))
 	newPath := path.Join(".svcs/files", contentSum)
 	zippedContent := lib.Zip(fileContent)
-	newFile, _ := os.Create(newPath)
-	newFile.WriteString(zippedContent)
-	_, sumString := lib.CreateCommitInfo(currentTime, branch)
+	newFile, err := os.Create(newPath)
+	if err != nil {
+		return err
+	}
+	_, err = newFile.WriteString(zippedContent)
+	if err != nil {
+		return err
+	}
+	_, sumString, err := lib.CreateCommitInfo(currentTime, branch)
+	if err != nil {
+		return err
+	}
 	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
-	fileEntriesFile, _ := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
-	fileEntriesFile.WriteString(relativePath + " " + contentSum + "\n")
-	return nil
+	fileEntriesFile, err := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	_, err = fileEntriesFile.WriteString(relativePath + " " + contentSum + "\n")
+	return err
 }

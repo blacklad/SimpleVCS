@@ -3,27 +3,44 @@ package lib
 import (
 	"crypto/sha1"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path"
 	"strings"
 )
 
-func CreateCommit(info string, hash string, message string) {
-	infoFile, _ := os.Create(path.Join(".svcs/history", hash+".txt"))
-	infoFile.WriteString(info)
+func CreateCommit(info string, hash string, message string) error {
+	infoFile, err := os.Create(path.Join(".svcs/history", hash+".txt"))
+	if err != nil {
+		return err
+	}
+	_, err = infoFile.WriteString(info)
+	if err != nil {
+		return err
+	}
 	fileEntriesPath := path.Join(".svcs/history", hash+"_files.txt")
-	os.Create(fileEntriesPath)
-	messageFile, _ := os.Create(path.Join(".svcs/history", hash+"_message.txt"))
-	messageFile.WriteString(message)
+	_, err = os.Create(fileEntriesPath)
+	if err != nil {
+		return err
+	}
+	messageFile, err := os.Create(path.Join(".svcs/history", hash+"_message.txt"))
+	if err != nil {
+		return err
+	}
+	_, err = messageFile.WriteString(message)
+	return err
 }
-func CreateCommitInfo(time string, branch string) (string, string) {
-	currentUser, _ := user.Current()
-	branches, _ := ioutil.ReadFile(".svcs/branches.txt")
+func CreateCommitInfo(time string, branch string) (string, string, error) {
+	currentUser, err := user.Current()
+	if err != nil {
+		return "", "", err
+	}
+	branches, err := ReadBranches()
+	if err != nil {
+		return "", "", err
+	}
 	var parentSum string
-	branchesArr := strings.Split(string(branches), "\n")
-	for _, line := range branchesArr {
+	for _, line := range branches {
 		if line == "" {
 			continue
 		}
@@ -35,5 +52,5 @@ func CreateCommitInfo(time string, branch string) (string, string) {
 	}
 	message := "author " + currentUser.Username + "\ntime " + time + "\nparent " + parentSum
 	hash := sha1.Sum([]byte(message))
-	return message, fmt.Sprintf("%x", hash)
+	return message, fmt.Sprintf("%x", hash), nil
 }

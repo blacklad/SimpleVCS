@@ -10,12 +10,18 @@ func Merge(fromBranch string, toBranch string) error {
 	if !lib.VCSExists(".svcs") {
 		return errors.New("not initialized")
 	}
-	fastForward := lib.CheckForFastForward(fromBranch, toBranch)
-	if fastForward {
-		lib.PerformFastForward(fromBranch, toBranch)
-		return nil
+	fastForward, err := lib.CheckForFastForward(fromBranch, toBranch)
+	if err != nil {
+		return err
 	}
-	parentSha := lib.CheckForRecursive(fromBranch, toBranch)
+	if fastForward {
+		err := lib.PerformFastForward(fromBranch, toBranch)
+		return err
+	}
+	parentSha, err := lib.CheckForRecursive(fromBranch, toBranch)
+	if err != nil {
+		return err
+	}
 	if parentSha != "" {
 		err := lib.PerformRecursive(fromBranch, toBranch, parentSha)
 		return err

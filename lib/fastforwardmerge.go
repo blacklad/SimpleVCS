@@ -4,10 +4,13 @@ import (
 	"strings"
 )
 
-func CheckForFastForward(fromBranch string, toBranch string) bool {
+func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
 	var fromSha string
 	var toSha string
-	branchesArr := ReadBranches()
+	branchesArr, err := ReadBranches()
+	if err != nil {
+		return false, err
+	}
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -21,22 +24,28 @@ func CheckForFastForward(fromBranch string, toBranch string) bool {
 		}
 	}
 	if toSha == "" || fromSha == "" {
-		return false
+		return false, nil
 	}
 	for currentSha := fromSha; true; {
 		if currentSha == toSha {
-			return true
+			return true, nil
 		}
-		currentSha = GetParent(currentSha)
+		currentSha, err = GetParent(currentSha)
+		if err != nil {
+			return false, err
+		}
 		if currentSha == "" {
 			break
 		}
 	}
-	return false
+	return false, nil
 }
-func PerformFastForward(fromBranch string, toBranch string) {
+func PerformFastForward(fromBranch string, toBranch string) error {
 	var fromSha string
-	branchesArr := ReadBranches()
+	branchesArr, err := ReadBranches()
+	if err != nil {
+		return err
+	}
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -47,5 +56,6 @@ func PerformFastForward(fromBranch string, toBranch string) {
 			break
 		}
 	}
-	UpdateBranch(toBranch, fromSha)
+	err = UpdateBranch(toBranch, fromSha)
+	return err
 }

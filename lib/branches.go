@@ -1,14 +1,18 @@
 package lib
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"strings"
 )
 
-func CreateBranch(branch string, sha string) {
+func CreateBranch(branch string, sha string) error {
 	var branches []string
-	branchesArr := ReadBranches()
+	branchesArr, err := ReadBranches()
+	if err != nil {
+		return err
+	}
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -16,19 +20,24 @@ func CreateBranch(branch string, sha string) {
 		lineSplit := strings.Split(line, " ")
 		branches = append(branches, line)
 		if lineSplit[0] == branch {
-			return
+			return errors.New("branch exists")
 		}
 	}
 	branches = append(branches, branch+" "+sha)
-	WriteBranches(branches)
+	err = WriteBranches(branches)
+	return err
 }
-func UpdateBranch(branch string, sha string) {
-	RemoveBranch(branch)
-	CreateBranch(branch, sha)
+func UpdateBranch(branch string, sha string) error {
+	err := RemoveBranch(branch)
+	if err != nil {
+		return err
+	}
+	err = CreateBranch(branch, sha)
+	return err
 }
-func RemoveBranch(branch string) {
+func RemoveBranch(branch string) error {
 	var branches []string
-	branchesArr := ReadBranches()
+	branchesArr, err := ReadBranches()
 	for _, line := range branchesArr {
 		if line == "" {
 			continue
@@ -40,14 +49,22 @@ func RemoveBranch(branch string) {
 		branches = append(branches, line)
 	}
 	WriteBranches(branches)
+	return err
 }
-func ReadBranches() []string {
-	branchesContent, _ := ioutil.ReadFile(".svcs/branches.txt")
-	return strings.Split(string(branchesContent), "\n")
+func ReadBranches() ([]string, error) {
+	branchesContent, err := ioutil.ReadFile(".svcs/branches.txt")
+	return strings.Split(string(branchesContent), "\n"), err
 }
-func WriteBranches(branches []string) {
-	branchesFile, _ := os.Create(".svcs/branches.txt")
-	for _, line := range branches {
-		branchesFile.WriteString(line + "\n")
+func WriteBranches(branches []string) error {
+	branchesFile, err := os.Create(".svcs/branches.txt")
+	if err != nil {
+		return err
 	}
+	for _, line := range branches {
+		_, err = branchesFile.WriteString(line + "\n")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -15,7 +15,10 @@ func Checkout(commitHash string) error {
 		return errors.New("not initialized")
 	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
-	filesContent, _ := ioutil.ReadFile(filesEntryPath)
+	filesContent, err := ioutil.ReadFile(filesEntryPath)
+	if err != nil {
+		return err
+	}
 	files := strings.Split(string(filesContent), "\n")
 	for _, fileEntry := range files {
 		if fileEntry == "" {
@@ -23,17 +26,29 @@ func Checkout(commitHash string) error {
 		}
 		mapping := strings.Split(fileEntry, " ")
 		copyFrom := path.Join(".svcs/files", mapping[1])
-		fileContent, _ := ioutil.ReadFile(copyFrom)
+		fileContent, err := ioutil.ReadFile(copyFrom)
+		if err != nil {
+			return err
+		}
 		splitFileArr := strings.Split(mapping[0], "/")
 		splitFileArr = splitFileArr[:len(splitFileArr)-1]
 		toDir := ""
 		for _, element := range splitFileArr {
 			toDir = toDir + element + "/"
 		}
-		os.MkdirAll(toDir, 666)
-		newFile, _ := os.Create(mapping[0])
+		err = os.MkdirAll(toDir, 666)
+		if err != nil {
+			return err
+		}
+		newFile, err := os.Create(mapping[0])
+		if err != nil {
+			return err
+		}
 		unzippedContent := lib.Unzip(fileContent)
-		newFile.WriteString(unzippedContent)
+		_, err = newFile.WriteString(unzippedContent)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

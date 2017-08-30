@@ -43,7 +43,12 @@ func main() {
 	} else {
 		flag.PrintDefaults()
 		os.Exit(1)
-	}
+  }
+  switch executedCommand{
+    case "init"{
+      fmt.Print("e")
+    }
+  }
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)

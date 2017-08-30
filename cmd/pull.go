@@ -20,7 +20,7 @@ func Pull(url string) error {
 	if err != nil {
 		return err
 	}
-	commitsArr := strings.Split(message, "\n")
+	//commitsArr := strings.Split(message, "\n")
 	fmt.Fprint(conn, "branches")
 	reader = bufio.NewReader(conn)
 	message, err = reader.ReadString('\r')

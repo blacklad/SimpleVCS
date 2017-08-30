@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+//CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
 	var branches []string
 	branchesArr, err := ReadBranches()
@@ -27,6 +28,8 @@ func CreateBranch(branch string, sha string) error {
 	err = WriteBranches(branches)
 	return err
 }
+
+//UpdateBranch deletes and then creates the specified branch.
 func UpdateBranch(branch string, sha string) error {
 	err := RemoveBranch(branch)
 	if err != nil {
@@ -35,6 +38,8 @@ func UpdateBranch(branch string, sha string) error {
 	err = CreateBranch(branch, sha)
 	return err
 }
+
+//RemoveBranch removes branch.
 func RemoveBranch(branch string) error {
 	var branches []string
 	branchesArr, err := ReadBranches()
@@ -51,10 +56,14 @@ func RemoveBranch(branch string) error {
 	WriteBranches(branches)
 	return err
 }
+
+//ReadBranches reads the content of branches.txt into an array.
 func ReadBranches() ([]string, error) {
 	branchesContent, err := ioutil.ReadFile(".svcs/branches.txt")
 	return strings.Split(string(branchesContent), "\n"), err
 }
+
+//WriteBranches writes the array to branches.txt.
 func WriteBranches(branches []string) error {
 	branchesFile, err := os.Create(".svcs/branches.txt")
 	if err != nil {

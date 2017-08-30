@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+//CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
 	var tags []string
 	tagsArr, err := ReadTags()
@@ -26,6 +27,8 @@ func CreateTag(tag string, sha string) error {
 	err = WriteTags(tags)
 	return err
 }
+
+//RemoveTag removes the tag.
 func RemoveTag(tag string) error {
 	var tags []string
 	tagsArr, err := ReadTags()
@@ -45,10 +48,14 @@ func RemoveTag(tag string) error {
 	err = WriteTags(tags)
 	return err
 }
+
+//ReadTags reads the tags.txt file into an array
 func ReadTags() ([]string, error) {
 	tagsContent, err := ioutil.ReadFile(".svcs/tags.txt")
 	return strings.Split(string(tagsContent), "\n"), err
 }
+
+//WriteTags writes an array to tags.txt.
 func WriteTags(tags []string) error {
 	tagsFile, err := os.Create(".svcs/tags.txt")
 	if err != nil {

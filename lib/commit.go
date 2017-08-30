@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+//CreateCommit creates and writes to the message file, info file and creates the files file.
 func CreateCommit(info string, hash string, message string) error {
 	infoFile, err := os.Create(path.Join(".svcs/history", hash+".txt"))
 	if err != nil {
@@ -30,6 +31,8 @@ func CreateCommit(info string, hash string, message string) error {
 	_, err = messageFile.WriteString(message)
 	return err
 }
+
+//CreateCommitInfo returns commit info and hash.
 func CreateCommitInfo(time string, branch string) (string, string, error) {
 	currentUser, err := user.Current()
 	if err != nil {

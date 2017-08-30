@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//VCSExists checks if the .svcs directory exists.
 func VCSExists(dir string) bool {
 	_, err := os.Stat(dir)
 	if err != nil {
@@ -17,9 +18,13 @@ func VCSExists(dir string) bool {
 	}
 	return true
 }
+
+//GetTime returns the properly formatted date and time.
 func GetTime() string {
 	return time.Now().Format("20060102150405")
 }
+
+//GetParent returns the parent sha of the specified commit.
 func GetParent(currentSha string) (string, error) {
 	currentInfo, err := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
 	if err != nil {
@@ -40,6 +45,8 @@ func GetParent(currentSha string) (string, error) {
 	}
 	return "", nil
 }
+
+//Zip zips the argument and returns the zipped content.
 func Zip(text []byte) string {
 	var compBytes bytes.Buffer
 	comp := gzip.NewWriter(&compBytes)
@@ -47,6 +54,8 @@ func Zip(text []byte) string {
 	comp.Close()
 	return compBytes.String()
 }
+
+//Unzip unzips the argument and returns the normal content.
 func Unzip(text []byte) string {
 	var compBytes bytes.Buffer
 	compBytes.Write(text)

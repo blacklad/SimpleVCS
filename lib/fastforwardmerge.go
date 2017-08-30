@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// CheckForFastForward checkis if fastforward merge is possible.
 func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
 	var fromSha string
 	var toSha string
@@ -40,6 +41,8 @@ func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
 	}
 	return false, nil
 }
+
+//PerformFastForward performs fastforward merge, before calling this you should call CheckForFastforward.
 func PerformFastForward(fromBranch string, toBranch string) error {
 	var fromSha string
 	branchesArr, err := ReadBranches()

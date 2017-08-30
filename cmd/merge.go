@@ -18,7 +18,7 @@ func Merge(fromBranch string, toBranch string) error {
 		err := lib.PerformFastForward(fromBranch, toBranch)
 		return err
 	}
-	parentSha, err := lib.CheckForRecursive(fromBranch, toBranch)
+	parentSha, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
 	if err != nil {
 		return err
 	}

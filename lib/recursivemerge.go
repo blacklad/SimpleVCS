@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-func CheckForRecursive(fromBranch string, toBranch string) (string, error) {
+//CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor sha.
+func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (string, error) {
 	branchesArr, err := ReadBranches()
 	if err != nil {
 		return "", err
@@ -57,6 +58,8 @@ func CheckForRecursive(fromBranch string, toBranch string) (string, error) {
 	}
 	return "", nil
 }
+
+//PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
 func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
 	branchesArr, err := ReadBranches()
 	if err != nil {

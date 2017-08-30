@@ -10,6 +10,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
+//Log logs all commits.
 func Log(branch string) error {
 	if !lib.VCSExists() {
 		return errors.New("not initialized")

@@ -14,41 +14,34 @@ func main() {
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
-	if executedCommand == "init" {
+	switch executedCommand {
+	case "init":
 		err = cmd.InitRepo(flag.Arg(1))
-	} else if executedCommand == "commit" {
+	case "commit":
 		err = cmd.Commit(branch, flag.Arg(1))
-	} else if executedCommand == "checkout" {
+	case "checkout":
 		err = cmd.Checkout(flag.Arg(1))
-	} else if executedCommand == "log" {
+	case "log":
 		err = cmd.Log(branch)
-	} else if executedCommand == "branch" {
+	case "branch":
 		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
-	} else if executedCommand == "tag" {
+	case "tag":
 		err = cmd.CreateTag(flag.Arg(1), flag.Arg(2))
-	} else if executedCommand == "tags" {
+	case "tags":
 		err = cmd.ListTags()
-	} else if executedCommand == "branches" {
+	case "branches":
 		err = cmd.ListBranches()
-	} else if executedCommand == "merge" {
+	case "merge":
 		err = cmd.Merge(flag.Arg(1), flag.Arg(2))
-	} else if executedCommand == "rmbranch" {
+	case "rmbranch":
 		err = cmd.RemoveBranch(flag.Arg(1))
-	} else if executedCommand == "rmtag" {
+	case "rmtag":
 		err = cmd.RemoveTag(flag.Arg(1))
-	} else if executedCommand == "pull" {
+	case "pull":
 		err = cmd.Pull(flag.Arg(1))
-	} else if executedCommand == "push" {
+	case "push":
 		err = cmd.Push(flag.Arg(1))
-	} else {
-		flag.PrintDefaults()
-		os.Exit(1)
-  }
-  switch executedCommand{
-    case "init"{
-      fmt.Print("e")
-    }
-  }
+	}
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)

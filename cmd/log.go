@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"path"
@@ -12,9 +11,6 @@ import (
 
 //Log logs all commits.
 func Log(branch string) error {
-	if !lib.VCSExists() {
-		return errors.New("not initialized")
-	}
 	var commits []string
 	var commitMessages []string
 	var lastSha string

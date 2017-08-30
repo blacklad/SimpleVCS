@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"io/ioutil"
 	"os"
 	"path"
@@ -12,9 +11,6 @@ import (
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
-	if !lib.VCSExists() {
-		return errors.New("not initialized")
-	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
 	if err != nil {

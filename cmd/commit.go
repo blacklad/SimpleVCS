@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"crypto/sha1"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -19,9 +18,6 @@ var branch string
 //Commit commits the current directory.
 func Commit(currentBranch string, message string) error {
 	branch = currentBranch
-	if !lib.VCSExists() {
-		return errors.New("not initialized")
-	}
 	info, sumString, err := lib.CreateCommitInfo(currentTime, branch)
 	if err != nil {
 		return err

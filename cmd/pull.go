@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"net"
 	"strings"
@@ -12,9 +11,6 @@ import (
 
 // Pull pulls the latest changes.
 func Pull(url string) error {
-	if !lib.VCSExists() {
-		return errors.New("not initialized")
-	}
 	conn, err := net.Dial("udp", url)
 	if err != nil {
 		return err

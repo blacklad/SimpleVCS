@@ -1,17 +1,11 @@
 package cmd
 
 import (
-	"errors"
 	"os"
-
-	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 //InitRepo inits the repo.
 func InitRepo(repoName string) error {
-	if lib.VCSExists() {
-		return errors.New("already initialized")
-	}
 	err := os.Mkdir(".svcs", 0700)
 	if err != nil {
 		return err

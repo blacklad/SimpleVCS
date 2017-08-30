@@ -1,21 +1,28 @@
 package main
 
 import (
+	"errors"
 	"flag"
-	"fmt"
-	"os"
+	"log"
 
 	"github.com/MSathieu/SimpleVCS/cmd"
+	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 func main() {
 	var branch string
-	flag.StringVar(&branch, "branch", "master", "Specify the branch")
+	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
+	if executedCommand != "init" && !lib.VCSExists() {
+		log.Fatal("not initialized")
+	}
 	switch executedCommand {
 	case "init":
+		if lib.VCSExists() {
+			log.Fatal(errors.New("already initialized"))
+		}
 		err = cmd.InitRepo(flag.Arg(1))
 	case "commit":
 		err = cmd.Commit(branch, flag.Arg(1))
@@ -43,7 +50,6 @@ func main() {
 		err = cmd.Push(flag.Arg(1))
 	}
 	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }

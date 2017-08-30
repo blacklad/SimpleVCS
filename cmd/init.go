@@ -9,7 +9,7 @@ import (
 
 func InitRepo(repoName string) error {
 	if lib.VCSExists(".svcs") {
-		return errors.New("not initialized")
+		return errors.New("already initialized")
 	}
 	err := os.Mkdir(".svcs", 0700)
 	if err != nil {

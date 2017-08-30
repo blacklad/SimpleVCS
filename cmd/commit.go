@@ -18,7 +18,7 @@ var branch string
 
 func Commit(currentBranch string, message string) error {
 	branch = currentBranch
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	info, sumString, err := lib.CreateCommitInfo(currentTime, branch)

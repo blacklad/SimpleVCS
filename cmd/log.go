@@ -11,7 +11,7 @@ import (
 )
 
 func Log(branch string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	var commits []string

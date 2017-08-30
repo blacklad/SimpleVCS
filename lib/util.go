@@ -11,8 +11,8 @@ import (
 )
 
 //VCSExists checks if the .svcs directory exists.
-func VCSExists(dir string) bool {
-	_, err := os.Stat(dir)
+func VCSExists() bool {
+	_, err := os.Stat(".svcs")
 	if err != nil {
 		return false
 	}

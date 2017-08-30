@@ -9,14 +9,14 @@ import (
 )
 
 func CreateBranch(branch string, sha string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	err := lib.CreateBranch(branch, sha)
 	return err
 }
 func ListBranches() error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	branches, err := lib.ReadBranches()
@@ -27,7 +27,7 @@ func ListBranches() error {
 	return nil
 }
 func RemoveBranch(branch string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	if branch == "master" {

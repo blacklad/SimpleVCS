@@ -7,7 +7,7 @@ import (
 )
 
 func Merge(fromBranch string, toBranch string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	fastForward, err := lib.CheckForFastForward(fromBranch, toBranch)

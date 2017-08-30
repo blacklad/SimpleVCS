@@ -9,14 +9,14 @@ import (
 )
 
 func CreateTag(tag string, sha string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	err := lib.CreateTag(tag, sha)
 	return err
 }
 func ListTags() error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	tags, err := lib.ReadTags()
@@ -24,7 +24,7 @@ func ListTags() error {
 	return err
 }
 func RemoveTag(tag string) error {
-	if !lib.VCSExists(".svcs") {
+	if !lib.VCSExists() {
 		return errors.New("not initialized")
 	}
 	err := lib.RemoveTag(tag)

@@ -7,6 +7,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
+//InitRepo inits the repo.
 func InitRepo(repoName string) error {
 	if lib.VCSExists() {
 		return errors.New("already initialized")

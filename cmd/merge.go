@@ -6,6 +6,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
+//Merge merges two branches.
 func Merge(fromBranch string, toBranch string) error {
 	if !lib.VCSExists() {
 		return errors.New("not initialized")

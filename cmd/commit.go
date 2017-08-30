@@ -16,6 +16,7 @@ import (
 var currentTime = lib.GetTime()
 var branch string
 
+//Commit commits the current directory.
 func Commit(currentBranch string, message string) error {
 	branch = currentBranch
 	if !lib.VCSExists() {

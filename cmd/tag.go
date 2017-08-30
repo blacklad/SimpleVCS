@@ -8,6 +8,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
+//CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
 	if !lib.VCSExists() {
 		return errors.New("not initialized")
@@ -15,6 +16,8 @@ func CreateTag(tag string, sha string) error {
 	err := lib.CreateTag(tag, sha)
 	return err
 }
+
+//ListTags lists all tags.
 func ListTags() error {
 	if !lib.VCSExists() {
 		return errors.New("not initialized")
@@ -23,6 +26,8 @@ func ListTags() error {
 	fmt.Print(strings.Join(tags, "\n"))
 	return err
 }
+
+//RemoveTag removes a tag.
 func RemoveTag(tag string) error {
 	if !lib.VCSExists() {
 		return errors.New("not initialized")

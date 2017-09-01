@@ -9,7 +9,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-// Pull pulls the latest changes.
+//Pull pulls the latest changes.
 func Pull(url string) error {
 	conn, err := net.Dial("udp", url)
 	if err != nil {

@@ -64,7 +64,7 @@ func usage() {
 	fmt.Println("\tcheckout: Checks out the provided sha.")
 	fmt.Println("\tlog: Logs all commits of the branch specified by the branch option.")
 	fmt.Println("\ttag: Creates a tag with the specified name and sha.")
-	fmt.Println("\tbranch: Creates a branch with the cpecified name and sha.")
+	fmt.Println("\tbranch: Creates a branch with the specified name and sha.")
 	fmt.Println("Arguments:")
 	flag.PrintDefaults()
 }

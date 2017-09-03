@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/MSathieu/SimpleVCS/cmd"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	flag.Usage = usage
 	var branch string
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.Parse()
@@ -54,4 +56,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func usage() {
+	fmt.Println("Commands:")
+	fmt.Println("\tCommit: Commits the current workspace to the directory specified by the branch option.")
+	fmt.Println("\tcheckout: Checks out the provided sha.")
+	fmt.Println("\tlog: Logs all commits of the branch specified by the branch option.")
+	fmt.Println("\ttag: Creates a tag with the specified name and sha.")
+	fmt.Println("\tbranch: Creates a branch with the cpecified name and sha.")
+	fmt.Println("Arguments:")
+	flag.PrintDefaults()
 }

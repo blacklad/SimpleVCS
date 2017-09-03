@@ -48,6 +48,8 @@ func main() {
 		err = cmd.Pull(flag.Arg(1))
 	case "push":
 		err = cmd.Push(flag.Arg(1))
+	default:
+		flag.PrintDefaults()
 	}
 	if err != nil {
 		log.Fatal(err)

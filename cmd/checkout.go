@@ -11,6 +11,19 @@ import (
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
+	branches, err := lib.ReadBranches()
+	if err != nil {
+		return err
+	}
+	for _, branch := range branches {
+		if branch == "" {
+			continue
+		}
+		mapping := strings.Split(branch, " ")
+		if commitHash == mapping[0] {
+			commitHash = mapping[1]
+		}
+	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
 	if err != nil {

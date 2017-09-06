@@ -41,7 +41,7 @@ func main() {
 	case "branches":
 		err = cmd.ListBranches()
 	case "merge":
-		err = cmd.Merge(flag.Arg(1), flag.Arg(2))
+		err = cmd.Merge(flag.Arg(1))
 	case "rmbranch":
 		err = cmd.RemoveBranch(flag.Arg(1))
 	case "rmtag":

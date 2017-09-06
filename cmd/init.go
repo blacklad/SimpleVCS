@@ -32,5 +32,13 @@ func InitRepo(repoName string) error {
 	}
 	branchesFile.WriteString("master ")
 	_, err = os.Create(".svcs/tags.txt")
+	if err != nil {
+		return err
+	}
+	head, err := os.Create(".svcs/head.txt")
+	if err != nil {
+		return err
+	}
+	_, err = head.WriteString("master")
 	return err
 }

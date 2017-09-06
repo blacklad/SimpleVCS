@@ -11,6 +11,8 @@ import (
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
+	detached := true
+	var checkoutBranch string
 	branches, err := lib.ReadBranches()
 	if err != nil {
 		return err
@@ -21,6 +23,8 @@ func Checkout(commitHash string) error {
 		}
 		mapping := strings.Split(branch, " ")
 		if commitHash == mapping[0] {
+			detached = false
+			checkoutBranch = commitHash
 			commitHash = mapping[1]
 		}
 	}
@@ -56,6 +60,18 @@ func Checkout(commitHash string) error {
 		if err != nil {
 			return err
 		}
+	}
+	head, err := os.Create(".svcs/head.txt")
+	if err != nil {
+		return err
+	}
+	if detached {
+		_, err = head.WriteString("DETACHED")
+	} else {
+		_, err = head.WriteString(checkoutBranch)
+	}
+	if err != nil {
+		return err
 	}
 	return nil
 }

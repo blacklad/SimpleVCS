@@ -27,7 +27,7 @@ func main() {
 		}
 		err = cmd.InitRepo(flag.Arg(1))
 	case "commit":
-		err = cmd.Commit(branch, flag.Arg(1))
+		err = cmd.Commit(flag.Arg(1))
 	case "checkout":
 		err = cmd.Checkout(flag.Arg(1))
 	case "log":

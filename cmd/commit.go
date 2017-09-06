@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -16,8 +17,15 @@ var currentTime = lib.GetTime()
 var branch string
 
 //Commit commits the current directory.
-func Commit(currentBranch string, message string) error {
-	branch = currentBranch
+func Commit(message string) error {
+	head, err := ioutil.ReadFile(".svcs/head.txt")
+	if err != nil {
+		return err
+	}
+	if string(head) == "DETACHED" {
+		return errors.New("cannot commit in detached state")
+	}
+	branch = string(head)
 	info, sumString, err := lib.CreateCommitInfo(currentTime, branch)
 	if err != nil {
 		return err
@@ -30,7 +38,7 @@ func Commit(currentBranch string, message string) error {
 	if err != nil {
 		return err
 	}
-	err = lib.UpdateBranch(currentBranch, sumString)
+	err = lib.UpdateBranch(branch, sumString)
 	return err
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {

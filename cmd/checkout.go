@@ -34,9 +34,6 @@ func Checkout(commitHash string) error {
 			toDir = toDir + element + "/"
 		}
 		err = os.MkdirAll(toDir, 666)
-		if err != nil {
-			return err
-		}
 		newFile, err := os.Create(mapping[0])
 		if err != nil {
 			return err

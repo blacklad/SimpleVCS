@@ -10,27 +10,17 @@ import (
 
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor sha.
 func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (string, error) {
-	branchesArr, err := ReadBranches()
+	var fromCommits []string
+	currentFromSha, _, err := ConvertToCommit(fromBranch)
 	if err != nil {
 		return "", err
 	}
-	var fromCommits []string
-	var currentFromSha string
-	var currentToSha string
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == fromBranch {
-			currentFromSha = lineSplit[1]
-		}
-		if lineSplit[0] == toBranch {
-			currentToSha = lineSplit[1]
-		}
+	currentToSha, _, err := ConvertToCommit(toBranch)
+	if err != nil {
+		return "", err
 	}
 	if currentToSha == "" || currentFromSha == "" {
-		return "", errors.New("branch not found")
+		return "", nil
 	}
 	for currentSha := currentFromSha; true; {
 		fromCommits = append(fromCommits, currentSha)
@@ -61,23 +51,13 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (str
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
 func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
-	branchesArr, err := ReadBranches()
+	currentFromSha, _, err := ConvertToCommit(fromBranch)
 	if err != nil {
 		return err
 	}
-	var currentFromSha string
-	var currentToSha string
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == fromBranch {
-			currentFromSha = lineSplit[1]
-		}
-		if lineSplit[0] == toBranch {
-			currentToSha = lineSplit[1]
-		}
+	currentToSha, _, err := ConvertToCommit(toBranch)
+	if err != nil {
+		return err
 	}
 	fromFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
 	if err != nil {

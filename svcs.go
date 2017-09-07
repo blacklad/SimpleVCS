@@ -32,26 +32,36 @@ func main() {
 		err = cmd.Checkout(flag.Arg(1))
 	case "log":
 		err = cmd.Log(branch)
-	case "branch":
-		err = cmd.CreateBranch(flag.Arg(1), flag.Arg(2))
 	case "tag":
-		err = cmd.CreateTag(flag.Arg(1), flag.Arg(2))
+		switch flag.Arg(1) {
+		case "create":
+			err = cmd.CreateTag(flag.Arg(2), flag.Arg(3))
+		case "delete":
+			err = cmd.RemoveTag(flag.Arg(2))
+		default:
+			flag.Usage()
+		}
 	case "tags":
 		err = cmd.ListTags()
-	case "branches":
-		err = cmd.ListBranches()
+	case "branch":
+		switch flag.Arg(1) {
+		case "create":
+			err = cmd.CreateBranch(flag.Arg(2), flag.Arg(3))
+		case "delete":
+			err = cmd.RemoveBranch(flag.Arg(2))
+		case "list":
+			err = cmd.ListBranches()
+		default:
+			flag.Usage()
+		}
 	case "merge":
 		err = cmd.Merge(flag.Arg(1))
-	case "rmbranch":
-		err = cmd.RemoveBranch(flag.Arg(1))
-	case "rmtag":
-		err = cmd.RemoveTag(flag.Arg(1))
 	case "pull":
 		err = cmd.Pull(flag.Arg(1))
 	case "push":
 		err = cmd.Push(flag.Arg(1))
 	default:
-		flag.PrintDefaults()
+		flag.Usage()
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -61,10 +71,10 @@ func main() {
 func usage() {
 	fmt.Println("Commands:")
 	fmt.Println("\tCommit: Commits the current workspace to the directory specified by the branch option.")
-	fmt.Println("\tcheckout: Checks out the provided sha.")
+	fmt.Println("\tcheckout: Checks out the provided branch/sha.")
 	fmt.Println("\tlog: Logs all commits of the branch specified by the branch option.")
-	fmt.Println("\ttag: Creates a tag with the specified name and sha.")
-	fmt.Println("\tbranch: Creates a branch with the specified name and sha.")
+	fmt.Println("\ttag: The tag command.")
+	fmt.Println("\tbranch: The branch command.")
 	fmt.Println("Arguments:")
 	flag.PrintDefaults()
 }

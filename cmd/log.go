@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
-	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -13,19 +12,9 @@ import (
 func Log(branch string) error {
 	var commits []string
 	var commitMessages []string
-	var lastSha string
-	branches, err := lib.ReadBranches()
+	lastSha, _, err := lib.ConvertToCommit(branch)
 	if err != nil {
 		return err
-	}
-	for _, line := range branches {
-		if line == "" {
-			continue
-		}
-		lineArr := strings.Split(line, " ")
-		if lineArr[0] == branch {
-			lastSha = lineArr[1]
-		}
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)

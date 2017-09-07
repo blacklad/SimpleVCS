@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/user"
 	"path"
-	"strings"
 )
 
 //CreateCommit creates and writes to the message file, info file and creates the files file.
@@ -38,20 +37,9 @@ func CreateCommitInfo(time string, branch string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	branches, err := ReadBranches()
+	parentSum, _, err := ConvertToCommit(branch)
 	if err != nil {
 		return "", "", err
-	}
-	var parentSum string
-	for _, line := range branches {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == branch {
-			parentSum = lineSplit[1]
-			break
-		}
 	}
 	message := "author " + currentUser.Username + "\ntime " + time + "\nparent " + parentSum
 	hash := sha1.Sum([]byte(message))

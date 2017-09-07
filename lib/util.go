@@ -65,3 +65,24 @@ func Unzip(text []byte) string {
 	comp.Close()
 	return outputBytes.String()
 }
+
+//ConvertToCommit converts a branch to a hash
+func ConvertToCommit(convertFrom string) (string, bool, error) {
+	isBranch := false
+	commitHash := convertFrom
+	branches, err := ReadBranches()
+	if err != nil {
+		return "", false, err
+	}
+	for _, branch := range branches {
+		if branch == "" {
+			continue
+		}
+		mapping := strings.Split(branch, " ")
+		if convertFrom == mapping[0] {
+			isBranch = true
+			commitHash = mapping[1]
+		}
+	}
+	return commitHash, isBranch, nil
+}

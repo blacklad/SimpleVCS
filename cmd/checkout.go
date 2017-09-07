@@ -11,22 +11,10 @@ import (
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
-	detached := true
-	var checkoutBranch string
-	branches, err := lib.ReadBranches()
+	checkoutBranch := commitHash
+	commitHash, isBranch, err := lib.ConvertToCommit(commitHash)
 	if err != nil {
 		return err
-	}
-	for _, branch := range branches {
-		if branch == "" {
-			continue
-		}
-		mapping := strings.Split(branch, " ")
-		if commitHash == mapping[0] {
-			detached = false
-			checkoutBranch = commitHash
-			commitHash = mapping[1]
-		}
 	}
 	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
@@ -65,10 +53,10 @@ func Checkout(commitHash string) error {
 	if err != nil {
 		return err
 	}
-	if detached {
-		_, err = head.WriteString("DETACHED")
-	} else {
+	if isBranch {
 		_, err = head.WriteString(checkoutBranch)
+	} else {
+		_, err = head.WriteString("DETACHED")
 	}
 	if err != nil {
 		return err

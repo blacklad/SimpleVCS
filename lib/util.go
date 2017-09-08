@@ -87,7 +87,19 @@ func ConvertToCommit(convertFrom string) (string, bool, error) {
 	return commitHash, isBranch, nil
 }
 
+//GetHead returns the head.
 func GetHead() (string, error) {
 	head, err := ioutil.ReadFile(".svcs/head.txt")
 	return string(head), err
+}
+
+//GetFiles gets the files of a specified commit
+func GetFiles(commitHash string) ([]string, error) {
+	filesEntryPath := path.Join(".svcs/trees", commitHash+".txt")
+	filesContent, err := ioutil.ReadFile(filesEntryPath)
+	if err != nil {
+		return nil, err
+	}
+	files := strings.Split(string(filesContent), "\n")
+	return files, nil
 }

@@ -3,13 +3,12 @@ package lib
 import (
 	"crypto/sha1"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path"
-	"strings"
 )
 
+//Commit creates the commit.
 func Commit(message string, files []string) (string, error) {
 	info, infoSum, err := getCommitInfo()
 	if err != nil {
@@ -56,16 +55,6 @@ func getCommitInfo() (string, string, error) {
 	message := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum
 	hash := sha1.Sum([]byte(message))
 	return message, fmt.Sprintf("%x", hash), nil
-}
-
-func GetFiles(commitHash string) ([]string, error) {
-	filesEntryPath := path.Join(".svcs/trees", commitHash+".txt")
-	filesContent, err := ioutil.ReadFile(filesEntryPath)
-	if err != nil {
-		return nil, err
-	}
-	files := strings.Split(string(filesContent), "\n")
-	return files, nil
 }
 
 func setFiles(commitHash string, files []string) error {

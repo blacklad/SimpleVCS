@@ -100,6 +100,7 @@ func GetFiles(commitHash string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	files := strings.Split(string(filesContent), "\n")
+	unzippedFiles := Unzip(filesContent)
+	files := strings.Split(unzippedFiles, "\n")
 	return files, nil
 }

@@ -59,14 +59,14 @@ func getCommitInfo() (string, string, error) {
 
 func setFiles(commitHash string, files []string) error {
 	file, err := os.Create(path.Join(".svcs/trees", commitHash+".txt"))
+	var content string
 	if err != nil {
 		return err
 	}
 	for _, line := range files {
-		_, err := file.WriteString(line + "\n")
-		if err != nil {
-			return err
-		}
+		content = content + line + "\n"
 	}
-	return nil
+	zippedContent := Zip([]byte(content))
+	_, err = file.WriteString(zippedContent)
+	return err
 }

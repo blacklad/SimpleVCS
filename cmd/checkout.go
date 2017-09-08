@@ -16,12 +16,10 @@ func Checkout(commitHash string) error {
 	if err != nil {
 		return err
 	}
-	filesEntryPath := path.Join(".svcs/trees", commitHash+".txt")
-	filesContent, err := ioutil.ReadFile(filesEntryPath)
+	files, err := lib.GetFiles(commitHash)
 	if err != nil {
 		return err
 	}
-	files := strings.Split(string(filesContent), "\n")
 	for _, fileEntry := range files {
 		if fileEntry == "" {
 			continue

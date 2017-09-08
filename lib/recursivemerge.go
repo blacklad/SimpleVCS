@@ -2,9 +2,6 @@ package lib
 
 import (
 	"errors"
-	"io/ioutil"
-	"os"
-	"path"
 	"strings"
 )
 
@@ -59,24 +56,18 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 	if err != nil {
 		return err
 	}
-	fromFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", currentFromSha+".txt"))
+	fromFilesArr, err := GetFiles(currentFromSha)
 	if err != nil {
 		return err
 	}
-	fromFiles := string(fromFilesByte)
-	toFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", currentToSha+".txt"))
+	toFilesArr, err := GetFiles(currentToSha)
 	if err != nil {
 		return err
 	}
-	toFiles := string(toFilesByte)
-	parentFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", parentSha+".txt"))
+	parentFilesArr, err := GetFiles(parentSha)
 	if err != nil {
 		return err
 	}
-	parentFiles := string(parentFilesByte)
-	fromFilesArr := strings.Split(fromFiles, "\n")
-	toFilesArr := strings.Split(toFiles, "\n")
-	parentFilesArr := strings.Split(parentFiles, "\n")
 	var toChanges []string
 	var fromChanges []string
 	for _, line := range toFilesArr {
@@ -265,28 +256,13 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			}
 		}
 	}
-	commitMessage, commitHash, err := CreateCommitInfo(GetTime(), toBranch)
-	if err != nil {
-		return err
-	}
-	err = CreateCommit(commitMessage, commitHash, "Merged branch "+fromBranch)
+	commitHash, err := Commit("Merged branch "+fromBranch+"into "+toBranch+".", filesArr)
 	if err != nil {
 		return err
 	}
 	err = UpdateBranch(toBranch, commitHash)
 	if err != nil {
 		return err
-	}
-	filesPath := path.Join(".svcs/trees", commitHash+".txt")
-	filesFile, err := os.Create(filesPath)
-	if err != nil {
-		return err
-	}
-	for _, file := range filesArr {
-		_, err = filesFile.WriteString(file + "\n")
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }

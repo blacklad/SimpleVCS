@@ -13,8 +13,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-var currentTime = lib.GetTime()
-var branch string
+var files []string
 
 //Commit commits the current directory.
 func Commit(message string) error {
@@ -25,16 +24,12 @@ func Commit(message string) error {
 	if string(head) == "DETACHED" {
 		return errors.New("cannot commit in detached state")
 	}
-	branch = string(head)
-	info, sumString, err := lib.CreateCommitInfo(currentTime, branch)
-	if err != nil {
-		return err
-	}
-	err = lib.CreateCommit(info, sumString, message)
-	if err != nil {
-		return err
-	}
+	branch := string(head)
 	err = filepath.Walk(".", visit)
+	if err != nil {
+		return err
+	}
+	sumString, err := lib.Commit(message, files)
 	if err != nil {
 		return err
 	}
@@ -72,15 +67,6 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	_, sumString, err := lib.CreateCommitInfo(currentTime, branch)
-	if err != nil {
-		return err
-	}
-	fileEntriesPath := path.Join(".svcs/trees", sumString+".txt")
-	fileEntriesFile, err := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
-	if err != nil {
-		return err
-	}
-	_, err = fileEntriesFile.WriteString(relativePath + " " + contentSum + "\n")
+	files = append(files, relativePath+" "+contentSum)
 	return err
 }

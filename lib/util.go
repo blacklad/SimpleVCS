@@ -86,3 +86,8 @@ func ConvertToCommit(convertFrom string) (string, bool, error) {
 	}
 	return commitHash, isBranch, nil
 }
+
+func GetHead() (string, error) {
+	head, err := ioutil.ReadFile(".svcs/head.txt")
+	return string(head), err
+}

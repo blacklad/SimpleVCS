@@ -16,7 +16,7 @@ func Checkout(commitHash string) error {
 	if err != nil {
 		return err
 	}
-	filesEntryPath := path.Join(".svcs/history", commitHash+"_files.txt")
+	filesEntryPath := path.Join(".svcs/trees", commitHash+".txt")
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
 	if err != nil {
 		return err

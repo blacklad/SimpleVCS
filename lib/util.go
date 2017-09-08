@@ -26,7 +26,7 @@ func GetTime() string {
 
 //GetParent returns the parent sha of the specified commit.
 func GetParent(currentSha string) (string, error) {
-	currentInfo, err := ioutil.ReadFile(path.Join(".svcs/history", currentSha+".txt"))
+	currentInfo, err := ioutil.ReadFile(path.Join(".svcs/commits", currentSha+".txt"))
 	if err != nil {
 		return "", err
 	}

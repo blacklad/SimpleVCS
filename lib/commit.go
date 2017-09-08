@@ -10,7 +10,7 @@ import (
 
 //CreateCommit creates and writes to the message file, info file and creates the files file.
 func CreateCommit(info string, hash string, message string) error {
-	infoFile, err := os.Create(path.Join(".svcs/history", hash+".txt"))
+	infoFile, err := os.Create(path.Join(".svcs/commits", hash+".txt"))
 	if err != nil {
 		return err
 	}
@@ -18,12 +18,12 @@ func CreateCommit(info string, hash string, message string) error {
 	if err != nil {
 		return err
 	}
-	fileEntriesPath := path.Join(".svcs/history", hash+"_files.txt")
+	fileEntriesPath := path.Join(".svcs/trees", hash+".txt")
 	_, err = os.Create(fileEntriesPath)
 	if err != nil {
 		return err
 	}
-	messageFile, err := os.Create(path.Join(".svcs/history", hash+"_message.txt"))
+	messageFile, err := os.Create(path.Join(".svcs/commits", hash+"_message.txt"))
 	if err != nil {
 		return err
 	}

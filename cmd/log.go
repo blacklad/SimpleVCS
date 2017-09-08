@@ -18,7 +18,7 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		message, err := ioutil.ReadFile(path.Join(".svcs/history", currentSha+"_message.txt"))
+		message, err := ioutil.ReadFile(path.Join(".svcs/commits", currentSha+"_message.txt"))
 		if err != nil {
 			return err
 		}

@@ -76,7 +76,7 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	fileEntriesPath := path.Join(".svcs/history", sumString+"_files.txt")
+	fileEntriesPath := path.Join(".svcs/trees", sumString+".txt")
 	fileEntriesFile, err := os.OpenFile(fileEntriesPath, os.O_APPEND, 0666)
 	if err != nil {
 		return err

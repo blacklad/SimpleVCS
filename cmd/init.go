@@ -14,7 +14,11 @@ func InitRepo(repoName string) error {
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(".svcs/history", 0700)
+	err = os.Mkdir(".svcs/commits", 0700)
+	if err != nil {
+		return err
+	}
+	err = os.Mkdir(".svcs/trees", 0700)
 	if err != nil {
 		return err
 	}

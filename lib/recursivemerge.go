@@ -59,17 +59,17 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 	if err != nil {
 		return err
 	}
-	fromFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", currentFromSha+"_files.txt"))
+	fromFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", currentFromSha+".txt"))
 	if err != nil {
 		return err
 	}
 	fromFiles := string(fromFilesByte)
-	toFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", currentToSha+"_files.txt"))
+	toFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", currentToSha+".txt"))
 	if err != nil {
 		return err
 	}
 	toFiles := string(toFilesByte)
-	parentFilesByte, err := ioutil.ReadFile(path.Join(".svcs/history", parentSha+"_files.txt"))
+	parentFilesByte, err := ioutil.ReadFile(path.Join(".svcs/trees", parentSha+".txt"))
 	if err != nil {
 		return err
 	}
@@ -277,7 +277,7 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 	if err != nil {
 		return err
 	}
-	filesPath := path.Join(".svcs/history", commitHash+"_files.txt")
+	filesPath := path.Join(".svcs/trees", commitHash+".txt")
 	filesFile, err := os.Create(filesPath)
 	if err != nil {
 		return err

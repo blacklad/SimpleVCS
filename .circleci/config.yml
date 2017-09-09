@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/SimpleVCS
+    docker:
+      - image: golang:1.9.0
+    steps:
+      - checkout
+      - run: go test ./...

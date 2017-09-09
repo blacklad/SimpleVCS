@@ -10,7 +10,11 @@ import (
 
 //Commit creates the commit.
 func Commit(message string, files []string) (string, error) {
-	info, infoSum, err := getCommitInfo()
+	treeHash, err := setFiles(files)
+	if err != nil {
+		return "", err
+	}
+	info, infoSum, err := getCommitInfo(treeHash)
 	if err != nil {
 		return "", err
 	}
@@ -18,7 +22,6 @@ func Commit(message string, files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	setFiles(infoSum, files)
 	return infoSum, err
 }
 
@@ -39,7 +42,7 @@ func createCommitFiles(info string, hash string, message string) error {
 	return err
 }
 
-func getCommitInfo() (string, string, error) {
+func getCommitInfo(treeHash string) (string, string, error) {
 	head, err := GetHead()
 	if err != nil {
 		return "", "", err
@@ -52,21 +55,23 @@ func getCommitInfo() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	message := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum
+	message := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum + "\ntree " + treeHash
 	hash := sha1.Sum([]byte(message))
 	return message, fmt.Sprintf("%x", hash), nil
 }
 
-func setFiles(commitHash string, files []string) error {
-	file, err := os.Create(path.Join(".svcs/trees", commitHash+".txt"))
+func setFiles(files []string) (string, error) {
 	var content string
-	if err != nil {
-		return err
-	}
 	for _, line := range files {
 		content = content + line + "\n"
 	}
+	hash := sha1.Sum([]byte(content))
+	hashString := fmt.Sprintf("%x", hash)
+	file, err := os.Create(path.Join(".svcs/trees", hashString+".txt"))
+	if err != nil {
+		return "", err
+	}
 	zippedContent := Zip([]byte(content))
 	_, err = file.WriteString(zippedContent)
-	return err
+	return hashString, err
 }

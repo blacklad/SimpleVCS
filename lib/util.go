@@ -24,6 +24,25 @@ func GetTime() string {
 	return time.Now().Format("20060102150405")
 }
 
+//GetTree gets the tree hash of a commit hash.
+func GetTree(commitSha string) (string, error) {
+	commitFile, err := ioutil.ReadFile(path.Join(".svcs/commits", commitSha+".txt"))
+	if err != nil {
+		return "", err
+	}
+	commitArr := strings.Split(string(commitFile), "\n")
+	for _, line := range commitArr {
+		if line == "" {
+			continue
+		}
+		mapping := strings.Split(line, " ")
+		if mapping[0] == "tree" {
+			return mapping[1], nil
+		}
+	}
+	return "", nil
+}
+
 //GetParent returns the parent sha of the specified commit.
 func GetParent(currentSha string) (string, error) {
 	currentInfo, err := ioutil.ReadFile(path.Join(".svcs/commits", currentSha+".txt"))
@@ -95,7 +114,11 @@ func GetHead() (string, error) {
 
 //GetFiles gets the files of a specified commit
 func GetFiles(commitHash string) ([]string, error) {
-	filesEntryPath := path.Join(".svcs/trees", commitHash+".txt")
+	treeHash, err := GetTree(commitHash)
+	if err != nil {
+		return nil, err
+	}
+	filesEntryPath := path.Join(".svcs/trees", treeHash+".txt")
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
 	if err != nil {
 		return nil, err

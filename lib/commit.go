@@ -67,7 +67,7 @@ func setFiles(files []string) (string, error) {
 	}
 	hash := sha1.Sum([]byte(content))
 	hashString := fmt.Sprintf("%x", hash)
-	file, err := os.Create(path.Join(".svcs/trees", hashString+".txt"))
+	file, err := os.Create(path.Join(".svcs/trees", hashString))
 	if err != nil {
 		return "", err
 	}

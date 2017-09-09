@@ -121,7 +121,7 @@ func GetFiles(commitHash string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	filesEntryPath := path.Join(".svcs/trees", treeHash+".txt")
+	filesEntryPath := path.Join(".svcs/trees", treeHash)
 	filesContent, err := ioutil.ReadFile(filesEntryPath)
 	if err != nil {
 		return nil, err

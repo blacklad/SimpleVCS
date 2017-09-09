@@ -3,6 +3,9 @@ package lib
 import (
 	"bytes"
 	"compress/gzip"
+	"crypto/sha1"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -124,6 +127,10 @@ func GetFiles(commitHash string) ([]string, error) {
 		return nil, err
 	}
 	unzippedFiles := Unzip(filesContent)
+	newHash := sha1.Sum([]byte(unzippedFiles))
+	if treeHash != fmt.Sprintf("%x", newHash) {
+		return nil, errors.New("data has been tampered with")
+	}
 	files := strings.Split(unzippedFiles, "\n")
 	return files, nil
 }

@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/SimpleVCS
+    working_directory: /go/src/github.com/MSathieu/SimpleVCS/
     docker:
       - image: golang:1.9.0
     steps:

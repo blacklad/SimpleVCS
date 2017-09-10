@@ -37,7 +37,7 @@ func Commit(message string) error {
 	return err
 }
 func visit(filePath string, fileInfo os.FileInfo, err error) error {
-	fixedPath := strings.Replace(filePath, "\\", "/", -1)
+	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
 		if pathPart == ".svcs" || pathPart == ".git" || pathPart == ".hg" || pathPart == ".svn" {

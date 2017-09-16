@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"strings"
 )
 
 //Commit creates the commit.
@@ -61,10 +62,7 @@ func getCommitInfo(treeHash string) (string, string, error) {
 }
 
 func setFiles(files []string) (string, error) {
-	var content string
-	for _, line := range files {
-		content = content + line + "\n"
-	}
+	content := strings.Join(files, "\n")
 	hash := sha1.Sum([]byte(content))
 	hashString := fmt.Sprintf("%x", hash)
 	file, err := os.Create(path.Join(".svcs/trees", hashString))

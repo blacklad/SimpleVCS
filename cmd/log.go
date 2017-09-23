@@ -2,9 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path"
-	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -32,24 +29,11 @@ func Log(branch string) error {
 	}
 	for _, sha := range commits {
 		fmt.Println(sha)
-		info, err := ioutil.ReadFile(path.Join(".svcs/commits", sha+".txt"))
+		commit, err := lib.GetCommit(sha)
 		if err != nil {
 			return err
 		}
-		infoSplit := strings.Split(string(info), "\n")
-		for _, line := range infoSplit {
-			if line == "" {
-				continue
-			}
-			lineSplit := strings.Fields(line)
-			if lineSplit[0] == "message" {
-				decoded, err := lib.Decode(lineSplit[1])
-				if err != nil {
-					return err
-				}
-				fmt.Println(decoded + "\n")
-			}
-		}
+		fmt.Println(commit.Message + "\n")
 	}
 	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -11,19 +12,12 @@ import (
 //Log logs all commits.
 func Log(branch string) error {
 	var commits []string
-	var commitMessages []string
 	lastSha, _, err := lib.ConvertToCommit(branch)
 	if err != nil {
 		return err
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		message, err := ioutil.ReadFile(path.Join(".svcs/commits", currentSha+"_message.txt"))
-		if err != nil {
-			return err
-		}
-		messageString := lib.Unzip(message)
-		commitMessages = append(commitMessages, messageString)
 		currentSha, err = lib.GetParent(currentSha)
 		if err != nil {
 			return err
@@ -36,12 +30,26 @@ func Log(branch string) error {
 	for i := 0; i < len(commits)/2; i++ {
 		commits[i], commits[last-i] = commits[last-i], commits[i]
 	}
-	for i := 0; i < len(commitMessages)/2; i++ {
-		commitMessages[i], commitMessages[last-i] = commitMessages[last-i], commitMessages[i]
-	}
-	for i, sha := range commits {
+	for _, sha := range commits {
 		fmt.Println(sha)
-		fmt.Println(commitMessages[i])
+		info, err := ioutil.ReadFile(path.Join(".svcs/commits", sha+".txt"))
+		if err != nil {
+			return err
+		}
+		infoSplit := strings.Split(string(info), "\n")
+		for _, line := range infoSplit {
+			if line == "" {
+				continue
+			}
+			lineSplit := strings.Fields(line)
+			if lineSplit[0] == "message" {
+				decoded, err := lib.Decode(lineSplit[1])
+				if err != nil {
+					return err
+				}
+				fmt.Println(decoded + "\n")
+			}
+		}
 	}
 	return nil
 }

@@ -15,36 +15,27 @@ func Commit(message string, files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	info, infoSum, err := getCommitInfo(treeHash)
+	info, infoSum, err := getCommitInfo(treeHash, message)
 	if err != nil {
 		return "", err
 	}
-	err = createCommitFiles(info, infoSum, message)
+	err = createCommitFiles(info, infoSum)
 	if err != nil {
 		return "", err
 	}
 	return infoSum, err
 }
 
-func createCommitFiles(info string, hash string, message string) error {
+func createCommitFiles(info string, hash string) error {
 	infoFile, err := os.Create(path.Join(".svcs/commits", hash+".txt"))
 	if err != nil {
 		return err
 	}
 	_, err = infoFile.WriteString(info)
-	if err != nil {
-		return err
-	}
-	messageFile, err := os.Create(path.Join(".svcs/commits", hash+"_message.txt"))
-	if err != nil {
-		return err
-	}
-	messageZipped := Zip([]byte(message))
-	_, err = messageFile.WriteString(messageZipped)
 	return err
 }
 
-func getCommitInfo(treeHash string) (string, string, error) {
+func getCommitInfo(treeHash string, message string) (string, string, error) {
 	head, err := GetHead()
 	if err != nil {
 		return "", "", err
@@ -57,9 +48,9 @@ func getCommitInfo(treeHash string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	message := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum + "\ntree " + treeHash
-	hash := sha1.Sum([]byte(message))
-	return message, fmt.Sprintf("%x", hash), nil
+	info := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum + "\ntree " + treeHash + "\nmessage " + Encode(message)
+	hash := sha1.Sum([]byte(info))
+	return info, fmt.Sprintf("%x", hash), nil
 }
 
 func setFiles(files []string) (string, error) {

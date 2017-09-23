@@ -60,6 +60,10 @@ func main() {
 		err = cmd.Pull(flag.Arg(1))
 	case "push":
 		err = cmd.Push(flag.Arg(1))
+	case "ignore":
+		err = cmd.Ignore(flag.Arg(1))
+	case "unignore":
+		err = cmd.UnIgnore(flag.Arg(1))
 	default:
 		flag.Usage()
 	}

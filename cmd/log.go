@@ -22,7 +22,8 @@ func Log(branch string) error {
 		if err != nil {
 			return err
 		}
-		commitMessages = append(commitMessages, string(message))
+		messageString := lib.Unzip(message)
+		commitMessages = append(commitMessages, messageString)
 		currentSha, err = lib.GetParent(currentSha)
 		if err != nil {
 			return err

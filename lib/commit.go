@@ -39,7 +39,8 @@ func createCommitFiles(info string, hash string, message string) error {
 	if err != nil {
 		return err
 	}
-	_, err = messageFile.WriteString(message)
+	messageZipped := Zip([]byte(message))
+	_, err = messageFile.WriteString(messageZipped)
 	return err
 }
 

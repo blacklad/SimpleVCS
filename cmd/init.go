@@ -47,6 +47,6 @@ func InitRepo(repoName string) error {
 	if err != nil {
 		return err
 	}
-	_, err := os.Create(".svcs/ignore.txt")
+	_, err = os.Create(".svcs/ignore.txt")
 	return err
 }

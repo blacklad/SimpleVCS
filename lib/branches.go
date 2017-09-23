@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const branchesFile = ".svcs/branches.txt"
+
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
 	var branches []string
@@ -59,13 +61,13 @@ func RemoveBranch(branch string) error {
 
 //ReadBranches reads the content of branches.txt into an array.
 func ReadBranches() ([]string, error) {
-	branchesContent, err := ioutil.ReadFile(".svcs/branches.txt")
+	branchesContent, err := ioutil.ReadFile(branchesFile)
 	return strings.Split(string(branchesContent), "\n"), err
 }
 
 //WriteBranches writes the array to branches.txt.
 func WriteBranches(branches []string) error {
-	branchesFile, err := os.Create(".svcs/branches.txt")
+	branchesFile, err := os.Create(branchesFile)
 	if err != nil {
 		return err
 	}

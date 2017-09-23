@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const tagsFile = ".svcs/tags.txt"
+
 //CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
 	var tags []string
@@ -51,13 +53,13 @@ func RemoveTag(tag string) error {
 
 //ReadTags reads the tags.txt file into an array
 func ReadTags() ([]string, error) {
-	tagsContent, err := ioutil.ReadFile(".svcs/tags.txt")
+	tagsContent, err := ioutil.ReadFile(tagsFile)
 	return strings.Split(string(tagsContent), "\n"), err
 }
 
 //WriteTags writes an array to tags.txt.
 func WriteTags(tags []string) error {
-	tagsFile, err := os.Create(".svcs/tags.txt")
+	tagsFile, err := os.Create(tagsFile)
 	if err != nil {
 		return err
 	}

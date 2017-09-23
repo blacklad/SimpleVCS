@@ -6,9 +6,11 @@ import (
 	"strings"
 )
 
+const ignoreFile = ".svcs/ignore.txt"
+
 //Ignore ignores the file.
 func Ignore(fileName string) error {
-	file, err := os.OpenFile(".svcs/ignore.txt", os.O_APPEND, 0700)
+	file, err := os.OpenFile(ignoreFile, os.O_APPEND, 0700)
 	if err != nil {
 		return err
 	}
@@ -18,12 +20,12 @@ func Ignore(fileName string) error {
 
 //UnIgnore unignores the file.
 func UnIgnore(fileName string) error {
-	fileContent, err := ioutil.ReadFile(".svcs/ignore.txt")
+	fileContent, err := ioutil.ReadFile(ignoreFile)
 	if err != nil {
 		return err
 	}
 	fileArr := strings.Split(string(fileContent), "\n")
-	file, err := os.Create(".svcs/ignore.txt")
+	file, err := os.Create(ignoreFile)
 	if err != nil {
 		return err
 	}

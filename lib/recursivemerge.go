@@ -256,7 +256,7 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			}
 		}
 	}
-	commitHash, err := Commit("Merged branch "+fromBranch+"into "+toBranch+".", filesArr)
+	commitHash, err := CreateCommit("Merged branch "+fromBranch+"into "+toBranch+".", filesArr)
 	if err != nil {
 		return err
 	}

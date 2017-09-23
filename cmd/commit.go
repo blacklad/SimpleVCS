@@ -29,7 +29,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	sumString, err := lib.Commit(message, files)
+	sumString, err := lib.CreateCommit(message, files)
 	if err != nil {
 		return err
 	}

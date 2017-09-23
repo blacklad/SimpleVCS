@@ -11,7 +11,7 @@ import (
 
 //Pull pulls the latest changes.
 func Pull(url string) error {
-	conn, err := net.Dial("udp", url)
+	conn, err := net.Dial("tcp", url)
 	if err != nil {
 		return err
 	}

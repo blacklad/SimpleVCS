@@ -58,15 +58,15 @@ func CreateCommit(message string, files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	info, infoSum, err := createCommitInfo(treeHash, message)
+	info, err := createCommitInfo(treeHash, message)
 	if err != nil {
 		return "", err
 	}
-	err = createCommitFile(info, infoSum)
+	sum, err := info.Commit()
 	if err != nil {
 		return "", err
 	}
-	return infoSum, err
+	return sum, err
 }
 func createCommitFile(info string, hash string) error {
 	infoFile, err := os.Create(path.Join(".svcs/commits", hash+".txt"))
@@ -77,24 +77,31 @@ func createCommitFile(info string, hash string) error {
 	return err
 }
 
-func createCommitInfo(treeHash string, message string) (string, string, error) {
+func createCommitInfo(treeHash string, message string) (Commit, error) {
 	head, err := GetHead()
 	if err != nil {
-		return "", "", err
+		return Commit{}, err
 	}
 	parentSum, _, err := ConvertToCommit(head)
 	if err != nil {
-		return "", "", err
+		return Commit{}, err
 	}
 	currentUser, err := user.Current()
 	if err != nil {
-		return "", "", err
+		return Commit{}, err
 	}
-	info := "author " + currentUser.Username + "\ntime " + GetTime() + "\nparent " + parentSum + "\ntree " + treeHash + "\nmessage " + Encode(message)
-	hash := sha1.Sum([]byte(info))
-	return info, fmt.Sprintf("%x", hash), nil
+	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: parentSum, Tree: treeHash, Message: Encode(message)}
+	return commit, nil
 }
 
+//Commit commits.
+func (commit Commit) Commit() (string, error) {
+	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree + "\nmessage " + commit.Message
+	hash := sha1.Sum([]byte(info))
+	hashString := fmt.Sprintf("%x", hash)
+	err := createCommitFile(info, hashString)
+	return hashString, err
+}
 func setFiles(files []string) (string, error) {
 	content := strings.Join(files, "\n")
 	hash := sha1.Sum([]byte(content))

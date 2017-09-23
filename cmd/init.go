@@ -44,5 +44,9 @@ func InitRepo(repoName string) error {
 		return err
 	}
 	_, err = head.WriteString("master")
+	if err != nil {
+		return err
+	}
+	_, err := os.Create(".svcs/ignore.txt")
 	return err
 }

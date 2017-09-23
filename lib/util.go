@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"crypto/sha1"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -133,4 +134,16 @@ func GetFiles(commitHash string) ([]string, error) {
 	}
 	files := strings.Split(unzippedFiles, "\n")
 	return files, nil
+}
+
+//Encode base64 encodes the string.
+func Encode(decoded string) string {
+	encoded := base64.StdEncoding.EncodeToString([]byte(decoded))
+	return encoded
+}
+
+//Decode decodes the string.
+func Decode(encoded string) (string, error) {
+	decoded, err := base64.StdEncoding.DecodeString(encoded)
+	return string(decoded), err
 }

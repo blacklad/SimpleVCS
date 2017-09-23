@@ -59,6 +59,10 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
+	fileContentString := string(fileContent)
+	fileContentString = strings.Replace(fileContentString, "\r\n", "\n", -1)
+	fileContentString = strings.Replace(fileContentString, "\r", "\n", -1)
+	fileContent = []byte(fileContentString)
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
 	contentSum := fmt.Sprintf("%x", sha1.Sum(fileContent))
 	newPath := path.Join(".svcs/files", contentSum)

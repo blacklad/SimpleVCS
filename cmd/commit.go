@@ -40,7 +40,11 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
-		if pathPart == ".svcs" || pathPart == ".git" || pathPart == ".hg" || pathPart == ".svn" {
+		ignored, err := lib.CheckIgnored(pathPart)
+		if err != nil {
+			return err
+		}
+		if ignored {
 			return nil
 		}
 	}

@@ -15,7 +15,7 @@ func Commit(message string, files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	info, infoSum, err := getCommitInfo(treeHash, message)
+	info, infoSum, err := createCommitInfo(treeHash, message)
 	if err != nil {
 		return "", err
 	}
@@ -35,7 +35,7 @@ func createCommitFiles(info string, hash string) error {
 	return err
 }
 
-func getCommitInfo(treeHash string, message string) (string, string, error) {
+func createCommitInfo(treeHash string, message string) (string, string, error) {
 	head, err := GetHead()
 	if err != nil {
 		return "", "", err

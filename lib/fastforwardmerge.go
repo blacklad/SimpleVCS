@@ -1,24 +1,13 @@
 package lib
 
 // CheckForFastForward checkis if fastforward merge is possible.
-func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
-	fromCommit, _, err := ConvertToCommit(fromBranch)
-	if err != nil {
-		return false, err
-	}
-	toCommit, _, err := ConvertToCommit(toBranch)
-	if err != nil {
-		return false, err
-	}
-	if toCommit.Hash == "" || fromCommit.Hash == "" {
+func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
+	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return false, nil
 	}
-	for currentCommit := fromCommit; true; {
-		if currentCommit.Hash == toCommit.Hash {
+	for currentCommit := fromBranch.Commit; true; {
+		if currentCommit.Hash == toBranch.Commit.Hash {
 			return true, nil
-		}
-		if err != nil {
-			return false, err
 		}
 		parentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
@@ -30,11 +19,7 @@ func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
 }
 
 //PerformFastForward performs fastforward merge, before calling this you should call CheckForFastforward.
-func PerformFastForward(fromBranch string, toBranch string) error {
-	fromSha, _, err := ConvertToCommit(fromBranch)
-	if err != nil {
-		return err
-	}
-	err = UpdateBranch(toBranch, fromSha.Hash)
+func PerformFastForward(fromBranch Branch, toBranch Branch) error {
+	err := UpdateBranch(toBranch.Name, fromBranch.Commit.Hash)
 	return err
 }

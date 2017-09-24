@@ -17,6 +17,9 @@ var files []string
 
 //Commit commits the current directory.
 func Commit(message string) error {
+	if message == "" {
+		return errors.New("you must specify a message")
+	}
 	head, err := lib.GetHead()
 	if err != nil {
 		return err

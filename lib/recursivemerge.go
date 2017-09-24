@@ -21,10 +21,11 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (str
 	}
 	for currentSha := currentFromSha; true; {
 		fromCommits = append(fromCommits, currentSha)
-		currentSha, err = GetParent(currentSha)
+		commit, err := GetCommit(currentSha)
 		if err != nil {
 			return "", err
 		}
+		currentSha = commit.Parent
 		if currentSha == "" {
 			break
 		}
@@ -35,10 +36,11 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (str
 				return currentSha, nil
 			}
 		}
-		currentSha, err = GetParent(currentSha)
+		commit, err := GetCommit(currentSha)
 		if err != nil {
 			return "", err
 		}
+		currentSha = commit.Parent
 		if currentSha == "" {
 			break
 		}

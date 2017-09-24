@@ -15,10 +15,11 @@ func Log(branch string) error {
 	}
 	for currentSha := lastSha; true; {
 		commits = append(commits, currentSha)
-		currentSha, err = lib.GetParent(currentSha)
+		commit, err := lib.GetCommit(currentSha)
 		if err != nil {
 			return err
 		}
+		currentSha = commit.Parent
 		if currentSha == "" {
 			break
 		}

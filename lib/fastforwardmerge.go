@@ -17,10 +17,11 @@ func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
 		if currentSha == toSha {
 			return true, nil
 		}
-		currentSha, err = GetParent(currentSha)
+		commit, err := GetCommit(currentSha)
 		if err != nil {
 			return false, err
 		}
+		currentSha = commit.Parent
 	}
 	return false, nil
 }

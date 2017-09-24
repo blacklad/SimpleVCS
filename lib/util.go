@@ -37,15 +37,6 @@ func GetTree(commitSha string) (string, error) {
 	return commit.Tree, nil
 }
 
-//GetParent returns the parent sha of the specified commit.
-func GetParent(currentSha string) (string, error) {
-	info, err := GetCommit(currentSha)
-	if err != nil {
-		return "", err
-	}
-	return info.Parent, nil
-}
-
 //Zip zips the argument and returns the zipped content.
 func Zip(text []byte) string {
 	var compBytes bytes.Buffer

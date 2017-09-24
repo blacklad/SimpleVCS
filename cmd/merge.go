@@ -28,12 +28,12 @@ func Merge(fromBranchString string) error {
 		err := lib.PerformFastForward(fromBranch, toBranch)
 		return err
 	}
-	parentSha, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
+	parent, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
 	if err != nil {
 		return err
 	}
-	if parentSha != "" {
-		err := lib.PerformRecursive(fromBranchString, toBranchString, parentSha)
+	if parent.Hash != "" {
+		err := lib.PerformRecursive(fromBranch, toBranch, parent)
 		return err
 	}
 	return errors.New("could not merge")

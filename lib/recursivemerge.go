@@ -5,17 +5,17 @@ import (
 	"strings"
 )
 
-//CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor sha.
-func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (string, error) {
+//CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor.
+func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (Commit, error) {
 	var fromCommits []string
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
-		return "", nil
+		return Commit{}, nil
 	}
 	for currentCommit := fromBranch.Commit; true; {
 		fromCommits = append(fromCommits, currentCommit.Hash)
 		currentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
-			return "", err
+			return Commit{}, err
 		}
 		if currentCommit.Hash == "" {
 			break
@@ -24,43 +24,31 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (str
 	for currentCommit := toBranch.Commit; true; {
 		for _, fromCommit := range fromCommits {
 			if fromCommit == currentCommit.Hash {
-				return currentCommit.Hash, nil
+				return currentCommit, nil
 			}
 		}
 		currentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
-			return "", err
+			return Commit{}, err
 		}
 		if currentCommit.Hash == "" {
 			break
 		}
 	}
-	return "", nil
+	return Commit{}, nil
 }
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
-func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
-	fromCommit, _, err := ConvertToCommit(fromBranch)
+func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
+	fromFilesArr, err := fromBranch.Commit.GetFiles()
 	if err != nil {
 		return err
 	}
-	toCommit, _, err := ConvertToCommit(toBranch)
+	toFilesArr, err := toBranch.Commit.GetFiles()
 	if err != nil {
 		return err
 	}
-	fromFilesArr, err := fromCommit.GetFiles()
-	if err != nil {
-		return err
-	}
-	toFilesArr, err := toCommit.GetFiles()
-	if err != nil {
-		return err
-	}
-	parentCommit, err := GetCommit(parentSha)
-	if err != nil {
-		return err
-	}
-	parentFilesArr, err := parentCommit.GetFiles()
+	parentFilesArr, err := parent.GetFiles()
 	if err != nil {
 		return err
 	}
@@ -252,11 +240,11 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 			}
 		}
 	}
-	commitHash, err := CreateCommit("Merged branch "+fromBranch+"into "+toBranch+".", filesArr)
+	commitHash, err := CreateCommit("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
 	if err != nil {
 		return err
 	}
-	err = UpdateBranch(toBranch, commitHash)
+	err = UpdateBranch(toBranch.Name, commitHash)
 	if err != nil {
 		return err
 	}

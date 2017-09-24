@@ -23,6 +23,9 @@ type Commit struct {
 
 //GetCommit gets the commit specified by the hash.
 func GetCommit(hash string) (Commit, error) {
+	if hash == "" {
+		return Commit{}, nil
+	}
 	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/commits", hash))
 	if err != nil {
 		return Commit{}, err

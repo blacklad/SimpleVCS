@@ -6,25 +6,14 @@ import (
 )
 
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor sha.
-func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (string, error) {
+func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (string, error) {
 	var fromCommits []string
-	currentFromCommit, _, err := ConvertToCommit(fromBranch)
-	if err != nil {
-		return "", err
-	}
-	currentToCommit, _, err := ConvertToCommit(toBranch)
-	if err != nil {
-		return "", err
-	}
-	if currentToCommit.Hash == "" || currentFromCommit.Hash == "" {
+	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return "", nil
 	}
-	for currentCommit := currentFromCommit; true; {
+	for currentCommit := fromBranch.Commit; true; {
 		fromCommits = append(fromCommits, currentCommit.Hash)
-		if err != nil {
-			return "", err
-		}
-		currentCommit, err = GetCommit(currentCommit.Parent)
+		currentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
 			return "", err
 		}
@@ -32,16 +21,13 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (str
 			break
 		}
 	}
-	for currentCommit := currentToCommit; true; {
+	for currentCommit := toBranch.Commit; true; {
 		for _, fromCommit := range fromCommits {
-			if fromCommit == currentToCommit.Hash {
+			if fromCommit == currentCommit.Hash {
 				return currentCommit.Hash, nil
 			}
 		}
-		if err != nil {
-			return "", err
-		}
-		currentCommit, err = GetCommit(currentCommit.Parent)
+		currentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
 			return "", err
 		}

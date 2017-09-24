@@ -24,7 +24,11 @@ func ListTags() error {
 }
 
 //RemoveTag removes a tag.
-func RemoveTag(tag string) error {
-	err := lib.RemoveTag(tag)
+func RemoveTag(name string) error {
+	tag, err := lib.GetTag(name)
+	if err != nil {
+		return err
+	}
+	err = tag.Remove()
 	return err
 }

@@ -15,6 +15,20 @@ type Tag struct {
 
 const tagsFile = ".svcs/tags.txt"
 
+//GetTag gets the tag.
+func GetTag(name string) (Tag, error) {
+	tags, err := ReadTags()
+	if err != nil {
+		return Tag{}, err
+	}
+	for _, tag := range tags {
+		if tag.Name == name {
+			return tag, nil
+		}
+	}
+	return Tag{}, nil
+}
+
 //CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
 	var tags []Tag
@@ -37,15 +51,15 @@ func CreateTag(tag string, sha string) error {
 	return err
 }
 
-//RemoveTag removes the tag.
-func RemoveTag(tag string) error {
+//Remove removes the tag.
+func (tag Tag) Remove() error {
 	var tags []Tag
 	tagsArr, err := ReadTags()
 	if err != nil {
 		return err
 	}
 	for _, loopTag := range tagsArr {
-		if loopTag.Name == tag {
+		if loopTag.Name == tag.Name {
 			continue
 		}
 		tags = append(tags, loopTag)

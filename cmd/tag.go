@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -16,7 +15,11 @@ func CreateTag(tag string, sha string) error {
 //ListTags lists all tags.
 func ListTags() error {
 	tags, err := lib.ReadTags()
-	fmt.Print(strings.Join(tags, "\n"))
+	var list string
+	for _, tag := range tags {
+		list = list + tag.Name + " " + tag.Commit.Hash + "\n"
+	}
+	fmt.Println(list)
 	return err
 }
 

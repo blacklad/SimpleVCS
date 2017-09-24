@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -16,62 +17,75 @@ const tagsFile = ".svcs/tags.txt"
 
 //CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
-	var tags []string
+	var tags []Tag
 	tagsArr, err := ReadTags()
 	if err != nil {
 		return err
 	}
-	for _, line := range tagsArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		tags = append(tags, line)
-		if lineSplit[0] == tag {
-			return nil
+	for _, loopTag := range tagsArr {
+		tags = append(tags, loopTag)
+		if loopTag.Name == tag {
+			return errors.New("tag already exists")
 		}
 	}
-	tags = append(tags, tag+" "+sha)
+	commit, err := GetCommit(sha)
+	if err != nil {
+		return err
+	}
+	tags = append(tags, Tag{Name: tag, Commit: commit})
 	err = WriteTags(tags)
 	return err
 }
 
 //RemoveTag removes the tag.
 func RemoveTag(tag string) error {
-	var tags []string
+	var tags []Tag
 	tagsArr, err := ReadTags()
 	if err != nil {
 		return err
 	}
-	for _, line := range tagsArr {
-		if line == "" {
+	for _, loopTag := range tagsArr {
+		if loopTag.Name == tag {
 			continue
 		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == tag {
-			continue
-		}
-		tags = append(tags, line)
+		tags = append(tags, loopTag)
 	}
 	err = WriteTags(tags)
 	return err
 }
 
 //ReadTags reads the tags.txt file into an array
-func ReadTags() ([]string, error) {
+func ReadTags() ([]Tag, error) {
 	tagsContent, err := ioutil.ReadFile(tagsFile)
-	return strings.Split(string(tagsContent), "\n"), err
+	if err != nil {
+		return nil, err
+	}
+	var tags []Tag
+	for _, line := range strings.Split(string(tagsContent), "\n") {
+		if line == "" {
+			continue
+		}
+		split := strings.Fields(line)
+		commit, err := GetCommit(split[1])
+		if err != nil {
+			return nil, err
+		}
+		tags = append(tags, Tag{Name: split[0], Commit: commit})
+	}
+	return tags, nil
 }
 
 //WriteTags writes an array to tags.txt.
-func WriteTags(tags []string) error {
+func WriteTags(tags []Tag) error {
 	tagsFile, err := os.Create(tagsFile)
 	if err != nil {
 		return err
 	}
-	for _, line := range tags {
-		_, err = tagsFile.WriteString(line + "\n")
-		return err
+	for _, tag := range tags {
+		_, err = tagsFile.WriteString(tag.Name + " " + tag.Commit.Hash + "\n")
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

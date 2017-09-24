@@ -22,15 +22,16 @@ type Commit struct {
 
 //GetCommit gets the commit specified by the hash.
 func GetCommit(hash string) (Commit, error) {
-	file, err := ioutil.ReadFile(path.Join(".svcs/commits", hash+".txt"))
+	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/commits", hash))
 	if err != nil {
 		return Commit{}, err
 	}
-	newSha := sha1.Sum(file)
+	file := Unzip(zippedFile)
+	newSha := sha1.Sum([]byte(file))
 	if hash != fmt.Sprintf("%x", newSha) {
 		return Commit{}, errors.New("data has been tampered with")
 	}
-	split := strings.Split(string(file), "\n")
+	split := strings.Split(file, "\n")
 	var author, time, parent, tree, message string
 	for _, line := range split {
 		if line == "" {
@@ -74,11 +75,12 @@ func CreateCommit(message string, files []string) (string, error) {
 	return sum, err
 }
 func createCommitFile(info string, hash string) error {
-	infoFile, err := os.Create(path.Join(".svcs/commits", hash+".txt"))
+	infoFile, err := os.Create(path.Join(".svcs/commits", hash))
 	if err != nil {
 		return err
 	}
-	_, err = infoFile.WriteString(info)
+	zipped := Zip([]byte(info))
+	_, err = infoFile.WriteString(zipped)
 	return err
 }
 

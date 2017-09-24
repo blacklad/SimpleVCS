@@ -9,8 +9,19 @@ import (
 )
 
 //CreateBranch creates a branch.
-func CreateBranch(branch string, sha string) error {
-	err := lib.CreateBranch(branch, sha)
+func CreateBranch(branch string) error {
+	currentBranch, err := lib.GetHead()
+	if err != nil {
+		return err
+	}
+	if currentBranch == "DETACHED" {
+		return errors.New("can't create branch in detached state")
+	}
+	sha, _, err := lib.ConvertToCommit(currentBranch)
+	if err != nil {
+		return err
+	}
+	err = lib.CreateBranch(branch, sha)
 	return err
 }
 

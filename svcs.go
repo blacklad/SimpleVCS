@@ -46,7 +46,7 @@ func main() {
 	case "branch":
 		switch flag.Arg(1) {
 		case "create":
-			err = cmd.CreateBranch(flag.Arg(2), flag.Arg(3))
+			err = cmd.CreateBranch(flag.Arg(2))
 		case "delete":
 			err = cmd.RemoveBranch(flag.Arg(2))
 		case "list":

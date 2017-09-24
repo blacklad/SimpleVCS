@@ -15,6 +15,20 @@ type Branch struct {
 
 const branchesFile = ".svcs/branches.txt"
 
+//GetBranch gets a branch
+func GetBranch(name string) (Branch, error) {
+	branches, err := ReadBranches()
+	if err != nil {
+		return Branch{}, err
+	}
+	for _, branch := range branches {
+		if branch.Name == name {
+			return branch, nil
+		}
+	}
+	return Branch{}, nil
+}
+
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
 	var branches []Branch

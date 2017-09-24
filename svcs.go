@@ -38,11 +38,11 @@ func main() {
 			err = cmd.CreateTag(flag.Arg(2), flag.Arg(3))
 		case "delete":
 			err = cmd.RemoveTag(flag.Arg(2))
+		case "list":
+			err = cmd.ListTags()
 		default:
-			flag.Usage()
+			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}
-	case "tags":
-		err = cmd.ListTags()
 	case "branch":
 		switch flag.Arg(1) {
 		case "create":
@@ -52,7 +52,7 @@ func main() {
 		case "list":
 			err = cmd.ListBranches()
 		default:
-			flag.Usage()
+			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}
 	case "merge":
 		err = cmd.Merge(flag.Arg(1))
@@ -65,7 +65,7 @@ func main() {
 	case "unignore":
 		err = cmd.UnIgnore(flag.Arg(1))
 	default:
-		flag.Usage()
+		fmt.Println("Invalid command, run --help to get a list of the commands.")
 	}
 	if err != nil {
 		log.Fatal(err)

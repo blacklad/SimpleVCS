@@ -17,22 +17,22 @@ const branchesFile = ".svcs/branches.txt"
 
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
-	var branches []string
+	var branches []Branch
 	branchesArr, err := ReadBranches()
 	if err != nil {
 		return err
 	}
-	for _, line := range branchesArr {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		branches = append(branches, line)
-		if lineSplit[0] == branch {
+	for _, loopBranch := range branchesArr {
+		branches = append(branches, loopBranch)
+		if loopBranch.Name == branch {
 			return errors.New("branch exists")
 		}
 	}
-	branches = append(branches, branch+" "+sha)
+	commit, err := GetCommit(sha)
+	if err != nil {
+		return err
+	}
+	branches = append(branches, Branch{Name: branch, Commit: commit})
 	err = WriteBranches(branches)
 	return err
 }
@@ -49,36 +49,47 @@ func UpdateBranch(branch string, sha string) error {
 
 //RemoveBranch removes branch.
 func RemoveBranch(branch string) error {
-	var branches []string
+	var branches []Branch
 	branchesArr, err := ReadBranches()
-	for _, line := range branchesArr {
-		if line == "" {
+	for _, loopBranch := range branchesArr {
+		if loopBranch.Name == branch {
 			continue
 		}
-		lineSplit := strings.Split(line, " ")
-		if lineSplit[0] == branch {
-			continue
-		}
-		branches = append(branches, line)
+		branches = append(branches, loopBranch)
 	}
 	WriteBranches(branches)
 	return err
 }
 
 //ReadBranches reads the content of branches.txt into an array.
-func ReadBranches() ([]string, error) {
+func ReadBranches() ([]Branch, error) {
 	branchesContent, err := ioutil.ReadFile(branchesFile)
-	return strings.Split(string(branchesContent), "\n"), err
+	if err != nil {
+		return nil, err
+	}
+	var branches []Branch
+	for _, line := range strings.Split(string(branchesContent), "\n") {
+		if line == "" {
+			continue
+		}
+		split := strings.Fields(line)
+		commit, err := GetCommit(split[1])
+		if err != nil {
+			return nil, err
+		}
+		branches = append(branches, Branch{Name: split[0], Commit: commit})
+	}
+	return branches, nil
 }
 
 //WriteBranches writes the array to branches.txt.
-func WriteBranches(branches []string) error {
+func WriteBranches(branches []Branch) error {
 	branchesFile, err := os.Create(branchesFile)
 	if err != nil {
 		return err
 	}
-	for _, line := range branches {
-		_, err = branchesFile.WriteString(line + "\n")
+	for _, branch := range branches {
+		_, err = branchesFile.WriteString(branch.Name + " " + branch.Commit.Hash + "\n")
 		if err != nil {
 			return err
 		}

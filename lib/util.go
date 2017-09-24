@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -53,13 +52,9 @@ func ConvertToCommit(convertFrom string) (Commit, bool, error) {
 		return Commit{}, false, err
 	}
 	for _, branch := range branches {
-		if branch == "" {
-			continue
-		}
-		mapping := strings.Split(branch, " ")
-		if convertFrom == mapping[0] {
+		if convertFrom == branch.Name {
 			isBranch = true
-			commitHash = mapping[1]
+			commitHash = branch.Commit.Hash
 		}
 	}
 	commit, err := GetCommit(commitHash)

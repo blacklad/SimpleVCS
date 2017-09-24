@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -28,11 +27,12 @@ func CreateBranch(branch string) error {
 //ListBranches prints the branches to the output.
 func ListBranches() error {
 	branches, err := lib.ReadBranches()
-	if err != nil {
-		return err
+	var list string
+	for _, branch := range branches {
+		list = list + branch.Name + " " + branch.Commit.Hash + "\n"
 	}
-	fmt.Print(strings.Join(branches, "\n"))
-	return nil
+	fmt.Println(list)
+	return err
 }
 
 //RemoveBranch removes a branch.

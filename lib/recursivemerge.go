@@ -58,15 +58,27 @@ func PerformRecursive(fromBranch string, toBranch string, parentSha string) erro
 	if err != nil {
 		return err
 	}
-	fromFilesArr, err := GetFiles(currentFromSha)
+	fromCommit, err := GetCommit(currentFromSha)
 	if err != nil {
 		return err
 	}
-	toFilesArr, err := GetFiles(currentToSha)
+	fromFilesArr, err := fromCommit.GetFiles()
 	if err != nil {
 		return err
 	}
-	parentFilesArr, err := GetFiles(parentSha)
+	toCommit, err := GetCommit(currentToSha)
+	if err != nil {
+		return err
+	}
+	toFilesArr, err := toCommit.GetFiles()
+	if err != nil {
+		return err
+	}
+	parentCommit, err := GetCommit(parentSha)
+	if err != nil {
+		return err
+	}
+	parentFilesArr, err := parentCommit.GetFiles()
 	if err != nil {
 		return err
 	}

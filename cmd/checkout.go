@@ -19,7 +19,11 @@ func Checkout(commitHash string) error {
 	if err != nil {
 		return err
 	}
-	files, err := lib.GetFiles(commitHash)
+	commit, err := lib.GetCommit(commitHash)
+	if err != nil {
+		return err
+	}
+	files, err := commit.GetFiles()
 	if err != nil {
 		return err
 	}

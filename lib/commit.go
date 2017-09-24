@@ -26,6 +26,10 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
+	newSha := sha1.Sum(file)
+	if hash != fmt.Sprintf("%x", newSha) {
+		return Commit{}, errors.New("data has been tampered with")
+	}
 	split := strings.Split(string(file), "\n")
 	var author, time, parent, tree, message string
 	for _, line := range split {

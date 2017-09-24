@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+//Branch is the branch object
+type Branch struct {
+	Name   string
+	Commit Commit
+}
+
 const branchesFile = ".svcs/branches.txt"
 
 //CreateBranch creates the specified branch

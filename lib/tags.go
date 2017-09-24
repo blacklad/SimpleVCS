@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+//Tag is the tag object
+type Tag struct {
+	Name   string
+	Commit Commit
+}
+
 const tagsFile = ".svcs/tags.txt"
 
 //CreateTag creates a tag.

@@ -9,18 +9,17 @@ import (
 //Log logs all commits.
 func Log(branch string) error {
 	var commits []string
-	lastSha, _, err := lib.ConvertToCommit(branch)
+	lastCommit, _, err := lib.ConvertToCommit(branch)
 	if err != nil {
 		return err
 	}
-	for currentSha := lastSha; true; {
-		commits = append(commits, currentSha)
-		commit, err := lib.GetCommit(currentSha)
+	for currentCommit := lastCommit; true; {
+		commits = append(commits, currentCommit.Hash)
+		currentCommit, err = lib.GetCommit(currentCommit.Parent)
 		if err != nil {
 			return err
 		}
-		currentSha = commit.Parent
-		if currentSha == "" {
+		if currentCommit.Hash == "" {
 			break
 		}
 	}

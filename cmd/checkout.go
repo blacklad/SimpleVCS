@@ -15,7 +15,8 @@ import (
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
 	checkoutBranch := commitHash
-	commitHash, isBranch, err := lib.ConvertToCommit(commitHash)
+	currentCommit, isBranch, err := lib.ConvertToCommit(commitHash)
+	commitHash = currentCommit.Hash
 	if err != nil {
 		return err
 	}

@@ -18,6 +18,7 @@ type Commit struct {
 	Parent  string
 	Tree    string
 	Message string
+	Hash    string
 }
 
 //GetCommit gets the commit specified by the hash.
@@ -55,7 +56,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	return Commit{Author: author, Time: time, Parent: parent, Tree: tree, Message: message}, nil
+	return Commit{Author: author, Time: time, Parent: parent, Tree: tree, Message: message, Hash: hash}, nil
 }
 
 //CreateCommit creates the commit.
@@ -89,7 +90,7 @@ func createCommitInfo(treeHash string, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	parentSum, _, err := ConvertToCommit(head)
+	parent, _, err := ConvertToCommit(head)
 	if err != nil {
 		return Commit{}, err
 	}
@@ -97,7 +98,7 @@ func createCommitInfo(treeHash string, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: parentSum, Tree: treeHash, Message: Encode(message)}
+	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: parent.Hash, Tree: treeHash, Message: Encode(message)}
 	return commit, nil
 }
 

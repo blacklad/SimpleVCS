@@ -2,26 +2,29 @@ package lib
 
 // CheckForFastForward checkis if fastforward merge is possible.
 func CheckForFastForward(fromBranch string, toBranch string) (bool, error) {
-	fromSha, _, err := ConvertToCommit(fromBranch)
+	fromCommit, _, err := ConvertToCommit(fromBranch)
 	if err != nil {
 		return false, err
 	}
-	toSha, _, err := ConvertToCommit(toBranch)
+	toCommit, _, err := ConvertToCommit(toBranch)
 	if err != nil {
 		return false, err
 	}
-	if toSha == "" || fromSha == "" {
+	if toCommit.Hash == "" || fromCommit.Hash == "" {
 		return false, nil
 	}
-	for currentSha := fromSha; true; {
-		if currentSha == toSha {
+	for currentCommit := fromCommit; true; {
+		if currentCommit.Hash == toCommit.Hash {
 			return true, nil
 		}
-		commit, err := GetCommit(currentSha)
 		if err != nil {
 			return false, err
 		}
-		currentSha = commit.Parent
+		parentCommit, err := GetCommit(currentCommit.Parent)
+		if err != nil {
+			return false, err
+		}
+		currentCommit = parentCommit
 	}
 	return false, nil
 }
@@ -32,6 +35,6 @@ func PerformFastForward(fromBranch string, toBranch string) error {
 	if err != nil {
 		return err
 	}
-	err = UpdateBranch(toBranch, fromSha)
+	err = UpdateBranch(toBranch, fromSha.Hash)
 	return err
 }

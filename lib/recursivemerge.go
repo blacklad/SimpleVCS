@@ -8,40 +8,44 @@ import (
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor sha.
 func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (string, error) {
 	var fromCommits []string
-	currentFromSha, _, err := ConvertToCommit(fromBranch)
+	currentFromCommit, _, err := ConvertToCommit(fromBranch)
 	if err != nil {
 		return "", err
 	}
-	currentToSha, _, err := ConvertToCommit(toBranch)
+	currentToCommit, _, err := ConvertToCommit(toBranch)
 	if err != nil {
 		return "", err
 	}
-	if currentToSha == "" || currentFromSha == "" {
+	if currentToCommit.Hash == "" || currentFromCommit.Hash == "" {
 		return "", nil
 	}
-	for currentSha := currentFromSha; true; {
-		fromCommits = append(fromCommits, currentSha)
-		commit, err := GetCommit(currentSha)
+	for currentCommit := currentFromCommit; true; {
+		fromCommits = append(fromCommits, currentCommit.Hash)
 		if err != nil {
 			return "", err
 		}
-		currentSha = commit.Parent
-		if currentSha == "" {
+		currentCommit, err = GetCommit(currentCommit.Parent)
+		if err != nil {
+			return "", err
+		}
+		if currentCommit.Hash == "" {
 			break
 		}
 	}
-	for currentSha := currentToSha; true; {
+	for currentCommit := currentToCommit; true; {
 		for _, fromCommit := range fromCommits {
-			if fromCommit == currentSha {
-				return currentSha, nil
+			if fromCommit == currentToCommit.Hash {
+				return currentCommit.Hash, nil
 			}
 		}
-		commit, err := GetCommit(currentSha)
 		if err != nil {
 			return "", err
 		}
-		currentSha = commit.Parent
-		if currentSha == "" {
+		currentCommit, err = GetCommit(currentCommit.Parent)
+		if err != nil {
+			return "", err
+		}
+		if currentCommit.Hash == "" {
 			break
 		}
 	}
@@ -50,23 +54,15 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch string, toBranch string) (str
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
 func PerformRecursive(fromBranch string, toBranch string, parentSha string) error {
-	currentFromSha, _, err := ConvertToCommit(fromBranch)
+	fromCommit, _, err := ConvertToCommit(fromBranch)
 	if err != nil {
 		return err
 	}
-	currentToSha, _, err := ConvertToCommit(toBranch)
-	if err != nil {
-		return err
-	}
-	fromCommit, err := GetCommit(currentFromSha)
+	toCommit, _, err := ConvertToCommit(toBranch)
 	if err != nil {
 		return err
 	}
 	fromFilesArr, err := fromCommit.GetFiles()
-	if err != nil {
-		return err
-	}
-	toCommit, err := GetCommit(currentToSha)
 	if err != nil {
 		return err
 	}

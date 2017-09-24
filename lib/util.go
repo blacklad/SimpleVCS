@@ -45,12 +45,12 @@ func Unzip(text []byte) string {
 }
 
 //ConvertToCommit converts a branch to a hash
-func ConvertToCommit(convertFrom string) (string, bool, error) {
+func ConvertToCommit(convertFrom string) (Commit, bool, error) {
 	isBranch := false
 	commitHash := convertFrom
 	branches, err := ReadBranches()
 	if err != nil {
-		return "", false, err
+		return Commit{}, false, err
 	}
 	for _, branch := range branches {
 		if branch == "" {
@@ -62,7 +62,8 @@ func ConvertToCommit(convertFrom string) (string, bool, error) {
 			commitHash = mapping[1]
 		}
 	}
-	return commitHash, isBranch, nil
+	commit, err := GetCommit(commitHash)
+	return commit, isBranch, err
 }
 
 //GetHead returns the head.

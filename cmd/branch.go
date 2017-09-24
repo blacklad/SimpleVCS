@@ -17,11 +17,11 @@ func CreateBranch(branch string) error {
 	if currentBranch == "DETACHED" {
 		return errors.New("can't create branch in detached state")
 	}
-	sha, _, err := lib.ConvertToCommit(currentBranch)
+	commit, _, err := lib.ConvertToCommit(currentBranch)
 	if err != nil {
 		return err
 	}
-	err = lib.CreateBranch(branch, sha)
+	err = lib.CreateBranch(branch, commit.Hash)
 	return err
 }
 

@@ -74,11 +74,14 @@ func main() {
 
 func usage() {
 	fmt.Println("Commands:")
-	fmt.Println("\tCommit: Commits the current workspace to the directory specified by the branch option.")
+	fmt.Println("\tCommit: Commits the current workspace.")
 	fmt.Println("\tcheckout: Checks out the provided branch/sha.")
 	fmt.Println("\tlog: Logs all commits of the branch specified by the branch option.")
 	fmt.Println("\ttag: The tag command.")
 	fmt.Println("\tbranch: The branch command.")
+	fmt.Println("\tpull: Pulls the latest changes from the server.")
+	fmt.Println("\tpush: Pushes the changes to the server.")
+	fmt.Println("\tmerge: Merges two branches.")
 	fmt.Println("Arguments:")
 	flag.PrintDefaults()
 }

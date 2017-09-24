@@ -25,18 +25,18 @@ func GetTime() string {
 }
 
 //Zip zips the argument and returns the zipped content.
-func Zip(text []byte) string {
+func Zip(text string) string {
 	var compBytes bytes.Buffer
 	comp := gzip.NewWriter(&compBytes)
-	comp.Write(text)
+	comp.Write([]byte(text))
 	comp.Close()
 	return compBytes.String()
 }
 
 //Unzip unzips the argument and returns the normal content.
-func Unzip(text []byte) string {
+func Unzip(text string) string {
 	var compBytes bytes.Buffer
-	compBytes.Write(text)
+	compBytes.Write([]byte(text))
 	comp, _ := gzip.NewReader(&compBytes)
 	var outputBytes bytes.Buffer
 	outputBytes.ReadFrom(comp)

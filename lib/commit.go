@@ -27,7 +27,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	file := Unzip(zippedFile)
+	file := Unzip(string(zippedFile))
 	newSha := sha1.Sum([]byte(file))
 	if hash != fmt.Sprintf("%x", newSha) {
 		return Commit{}, errors.New("data has been tampered with")
@@ -80,7 +80,7 @@ func createCommitFile(info string, hash string) error {
 	if err != nil {
 		return err
 	}
-	zipped := Zip([]byte(info))
+	zipped := Zip(info)
 	_, err = infoFile.WriteString(zipped)
 	return err
 }
@@ -118,7 +118,7 @@ func setFiles(files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	zippedContent := Zip([]byte(content))
+	zippedContent := Zip(content)
 	_, err = file.WriteString(zippedContent)
 	return hashString, err
 }
@@ -130,7 +130,7 @@ func (commit Commit) GetFiles() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	unzippedFiles := Unzip(filesContent)
+	unzippedFiles := Unzip(string(filesContent))
 	newHash := sha1.Sum([]byte(unzippedFiles))
 	if commit.Tree != fmt.Sprintf("%x", newHash) {
 		return nil, errors.New("data has been tampered with")

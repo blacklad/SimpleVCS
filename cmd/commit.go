@@ -66,7 +66,7 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
 	contentSum := fmt.Sprintf("%x", sha1.Sum(fileContent))
 	newPath := path.Join(".svcs/files", contentSum)
-	zippedContent := lib.Zip(fileContent)
+	zippedContent := lib.Zip(string(fileContent))
 	newFile, err := os.Create(newPath)
 	if err != nil {
 		return err

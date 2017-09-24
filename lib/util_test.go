@@ -6,24 +6,23 @@ import (
 	"testing"
 )
 
+const data = "testing"
+
 func TestZip(t *testing.T) {
-	data := "testing"
 	byteData := []byte(data)
 	var compBytes bytes.Buffer
 	comp := gzip.NewWriter(&compBytes)
 	comp.Write(byteData)
 	comp.Close()
 	zippedData := compBytes.String()
-	testData := Zip(byteData)
+	testData := Zip(data)
 	if testData != zippedData {
 		t.Fail()
 	}
 }
 
 func TestUnzip(t *testing.T) {
-	data := "testing"
-	byteData := []byte(data)
-	zippedStringData := Zip(byteData)
+	zippedStringData := Zip(data)
 	zippedData := []byte(zippedStringData)
 	var compBytes bytes.Buffer
 	compBytes.Write(zippedData)
@@ -31,7 +30,7 @@ func TestUnzip(t *testing.T) {
 	var outputBytes bytes.Buffer
 	outputBytes.ReadFrom(comp)
 	comp.Close()
-	if outputBytes.String() != Unzip(zippedData) {
+	if outputBytes.String() != Unzip(string(zippedData)) {
 		t.Fail()
 	}
 }

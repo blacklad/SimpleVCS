@@ -44,7 +44,7 @@ func Checkout(commitHash string) error {
 		for _, element := range splitFileArr {
 			toDir = toDir + element + "/"
 		}
-		unzippedContent := lib.Unzip(fileContent)
+		unzippedContent := lib.Unzip(string(fileContent))
 		newSum := sha1.Sum([]byte(unzippedContent))
 		newSumString := fmt.Sprintf("%x", newSum)
 		if newSumString != mapping[1] {

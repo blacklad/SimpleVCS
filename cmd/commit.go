@@ -17,14 +17,14 @@ var files []string
 
 //Commit commits the current directory.
 func Commit(message string) error {
-	head, err := ioutil.ReadFile(".svcs/head.txt")
+	head, err := lib.GetHead()
 	if err != nil {
 		return err
 	}
-	if string(head) == "DETACHED" {
+	if head == "DETACHED" {
 		return errors.New("cannot commit in detached state")
 	}
-	branch := string(head)
+	branch := head
 	err = filepath.Walk(".", visit)
 	if err != nil {
 		return err

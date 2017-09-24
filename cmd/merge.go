@@ -2,18 +2,16 @@ package cmd
 
 import (
 	"errors"
-	"io/ioutil"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 //Merge merges two branches.
 func Merge(fromBranch string) error {
-	toBranchBytes, err := ioutil.ReadFile(".svcs/head.txt")
+	toBranch, err := lib.GetHead()
 	if err != nil {
 		return err
 	}
-	toBranch := string(toBranchBytes)
 	fastForward, err := lib.CheckForFastForward(fromBranch, toBranch)
 	if err != nil {
 		return err

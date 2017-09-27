@@ -64,6 +64,8 @@ func main() {
 		err = cmd.Ignore(flag.Arg(1))
 	case "unignore":
 		err = cmd.UnIgnore(flag.Arg(1))
+	case "status":
+		err = cmd.Status()
 	default:
 		fmt.Println("Invalid command, run --help to get a list of the commands.")
 	}

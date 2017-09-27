@@ -35,7 +35,7 @@ func GetTree(hash string) (Tree, error) {
 			continue
 		}
 		lineSplit := strings.Split(line, " ")
-		filesFile, err := GetFile(lineSplit[0])
+		filesFile, err := GetFile(lineSplit[1])
 		if err != nil {
 			return Tree{}, err
 		}

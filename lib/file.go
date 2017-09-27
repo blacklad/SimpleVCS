@@ -1,10 +1,8 @@
 package lib
 
 import (
-	"crypto/sha1"
-	"errors"
-	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 )
 
@@ -24,9 +22,18 @@ func GetFile(hash string) (File, error) {
 		return File{}, err
 	}
 	file := Unzip(string(zippedFile))
-	newSha := sha1.Sum([]byte(file))
-	if hash != fmt.Sprintf("%x", newSha) {
-		return File{}, errors.New("data has been tampered with")
+	err = CheckIntegrity(file, hash)
+	return File{Content: file, Hash: hash}, err
+}
+
+//Save saves the file
+func (file File) Save() error {
+	path := path.Join(".svcs/files", file.Hash)
+	zippedContent := Zip(file.Content)
+	newFile, err := os.Create(path)
+	if err != nil {
+		return err
 	}
-	return File{Content: file, Hash: hash}, nil
+	_, err = newFile.WriteString(zippedContent)
+	return err
 }

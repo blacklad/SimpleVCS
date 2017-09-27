@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"errors"
 	"io/ioutil"
 	"path"
 	"strings"
@@ -26,7 +25,7 @@ func GetTree(hash string) (Tree, error) {
 	file := Unzip(string(zippedFile))
 	err = CheckIntegrity(file, hash)
 	if err != nil {
-		return Tree{}, errors.New("data has been tampered with")
+		return Tree{}, err
 	}
 	var files []File
 	var names []string

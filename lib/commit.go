@@ -2,7 +2,6 @@ package lib
 
 import (
 	"crypto/sha1"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -132,20 +131,4 @@ func setFiles(files []string) (Tree, error) {
 	}
 	tree, err := GetTree(hashString)
 	return tree, err
-}
-
-//GetFiles gets the files of a specified commit
-func (commit Commit) GetFiles() ([]string, error) {
-	filesEntryPath := path.Join(".svcs/trees", commit.Tree)
-	filesContent, err := ioutil.ReadFile(filesEntryPath)
-	if err != nil {
-		return nil, err
-	}
-	unzippedFiles := Unzip(string(filesContent))
-	newHash := sha1.Sum([]byte(unzippedFiles))
-	if commit.Tree != fmt.Sprintf("%x", newHash) {
-		return nil, errors.New("data has been tampered with")
-	}
-	files := strings.Split(unzippedFiles, "\n")
-	return files, nil
 }

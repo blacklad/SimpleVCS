@@ -88,4 +88,5 @@ func CheckIntegrity(content string, hash string) error {
 	if hash != fmt.Sprintf("%x", newHash) {
 		return errors.New("data has been tampered with")
 	}
+	return nil
 }

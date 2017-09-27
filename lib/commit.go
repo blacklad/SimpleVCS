@@ -132,3 +132,12 @@ func setFiles(files []string) (Tree, error) {
 	tree, err := GetTree(hashString)
 	return tree, err
 }
+
+//GetFiles gets the files of a specified commit
+func (commit Commit) GetFiles() ([]string, error) {
+	var content []string
+	for i, file := range commit.Tree.Files {
+		content = append(content, commit.Tree.Names[i]+" "+file.Hash)
+	}
+	return content, nil
+}

@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 )
 
 //File is the file object.
@@ -24,6 +25,15 @@ func GetFile(hash string) (File, error) {
 	file := Unzip(string(zippedFile))
 	err = CheckIntegrity(file, hash)
 	return File{Content: file, Hash: hash}, err
+}
+
+//AddFile adds a file to the database.
+func AddFile(content string) (File, error) {
+	content = strings.Replace(content, "\r\n", "\n", -1)
+	content = strings.Replace(content, "\r", "\n", -1)
+	file := File{Content: content, Hash: GetChecksum(content)}
+	err := file.Save()
+	return file, err
 }
 
 //Save saves the file

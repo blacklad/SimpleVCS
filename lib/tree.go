@@ -40,7 +40,7 @@ func GetTree(hash string) (Tree, error) {
 			return Tree{}, err
 		}
 		files = append(files, filesFile)
-		names = append(names, lineSplit[1])
+		names = append(names, lineSplit[0])
 	}
 	return Tree{Hash: hash, Files: files, Names: names}, nil
 }

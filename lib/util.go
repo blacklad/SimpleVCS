@@ -84,9 +84,14 @@ func Decode(encoded string) (string, error) {
 
 //CheckIntegrity checks the integrity.
 func CheckIntegrity(content string, hash string) error {
-	newHash := sha1.Sum([]byte(content))
-	if hash != fmt.Sprintf("%x", newHash) {
+	if hash != GetChecksum(content) {
 		return errors.New("data has been tampered with")
 	}
 	return nil
+}
+
+//GetChecksum gets the checksum.
+func GetChecksum(data string) string {
+	checksum := sha1.Sum([]byte(data))
+	return fmt.Sprintf("%x", checksum)
 }

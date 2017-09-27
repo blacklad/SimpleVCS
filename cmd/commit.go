@@ -25,7 +25,7 @@ func Commit(message string) error {
 		return errors.New("cannot commit in detached state")
 	}
 	branch := head
-	err = filepath.Walk(".", visit)
+	err = filepath.Walk(".", commitVisit)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func Commit(message string) error {
 	err = lib.UpdateBranch(branch, sumString)
 	return err
 }
-func visit(filePath string, fileInfo os.FileInfo, err error) error {
+func commitVisit(filePath string, fileInfo os.FileInfo, err error) error {
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {

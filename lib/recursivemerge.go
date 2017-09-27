@@ -40,33 +40,13 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (Com
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
 func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
-	fromFilesArr, err := fromBranch.Commit.GetFiles()
-	if err != nil {
-		return err
-	}
-	toFilesArr, err := toBranch.Commit.GetFiles()
-	if err != nil {
-		return err
-	}
-	parentFilesArr, err := parent.GetFiles()
-	if err != nil {
-		return err
-	}
 	var toChanges []string
 	var fromChanges []string
-	for _, line := range toFilesArr {
-		if line == "" {
-			continue
-		}
-		mapping := strings.Split(line, " ")
+	for i, file := range toBranch.Commit.Tree.Files {
 		changedStatus := "created"
-		for _, parentLine := range parentFilesArr {
-			if line == "" {
-				continue
-			}
-			parentMapping := strings.Split(parentLine, " ")
-			if parentMapping[0] == mapping[0] {
-				if parentMapping[1] == mapping[1] {
+		for parentI, parentFile := range parent.Tree.Files {
+			if parent.Tree.Names[parentI] == toBranch.Commit.Tree.Names[i] {
+				if parentFile.Hash == file.Hash {
 					changedStatus = "same"
 				} else {
 					changedStatus = "changed"
@@ -74,19 +54,12 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 			}
 		}
 		if changedStatus != "same" {
-			toChanges = append(toChanges, changedStatus+" "+mapping[0])
+			toChanges = append(toChanges, changedStatus+" "+toBranch.Commit.Tree.Names[i])
 		}
 	}
-	for _, line := range parentFilesArr {
-		if line == "" {
-			continue
-		}
-		mapping := strings.Split(line, " ")
+	for _, file := range parent.Tree.Files {
 		changedStatus := "deleted"
-		for _, toLine := range toFilesArr {
-			if line == "" {
-				continue
-			}
+		for _, toFile := range toBranch.Commit.Tree.Files {
 			toMapping := strings.Split(toLine, " ")
 			if toMapping[0] == mapping[0] {
 				changedStatus = "same"

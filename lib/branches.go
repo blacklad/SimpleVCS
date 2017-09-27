@@ -87,9 +87,14 @@ func ReadBranches() ([]Branch, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		commit, err := GetCommit(split[1])
-		if err != nil {
-			return nil, err
+		var commit Commit
+		if len(split) == 2 {
+			commit, err = GetCommit(split[1])
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			commit = Commit{}
 		}
 		branches = append(branches, Branch{Name: split[0], Commit: commit})
 	}

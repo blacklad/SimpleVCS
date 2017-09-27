@@ -16,7 +16,7 @@ type Commit struct {
 	Author  string
 	Time    string
 	Parent  string
-	Tree    string
+	Tree    Tree
 	Message string
 	Hash    string
 }
@@ -31,12 +31,12 @@ func GetCommit(hash string) (Commit, error) {
 		return Commit{}, err
 	}
 	file := Unzip(string(zippedFile))
-	newSha := sha1.Sum([]byte(file))
-	if hash != fmt.Sprintf("%x", newSha) {
-		return Commit{}, errors.New("data has been tampered with")
+	err = CheckIntegrity(file, hash)
+	if err != nil {
+		return Commit{}, err
 	}
 	split := strings.Split(file, "\n")
-	var author, time, parent, tree, message string
+	var author, time, parent, treeHash, message string
 	for _, line := range split {
 		if line == "" {
 			continue
@@ -50,12 +50,16 @@ func GetCommit(hash string) (Commit, error) {
 		case "parent":
 			parent = lineSplit[1]
 		case "tree":
-			tree = lineSplit[1]
+			treeHash = lineSplit[1]
 		case "message":
 			message = lineSplit[1]
 		}
 	}
 	message, err = Decode(message)
+	if err != nil {
+		return Commit{}, err
+	}
+	tree, err := GetTree(treeHash)
 	if err != nil {
 		return Commit{}, err
 	}
@@ -72,7 +76,7 @@ func CreateCommit(message string, files []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	sum, err := info.Commit()
+	sum, err := info.Save()
 	if err != nil {
 		return "", err
 	}
@@ -105,9 +109,9 @@ func createCommitInfo(treeHash string, message string) (Commit, error) {
 	return commit, nil
 }
 
-//Commit commits.
-func (commit Commit) Commit() (string, error) {
-	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree + "\nmessage " + commit.Message
+//Save saves the commit.
+func (commit Commit) Save() (string, error) {
+	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree.Hash + "\nmessage " + commit.Message
 	hash := sha1.Sum([]byte(info))
 	hashString := fmt.Sprintf("%x", hash)
 	err := createCommitFile(info, hashString)

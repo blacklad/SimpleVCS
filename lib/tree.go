@@ -1,9 +1,7 @@
 package lib
 
 import (
-	"crypto/sha1"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"path"
 	"strings"
@@ -26,8 +24,8 @@ func GetTree(hash string) (Tree, error) {
 		return Tree{}, err
 	}
 	file := Unzip(string(zippedFile))
-	newSha := sha1.Sum([]byte(file))
-	if hash != fmt.Sprintf("%x", newSha) {
+	err = CheckIntegrity(file, hash)
+	if err != nil {
 		return Tree{}, errors.New("data has been tampered with")
 	}
 	var files []File

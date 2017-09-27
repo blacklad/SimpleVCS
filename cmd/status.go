@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -30,5 +32,30 @@ func Status() error {
 	return nil
 }
 func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
+	fixedPath := filepath.ToSlash(filePath)
+	pathArr := strings.Split(fixedPath, "/")
+	for _, pathPart := range pathArr {
+		ignored, err := lib.CheckIgnored(pathPart)
+		if err != nil {
+			return err
+		}
+		if ignored {
+			return nil
+		}
+	}
+	if fileInfo.IsDir() {
+		return nil
+	}
+	currentFileContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	checksum := lib.GetChecksum(string(currentFileContent))
+	currentPath, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
+	currentFiles = append(currentFiles, relativePath+" "+checksum)
 	return nil
 }

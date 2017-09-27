@@ -1,12 +1,9 @@
 package cmd
 
 import (
-	"crypto/sha1"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -58,26 +55,15 @@ func visit(filePath string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
+	file, err := lib.AddFile(string(fileContent))
+	if err != nil {
+		return err
+	}
 	currentPath, err := os.Getwd()
 	if err != nil {
 		return err
 	}
-	fileContentString := string(fileContent)
-	fileContentString = strings.Replace(fileContentString, "\r\n", "\n", -1)
-	fileContentString = strings.Replace(fileContentString, "\r", "\n", -1)
-	fileContent = []byte(fileContentString)
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
-	contentSum := fmt.Sprintf("%x", sha1.Sum(fileContent))
-	newPath := path.Join(".svcs/files", contentSum)
-	zippedContent := lib.Zip(string(fileContent))
-	newFile, err := os.Create(newPath)
-	if err != nil {
-		return err
-	}
-	_, err = newFile.WriteString(zippedContent)
-	if err != nil {
-		return err
-	}
-	files = append(files, relativePath+" "+contentSum)
+	files = append(files, relativePath+" "+file.Hash)
 	return err
 }

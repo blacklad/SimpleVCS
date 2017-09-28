@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -94,4 +95,20 @@ func CheckIntegrity(content string, hash string) error {
 func GetChecksum(data string) string {
 	checksum := sha1.Sum([]byte(data))
 	return fmt.Sprintf("%x", checksum)
+}
+
+//GetConfig gets the config.
+func GetConfig(key string) (string, error) {
+	file, err := ioutil.ReadFile(".svcs/settings.txt")
+	if err != nil {
+		return "", err
+	}
+	split := strings.Split(string(file), "\n")
+	for _, line := range split {
+		mapping := strings.Split(line, " ")
+		if mapping[0] == key {
+			return mapping[1], nil
+		}
+	}
+	return "", nil
 }

@@ -30,7 +30,7 @@ func InitRepo(repoName string) error {
 	if err != nil {
 		return err
 	}
-	_, err = settingsFile.WriteString("name " + repoName)
+	_, err = settingsFile.WriteString("name " + repoName + "\n")
 	if err != nil {
 		return err
 	}

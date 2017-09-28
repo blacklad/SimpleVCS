@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -18,6 +19,10 @@ func Status() error {
 	if err != nil {
 		return err
 	}
+	if head == "DETACHED" {
+		return errors.New("Can't view status in detached state")
+	}
+	fmt.Println("On branch " + head)
 	commit, _, err := lib.ConvertToCommit(head)
 	if err != nil {
 		return err

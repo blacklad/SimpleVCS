@@ -22,7 +22,10 @@ func GetTree(hash string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	file := Unzip(string(zippedFile))
+	file, err := Unzip(string(zippedFile))
+	if err != nil {
+		return Tree{}, err
+	}
 	err = CheckIntegrity(file, hash)
 	if err != nil {
 		return Tree{}, err

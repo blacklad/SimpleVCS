@@ -29,7 +29,10 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	file := Unzip(string(zippedFile))
+	file, err := Unzip(string(zippedFile))
+	if err != nil {
+		return Commit{}, err
+	}
 	err = CheckIntegrity(file, hash)
 	if err != nil {
 		return Commit{}, err
@@ -86,7 +89,10 @@ func createCommitFile(info string, hash string) error {
 	if err != nil {
 		return err
 	}
-	zipped := Zip(info)
+	zipped, err := Zip(info)
+	if err != nil {
+		return err
+	}
 	_, err = infoFile.WriteString(zipped)
 	return err
 }
@@ -124,7 +130,10 @@ func setFiles(files []string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	zippedContent := Zip(content)
+	zippedContent, err := Zip(content)
+	if err != nil {
+		return Tree{}, err
+	}
 	_, err = file.WriteString(zippedContent)
 	if err != nil {
 		return Tree{}, nil

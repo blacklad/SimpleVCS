@@ -28,23 +28,52 @@ func GetTime() string {
 }
 
 //Zip zips the argument and returns the zipped content.
-func Zip(text string) string {
+func Zip(text string) (string, error) {
+	config, err := GetConfig("zip")
+	if err != nil {
+		return "", err
+	}
+	if config == "false" {
+		return text, nil
+	}
 	var compBytes bytes.Buffer
 	comp := gzip.NewWriter(&compBytes)
-	comp.Write([]byte(text))
-	comp.Close()
-	return compBytes.String()
+	_, err = comp.Write([]byte(text))
+	if err != nil {
+		return "", err
+	}
+	err = comp.Close()
+	if err != nil {
+		return "", err
+	}
+	return compBytes.String(), nil
 }
 
 //Unzip unzips the argument and returns the normal content.
-func Unzip(text string) string {
+func Unzip(text string) (string, error) {
+	config, err := GetConfig("zip")
+	if err != nil {
+		return "", err
+	}
+	if config == "false" {
+		return text, nil
+	}
 	var compBytes bytes.Buffer
-	compBytes.Write([]byte(text))
-	comp, _ := gzip.NewReader(&compBytes)
+	_, err = compBytes.Write([]byte(text))
+	if err != nil {
+		return "", err
+	}
+	comp, err := gzip.NewReader(&compBytes)
+	if err != nil {
+		return "", err
+	}
 	var outputBytes bytes.Buffer
-	outputBytes.ReadFrom(comp)
-	comp.Close()
-	return outputBytes.String()
+	_, err = outputBytes.ReadFrom(comp)
+	if err != nil {
+		return "", err
+	}
+	err = comp.Close()
+	return outputBytes.String(), err
 }
 
 //ConvertToCommit converts a branch to a hash

@@ -22,7 +22,10 @@ func GetFile(hash string) (File, error) {
 	if err != nil {
 		return File{}, err
 	}
-	file := Unzip(string(zippedFile))
+	file, err := Unzip(string(zippedFile))
+	if err != nil {
+		return File{}, err
+	}
 	err = CheckIntegrity(file, hash)
 	return File{Content: file, Hash: hash}, err
 }
@@ -39,7 +42,10 @@ func AddFile(content string) (File, error) {
 //Save saves the file
 func (file File) Save() error {
 	path := path.Join(".svcs/files", file.Hash)
-	zippedContent := Zip(file.Content)
+	zippedContent, err := Zip(file.Content)
+	if err != nil {
+		return err
+	}
 	newFile, err := os.Create(path)
 	if err != nil {
 		return err

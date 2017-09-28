@@ -13,7 +13,9 @@ import (
 func main() {
 	flag.Usage = usage
 	var branch string
+	var zip bool
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
+	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
@@ -25,7 +27,7 @@ func main() {
 		if lib.VCSExists() {
 			log.Fatal(errors.New("already initialized"))
 		}
-		err = cmd.InitRepo(flag.Arg(1))
+		err = cmd.InitRepo(flag.Arg(1), zip)
 	case "commit":
 		err = cmd.Commit(flag.Arg(1))
 	case "checkout":

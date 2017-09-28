@@ -3,10 +3,11 @@ package cmd
 import (
 	"errors"
 	"os"
+	"strconv"
 )
 
 //InitRepo inits the repo.
-func InitRepo(repoName string) error {
+func InitRepo(repoName string, zipped bool) error {
 	if repoName == "" {
 		return errors.New("you must specify the repo name")
 	}
@@ -31,6 +32,10 @@ func InitRepo(repoName string) error {
 		return err
 	}
 	_, err = settingsFile.WriteString("name " + repoName + "\n")
+	if err != nil {
+		return err
+	}
+	_, err = settingsFile.WriteString("zip " + strconv.FormatBool(zipped) + "\n")
 	if err != nil {
 		return err
 	}

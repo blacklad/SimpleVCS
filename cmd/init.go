@@ -1,11 +1,15 @@
 package cmd
 
 import (
+	"errors"
 	"os"
 )
 
 //InitRepo inits the repo.
 func InitRepo(repoName string) error {
+	if repoName == "" {
+		return errors.New("you must specify the repo name")
+	}
 	err := os.Mkdir(".svcs", 0700)
 	if err != nil {
 		return err

@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"crypto/sha1"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -48,10 +45,9 @@ func Checkout(commitHash string) error {
 		if err != nil {
 			return err
 		}
-		newSum := sha1.Sum([]byte(unzippedContent))
-		newSumString := fmt.Sprintf("%x", newSum)
-		if newSumString != mapping[1] {
-			return errors.New("data has been tampered with")
+		err = lib.CheckIntegrity(unzippedContent, mapping[1])
+		if err != nil {
+			return err
 		}
 		err = os.MkdirAll(toDir, 666)
 		newFile, err := os.Create(mapping[0])

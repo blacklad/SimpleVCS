@@ -1,8 +1,6 @@
 package lib
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -117,16 +115,14 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 //Save saves the commit.
 func (commit Commit) Save() (string, error) {
 	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree.Hash + "\nmessage " + commit.Message
-	hash := sha1.Sum([]byte(info))
-	hashString := fmt.Sprintf("%x", hash)
-	err := createCommitFile(info, hashString)
-	return hashString, err
+	hash := GetChecksum(info)
+	err := createCommitFile(info, hash)
+	return hash, err
 }
 func setFiles(files []string) (Tree, error) {
 	content := strings.Join(files, "\n")
-	hash := sha1.Sum([]byte(content))
-	hashString := fmt.Sprintf("%x", hash)
-	file, err := os.Create(path.Join(".svcs/trees", hashString))
+	hash := GetChecksum(content)
+	file, err := os.Create(path.Join(".svcs/trees", hash))
 	if err != nil {
 		return Tree{}, err
 	}
@@ -138,7 +134,7 @@ func setFiles(files []string) (Tree, error) {
 	if err != nil {
 		return Tree{}, nil
 	}
-	tree, err := GetTree(hashString)
+	tree, err := GetTree(hash)
 	return tree, err
 }
 

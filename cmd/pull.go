@@ -23,7 +23,6 @@ func Pull(url string) error {
 	}
 	//commitsArr := strings.Split(message, "\n")
 	fmt.Fprint(conn, "branches")
-	reader = bufio.NewReader(conn)
 	message, err = reader.ReadString('\r')
 	if err != nil {
 		return err
@@ -34,7 +33,6 @@ func Pull(url string) error {
 		lib.UpdateBranch(mapping[0], mapping[1])
 	}
 	fmt.Fprint(conn, "tags")
-	reader = bufio.NewReader(conn)
 	message, err = reader.ReadString('\r')
 	if err != nil {
 		return err

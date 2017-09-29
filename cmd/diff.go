@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/MSathieu/SimpleVCS/lib"
@@ -55,6 +56,37 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 		}
 		if changed {
 			changes = append(changes, change+" "+toSplit[0])
+		}
+	}
+	for _, change := range changes {
+		fmt.Println(change + ":")
+		split := strings.Split(change, " ")
+		switch split[0] {
+		case "changed":
+			fmt.Println("old:")
+			for i, name := range fromCommit.Tree.Names {
+				if name == split[1] {
+					fmt.Println(fromCommit.Tree.Files[i].Content)
+				}
+			}
+			fmt.Println("new:")
+			for i, name := range toCommit.Tree.Names {
+				if name == split[1] {
+					fmt.Println(toCommit.Tree.Files[i].Content)
+				}
+			}
+		case "created":
+			for i, name := range toCommit.Tree.Names {
+				if name == split[1] {
+					fmt.Println(toCommit.Tree.Files[i].Content)
+				}
+			}
+		case "deleted":
+			for i, name := range fromCommit.Tree.Names {
+				if name == split[1] {
+					fmt.Println(fromCommit.Tree.Files[i].Content)
+				}
+			}
 		}
 	}
 	return nil

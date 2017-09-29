@@ -22,7 +22,7 @@ func Status() error {
 	if head == "DETACHED" {
 		return errors.New("Can't view status in detached state")
 	}
-	fmt.Println("On branch " + head)
+	fmt.Println("branch " + head)
 	commit, _, err := lib.ConvertToCommit(head)
 	if err != nil {
 		return err

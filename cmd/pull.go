@@ -21,7 +21,15 @@ func Pull(url string) error {
 	if err != nil {
 		return err
 	}
-	//commitsArr := strings.Split(message, "\n")
+	commitsArr := strings.Split(message, "\n")
+	for _, commit := range commitsArr {
+		mapping := strings.Split(commit, " ")
+		commitObject := lib.Commit{Author: mapping[0], Time: mapping[1], Parent: mapping[2], Tree: lib.Tree{Hash: mapping[3]}, Message: mapping[4]}
+		_, err = commitObject.Save()
+		if err != nil {
+			return err
+		}
+	}
 	fmt.Fprint(conn, "branches")
 	message, err = reader.ReadString('\r')
 	if err != nil {

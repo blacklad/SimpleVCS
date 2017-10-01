@@ -3,14 +3,22 @@ package cmd
 import (
 	"errors"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-var files []string
+type safeFilesSlice struct {
+	files []string
+	mutex sync.Mutex
+}
+
+var filesStruct safeFilesSlice
+var commitWait sync.WaitGroup
 
 //Commit commits the current directory.
 func Commit(message string) error {
@@ -29,41 +37,54 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	sumString, err := lib.CreateCommit(message, files)
+	commitWait.Wait()
+	sumString, err := lib.CreateCommit(message, filesStruct.files)
 	if err != nil {
 		return err
 	}
 	err = lib.UpdateBranch(branch, sumString)
-	return err
+	if err != nil {
+		return err
+	}
+	return nil
 }
 func commitVisit(filePath string, fileInfo os.FileInfo, err error) error {
+	commitWait.Add(1)
+	go concCommitVisit(filePath, fileInfo)
+	return nil
+}
+func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
 		ignored, err := lib.CheckIgnored(pathPart)
 		if err != nil {
-			return err
+			log.Fatal(err)
 		}
 		if ignored {
-			return nil
+			commitWait.Done()
+			return
 		}
 	}
 	if fileInfo.IsDir() {
-		return nil
+		commitWait.Done()
+		return
 	}
 	fileContent, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	file, err := lib.AddFile(string(fileContent))
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	currentPath, err := os.Getwd()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
-	files = append(files, relativePath+" "+file.Hash)
-	return err
+	filesStruct.mutex.Lock()
+	filesStruct.files = append(filesStruct.files, relativePath+" "+file.Hash)
+	filesStruct.mutex.Unlock()
+	commitWait.Done()
 }

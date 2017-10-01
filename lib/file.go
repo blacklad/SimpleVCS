@@ -51,5 +51,9 @@ func (file File) Save() error {
 		return err
 	}
 	_, err = newFile.WriteString(zippedContent)
+	if err != nil {
+		return err
+	}
+	err = newFile.Close()
 	return err
 }

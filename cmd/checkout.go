@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -58,12 +59,6 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	splitFileArr := strings.Split(name, "/")
-	splitFileArr = splitFileArr[:len(splitFileArr)-1]
-	toDir := ""
-	for _, element := range splitFileArr {
-		toDir = toDir + element + "/"
-	}
 	unzippedContent, err := lib.Unzip(string(fileContent))
 	if err != nil {
 		log.Fatal(err)
@@ -72,7 +67,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = os.MkdirAll(toDir, 666)
+	err = os.MkdirAll(filepath.Dir(name), 666)
 	newFile, err := os.Create(name)
 	if err != nil {
 		log.Fatal(err)

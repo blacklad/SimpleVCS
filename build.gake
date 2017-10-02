@@ -1,3 +1,2 @@
 mkdir -p build
-.CD:build
-go build ../
+go build -o build/svcs

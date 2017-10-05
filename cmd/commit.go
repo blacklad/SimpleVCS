@@ -54,6 +54,7 @@ func commitVisit(filePath string, fileInfo os.FileInfo, err error) error {
 	return nil
 }
 func concCommitVisit(filePath string, fileInfo os.FileInfo) {
+	defer commitWait.Done()
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
@@ -62,12 +63,10 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 			log.Fatal(err)
 		}
 		if ignored {
-			commitWait.Done()
 			return
 		}
 	}
 	if fileInfo.IsDir() {
-		commitWait.Done()
 		return
 	}
 	fileContent, err := ioutil.ReadFile(filePath)
@@ -84,7 +83,6 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	}
 	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
 	filesStruct.mutex.Lock()
+	defer filesStruct.mutex.Unlock()
 	filesStruct.files = append(filesStruct.files, relativePath+" "+file.Hash)
-	filesStruct.mutex.Unlock()
-	commitWait.Done()
 }

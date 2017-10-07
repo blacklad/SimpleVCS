@@ -1,0 +1,3 @@
+go get github.com/MSathieu/SimpleVCS
+mkdir build
+go build -o build/svcs github.com/MSathieu/SimpleVCS

@@ -68,6 +68,14 @@ func InitRepo(repoName string, zipped bool) error {
 	if err != nil {
 		return err
 	}
+	_, err = os.Create(".svcs/hooks/precheckout.gake")
+	if err != nil {
+		return err
+	}
+	_, err = os.Create(".svcs/hooks/postcheckout.gake")
+	if err != nil {
+		return err
+	}
 	_, err = os.Create(".svcs/ignore.txt")
 	return err
 }

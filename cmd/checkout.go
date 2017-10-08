@@ -16,6 +16,10 @@ var wait sync.WaitGroup
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
+	err = lib.ExecHook("precheckout")
+	if err != nil {
+		return err
+	}
 	checkoutBranch := commitHash
 	currentCommit, isBranch, err := lib.ConvertToCommit(commitHash)
 	if err != nil {
@@ -51,6 +55,10 @@ func Checkout(commitHash string) error {
 		return err
 	}
 	wait.Wait()
+	err = lib.ExecHook("postcheckout")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func concProcessFile(hash string, name string) {

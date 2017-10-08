@@ -16,7 +16,7 @@ var wait sync.WaitGroup
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string) error {
-	err = lib.ExecHook("precheckout")
+	err := lib.ExecHook("precheckout")
 	if err != nil {
 		return err
 	}

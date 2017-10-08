@@ -32,7 +32,6 @@ func Commit(message string) error {
 	if head == "DETACHED" {
 		return errors.New("cannot commit in detached state")
 	}
-	branch := head
 	err = filepath.Walk(".", commitVisit)
 	if err != nil {
 		return err
@@ -42,7 +41,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = lib.UpdateBranch(branch, sumString)
+	err = lib.UpdateBranch(head, sumString)
 	if err != nil {
 		return err
 	}

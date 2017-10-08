@@ -34,6 +34,9 @@ func GetFile(hash string) (File, error) {
 func AddFile(content string) (File, error) {
 	content = strings.Replace(content, "\r\n", "\n", -1)
 	content = strings.Replace(content, "\r", "\n", -1)
+	if !strings.HasSuffix(content, "\n") {
+		content = content + "\n"
+	}
 	file := File{Content: content, Hash: GetChecksum(content)}
 	err := file.Save()
 	return file, err

@@ -2,6 +2,7 @@ package lib
 
 import (
 	"io/ioutil"
+	"path"
 	"strings"
 )
 
@@ -17,7 +18,11 @@ func CheckIgnored(file string) (bool, error) {
 	}
 	ignoreArr := strings.Split(string(ignoreContent), "\n")
 	for _, line := range ignoreArr {
-		if line == file {
+		match, err := path.Match(line, file)
+		if err != nil {
+			return false, err
+		}
+		if match {
 			return true, nil
 		}
 	}

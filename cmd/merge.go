@@ -8,6 +8,10 @@ import (
 
 //Merge merges two branches.
 func Merge(fromBranchString string) error {
+	err := lib.ExecHook("premerge")
+	if err != nil {
+		return err
+	}
 	toBranchString, err := lib.GetHead()
 	if err != nil {
 		return err
@@ -25,7 +29,11 @@ func Merge(fromBranchString string) error {
 		return err
 	}
 	if fastForward {
-		err := lib.PerformFastForward(fromBranch, toBranch)
+		err = lib.PerformFastForward(fromBranch, toBranch)
+		if err != nil {
+			return err
+		}
+		err = lib.ExecHook("postmerge")
 		return err
 	}
 	parent, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
@@ -33,7 +41,11 @@ func Merge(fromBranchString string) error {
 		return err
 	}
 	if parent.Hash != "" {
-		err := lib.PerformRecursive(fromBranch, toBranch, parent)
+		err = lib.PerformRecursive(fromBranch, toBranch, parent)
+		if err != nil {
+			return err
+		}
+		err = lib.ExecHook("postmerge")
 		return err
 	}
 	return errors.New("could not merge")

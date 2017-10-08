@@ -76,6 +76,13 @@ func InitRepo(repoName string, zipped bool) error {
 	if err != nil {
 		return err
 	}
+	_, err = os.Create(".svcs/hooks/premerge.gake")
+	if err != nil {
+		return err
+	}_, err = os.Create(".svcs/hooks/postmerge.gake")
+	if err != nil {
+		return err
+	}
 	_, err = os.Create(".svcs/ignore.txt")
 	return err
 }

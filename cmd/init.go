@@ -79,7 +79,8 @@ func InitRepo(repoName string, zipped bool) error {
 	_, err = os.Create(".svcs/hooks/premerge.gake")
 	if err != nil {
 		return err
-	}_, err = os.Create(".svcs/hooks/postmerge.gake")
+	}
+	_, err = os.Create(".svcs/hooks/postmerge.gake")
 	if err != nil {
 		return err
 	}

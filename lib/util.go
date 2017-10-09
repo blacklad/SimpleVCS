@@ -7,9 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -76,30 +74,6 @@ func Unzip(text string) (string, error) {
 	return outputBytes.String(), err
 }
 
-//ConvertToCommit converts a branch to a hash
-func ConvertToCommit(convertFrom string) (Commit, bool, error) {
-	isBranch := false
-	commitHash := convertFrom
-	branches, err := ReadBranches()
-	if err != nil {
-		return Commit{}, false, err
-	}
-	for _, branch := range branches {
-		if convertFrom == branch.Name {
-			isBranch = true
-			commitHash = branch.Commit.Hash
-		}
-	}
-	commit, err := GetCommit(commitHash)
-	return commit, isBranch, err
-}
-
-//GetHead returns the head.
-func GetHead() (string, error) {
-	head, err := ioutil.ReadFile(".svcs/head.txt")
-	return string(head), err
-}
-
 //Encode base64 encodes the string.
 func Encode(decoded string) string {
 	encoded := base64.StdEncoding.EncodeToString([]byte(decoded))
@@ -124,20 +98,4 @@ func CheckIntegrity(content string, hash string) error {
 func GetChecksum(data string) string {
 	checksum := sha1.Sum([]byte(data))
 	return fmt.Sprintf("%x", checksum)
-}
-
-//GetConfig gets the config.
-func GetConfig(key string) (string, error) {
-	file, err := ioutil.ReadFile(".svcs/settings.txt")
-	if err != nil {
-		return "", err
-	}
-	split := strings.Split(string(file), "\n")
-	for _, line := range split {
-		mapping := strings.Split(line, " ")
-		if mapping[0] == key {
-			return mapping[1], nil
-		}
-	}
-	return "", nil
 }

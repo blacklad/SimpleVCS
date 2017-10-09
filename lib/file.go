@@ -32,18 +32,19 @@ func GetFile(hash string) (File, error) {
 
 //AddFile adds a file to the database.
 func AddFile(content string) (File, error) {
-	content = strings.Replace(content, "\r\n", "\n", -1)
-	content = strings.Replace(content, "\r", "\n", -1)
-	if !strings.HasSuffix(content, "\n") {
-		content = content + "\n"
-	}
-	file := File{Content: content, Hash: GetChecksum(content)}
+	file := File{Content: content}
 	err := file.Save()
 	return file, err
 }
 
 //Save saves the file
 func (file File) Save() error {
+	file.Content = strings.Replace(file.Content, "\r\n", "\n", -1)
+	file.Content = strings.Replace(file.Content, "\r", "\n", -1)
+	if !strings.HasSuffix(file.Content, "\n") {
+		file.Content = file.Content + "\n"
+	}
+	file.Hash = GetChecksum(file.Content)
 	path := path.Join(".svcs/files", file.Hash)
 	zippedContent, err := Zip(file.Content)
 	if err != nil {

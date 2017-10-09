@@ -31,13 +31,11 @@ func GetBranch(name string) (Branch, error) {
 
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
-	var branches []Branch
 	branchesArr, err := ReadBranches()
 	if err != nil {
 		return err
 	}
 	for _, loopBranch := range branchesArr {
-		branches = append(branches, loopBranch)
 		if loopBranch.Name == branch {
 			return errors.New("branch exists")
 		}
@@ -46,8 +44,8 @@ func CreateBranch(branch string, sha string) error {
 	if err != nil {
 		return err
 	}
-	branches = append(branches, Branch{Name: branch, Commit: commit})
-	err = WriteBranches(branches)
+	branchesArr = append(branchesArr, Branch{Name: branch, Commit: commit})
+	err = WriteBranches(branchesArr)
 	return err
 }
 

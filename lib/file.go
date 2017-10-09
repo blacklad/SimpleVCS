@@ -30,13 +30,6 @@ func GetFile(hash string) (File, error) {
 	return File{Content: file, Hash: hash}, err
 }
 
-//AddFile adds a file to the database.
-func AddFile(content string) (File, error) {
-	file := File{Content: content}
-	err := file.Save()
-	return file, err
-}
-
 //Save saves the file
 func (file File) Save() error {
 	file.Content = strings.Replace(file.Content, "\r\n", "\n", -1)

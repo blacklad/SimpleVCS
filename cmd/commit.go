@@ -80,7 +80,8 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	file, err := lib.AddFile(string(fileContent))
+	file := lib.File{Content: string(fileContent)}
+	err = file.Save()
 	if err != nil {
 		log.Fatal(err)
 	}

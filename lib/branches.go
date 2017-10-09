@@ -119,17 +119,19 @@ func WriteBranches(branches []Branch) error {
 //ConvertToCommit converts a branch to a hash
 func ConvertToCommit(convertFrom string) (Commit, bool, error) {
 	isBranch := false
-	commitHash := convertFrom
-	branches, err := ReadBranches()
+	branch, err := GetBranch(convertFrom)
 	if err != nil {
 		return Commit{}, false, err
 	}
-	for _, branch := range branches {
-		if convertFrom == branch.Name {
-			isBranch = true
-			commitHash = branch.Commit.Hash
+	var commit Commit
+	if branch.Name != "" {
+		isBranch = true
+		commit = branch.Commit
+	} else {
+		commit, err = GetCommit(convertFrom)
+		if err != nil {
+			return Commit{}, false, err
 		}
 	}
-	commit, err := GetCommit(commitHash)
-	return commit, isBranch, err
+	return commit, isBranch, nil
 }

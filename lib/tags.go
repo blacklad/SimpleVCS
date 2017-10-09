@@ -31,13 +31,11 @@ func GetTag(name string) (Tag, error) {
 
 //CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
-	var tags []Tag
 	tagsArr, err := ReadTags()
 	if err != nil {
 		return err
 	}
 	for _, loopTag := range tagsArr {
-		tags = append(tags, loopTag)
 		if loopTag.Name == tag {
 			return errors.New("tag already exists")
 		}
@@ -46,8 +44,8 @@ func CreateTag(tag string, sha string) error {
 	if err != nil {
 		return err
 	}
-	tags = append(tags, Tag{Name: tag, Commit: commit})
-	err = WriteTags(tags)
+	tagsArr = append(tagsArr, Tag{Name: tag, Commit: commit})
+	err = WriteTags(tagsArr)
 	return err
 }
 

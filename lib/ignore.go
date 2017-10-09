@@ -6,11 +6,18 @@ import (
 	"strings"
 )
 
+var ignoreList = []string{".svcs", ".git", ".svn", ".hg"}
+
 //CheckIgnored checks if the file/directory must be ignored.
 func CheckIgnored(file string) (bool, error) {
-	switch file {
-	case ".svcs", ".git", ".svn", ".hg":
-		return true, nil
+	for _, value := range ignoreList {
+		match, err := path.Match(value, file)
+		if err != nil {
+			return false, err
+		}
+		if match {
+			return true, nil
+		}
 	}
 	ignoreContent, err := ioutil.ReadFile(".svcs/ignore.txt")
 	if err != nil {

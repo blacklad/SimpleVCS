@@ -8,7 +8,7 @@ import (
 
 //ExecTarget executes a Gake task.
 func ExecTarget(path string) error {
-	_, err := os.Stat(path)
+	_, err := os.Stat(path + ".gake")
 	if err != nil {
 		return nil
 	}

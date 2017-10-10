@@ -2,6 +2,7 @@ package lib
 
 import (
 	"os"
+	"os/user"
 
 	gake "github.com/MSathieu/Gake/lib"
 )
@@ -20,5 +21,14 @@ func ExecTarget(path string) error {
 func ExecHook(name string) error {
 	path := ".svcs/hooks/" + name
 	err := ExecTarget(path)
+	if err != nil {
+		return err
+	}
+	user, err := user.Current()
+	if err != nil {
+		return err
+	}
+	userPath := user.HomeDir + "/.svcshooks/" + name
+	err = ExecTarget(userPath)
 	return err
 }

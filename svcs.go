@@ -13,9 +13,11 @@ import (
 func main() {
 	flag.Usage = usage
 	var branch string
+	var noHead bool
 	var zip bool
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
+	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
@@ -31,7 +33,7 @@ func main() {
 	case "commit":
 		err = cmd.Commit(flag.Arg(1))
 	case "checkout":
-		err = cmd.Checkout(flag.Arg(1))
+		err = cmd.Checkout(flag.Arg(1), noHead)
 	case "log":
 		err = cmd.Log(branch)
 	case "tag":

@@ -15,7 +15,7 @@ import (
 var wait sync.WaitGroup
 
 //Checkout checks out the specified commit.
-func Checkout(commitHash string) error {
+func Checkout(commitHash string, noHead bool) error {
 	err := lib.ExecHook("precheckout")
 	if err != nil {
 		return err
@@ -42,17 +42,19 @@ func Checkout(commitHash string) error {
 		mapping := strings.Split(fileEntry, " ")
 		go concProcessFile(mapping[1], mapping[0])
 	}
-	head, err := os.Create(".svcs/head.txt")
-	if err != nil {
-		return err
-	}
-	if isBranch {
-		_, err = head.WriteString(checkoutBranch)
-	} else {
-		_, err = head.WriteString("DETACHED")
-	}
-	if err != nil {
-		return err
+	if !noHead {
+		head, err := os.Create(".svcs/head.txt")
+		if err != nil {
+			return err
+		}
+		if isBranch {
+			_, err = head.WriteString(checkoutBranch)
+		} else {
+			_, err = head.WriteString("DETACHED")
+		}
+		if err != nil {
+			return err
+		}
 	}
 	wait.Wait()
 	err = lib.ExecHook("postcheckout")

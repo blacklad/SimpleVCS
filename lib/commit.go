@@ -68,7 +68,7 @@ func GetCommit(hash string) (Commit, error) {
 
 //CreateCommit creates the commit.
 func CreateCommit(message string, files []string) (string, error) {
-	tree, err := setFiles(files)
+	tree, err := SetFiles(files)
 	if err != nil {
 		return "", err
 	}
@@ -119,7 +119,7 @@ func (commit Commit) Save() (string, error) {
 	err := createCommitFile(info, hash)
 	return hash, err
 }
-func setFiles(files []string) (Tree, error) {
+func SetFiles(files []string) (Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := GetChecksum(content)
 	file, err := os.Create(path.Join(".svcs/trees", hash))

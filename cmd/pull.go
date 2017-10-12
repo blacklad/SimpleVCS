@@ -48,5 +48,39 @@ func Pull(url string) error {
 			return err
 		}
 	}
+	treesResponse, err := http.Get(url + "/trees")
+	if err != nil {
+		return err
+	}
+	treesBytes, err := ioutil.ReadAll(treesResponse.Body)
+	if err != nil {
+		return err
+	}
+	treesSplit := strings.Split(string(treesBytes), "\n")
+	for _, tree := range treesSplit {
+		treeSplit := strings.Split(tree, " ")
+		_, err := lib.GetTree(treeSplit[0])
+		if err != nil {
+			continue
+		}
+		decodedFiles, err := lib.Decode(treeSplit[1])
+		if err != nil {
+			return err
+		}
+		decodedNames, err := lib.Decode(treeSplit[22])
+		if err != nil {
+			return err
+		}
+		filesSplit := strings.Split(decodedFiles, " ")
+		namesSplit := strings.Split(decodedNames, " ")
+		var filesList []string
+		for i := range filesSplit {
+			filesList = append(filesList, namesSplit[i]+" "+filesSplit[i])
+		}
+		_, err = lib.SetFiles(filesList)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

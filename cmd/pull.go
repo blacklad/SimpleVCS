@@ -88,5 +88,30 @@ func Pull(url string) error {
 			return err
 		}
 	}
+	commitsResponse, err := http.Get(url + "/commits")
+	if err != nil {
+		return err
+	}
+	commitsBytes, err := ioutil.ReadAll(commitsResponse.Body)
+	if err != nil {
+		return err
+	}
+	commitsSplit := strings.Split(string(commitsBytes), "\n")
+	for _, commit := range commitsSplit {
+		if commit == "" {
+			continue
+		}
+		commitSplit := strings.Split(commit, " ")
+		_, err := lib.GetCommit(commitSplit[0])
+		if err == nil {
+			continue
+		}
+		commitTree := lib.Tree{Hash: commitSplit[3]}
+		commitObj := lib.Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
+		_, err = commitObj.Save()
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

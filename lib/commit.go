@@ -119,6 +119,8 @@ func (commit Commit) Save() (string, error) {
 	err := createCommitFile(info, hash)
 	return hash, err
 }
+
+//SetFiles creates a tree.
 func SetFiles(files []string) (Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := GetChecksum(content)

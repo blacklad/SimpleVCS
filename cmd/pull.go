@@ -69,11 +69,11 @@ func Pull(url string) error {
 		if err == nil {
 			continue
 		}
-		decodedFiles, err := lib.Decode(treeSplit[1])
+		decodedNames, err := lib.Decode(treeSplit[1])
 		if err != nil {
 			return err
 		}
-		decodedNames, err := lib.Decode(treeSplit[2])
+		decodedFiles, err := lib.Decode(treeSplit[2])
 		if err != nil {
 			return err
 		}

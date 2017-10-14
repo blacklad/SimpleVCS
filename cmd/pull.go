@@ -113,5 +113,24 @@ func Pull(url string) error {
 			return err
 		}
 	}
+	branchesResponse, err := http.Get(url + "/branches")
+	if err != nil {
+		return err
+	}
+	branchesBytes, err := ioutil.ReadAll(branchesResponse.Body)
+	if err != nil {
+		return err
+	}
+	branchesSplit := strings.Split(string(branchesBytes), "\n")
+	for _, branch := range branchesSplit {
+		if branch == "" {
+			continue
+		}
+		branchSplit := strings.Split(branch, " ")
+		err = lib.UpdateBranch(branchSplit[0], branchSplit[1])
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

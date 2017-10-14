@@ -31,7 +31,7 @@ func GetFile(hash string) (File, error) {
 }
 
 //Save saves the file
-func (file File) Save() error {
+func (file *File) Save() error {
 	file.Content = strings.Replace(file.Content, "\r\n", "\n", -1)
 	file.Content = strings.Replace(file.Content, "\r", "\n", -1)
 	if !strings.HasSuffix(file.Content, "\n") {

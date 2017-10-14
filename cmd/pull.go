@@ -33,9 +33,12 @@ func Pull(url string) error {
 	}
 	filesSplit := strings.Split(string(filesBytes), "\n")
 	for _, file := range filesSplit {
+		if file == "" {
+			continue
+		}
 		fileSplit := strings.Split(file, " ")
 		_, err := lib.GetFile(fileSplit[0])
-		if err != nil {
+		if err == nil {
 			continue
 		}
 		decodedFile, err := lib.Decode(fileSplit[1])
@@ -58,9 +61,12 @@ func Pull(url string) error {
 	}
 	treesSplit := strings.Split(string(treesBytes), "\n")
 	for _, tree := range treesSplit {
+		if tree == "" {
+			continue
+		}
 		treeSplit := strings.Split(tree, " ")
 		_, err := lib.GetTree(treeSplit[0])
-		if err != nil {
+		if err == nil {
 			continue
 		}
 		decodedFiles, err := lib.Decode(treeSplit[1])

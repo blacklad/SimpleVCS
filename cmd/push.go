@@ -54,6 +54,29 @@ func Push(url string) error {
 		return err
 	}
 	body = ""
+	branches, err := lib.ReadBranches()
+	if err != nil {
+		return err
+	}
+	for _, branch := range branches {
+		body = body + branch.Name + branch.Commit.Hash
+	}
+	_, err = http.Post(url+"/branches", "", strings.NewReader(body))
+	if err != nil {
+		return err
+	}
+	body = ""
+	tags, err := lib.ReadTags()
+	if err != nil {
+		return err
+	}
+	for _, tag := range tags {
+		body = body + tag.Name + tag.Commit.Hash
+	}
+	_, err = http.Post(url+"/tags", "", strings.NewReader(body))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func visitFilesPush(path string, info os.FileInfo, err error) error {

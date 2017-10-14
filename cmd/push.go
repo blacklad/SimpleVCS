@@ -45,6 +45,15 @@ func Push(url string) error {
 		return err
 	}
 	body = ""
+	err = filepath.Walk(".svcs/commits", visitCommitsPush)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post(url+"/commits", "", strings.NewReader(body))
+	if err != nil {
+		return err
+	}
+	body = ""
 	return nil
 }
 func visitFilesPush(path string, info os.FileInfo, err error) error {
@@ -74,5 +83,16 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 	}
 	encodedFiles := lib.Encode(strings.Join(hashes, " "))
 	body = body + info.Name() + " " + encodedNames + " " + encodedFiles
+	return nil
+}
+func visitCommitsPush(path string, info os.FileInfo, err error) error {
+	if info.IsDir() {
+		return nil
+	}
+	commit, err := lib.GetCommit(info.Name())
+	if err != nil {
+		return err
+	}
+	body = body + commit.Hash + " " + commit.Author + " " + commit.Parent + " " + commit.Tree.Hash + " " + commit.Time + " " + lib.Encode(commit.Message)
 	return nil
 }

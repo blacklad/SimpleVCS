@@ -59,7 +59,7 @@ func Push(url string) error {
 		return err
 	}
 	for _, branch := range branches {
-		body = body + branch.Name + branch.Commit.Hash
+		body = body + branch.Name + branch.Commit.Hash + "\n"
 	}
 	_, err = http.Post(url+"/branches", "", strings.NewReader(body))
 	if err != nil {
@@ -71,7 +71,7 @@ func Push(url string) error {
 		return err
 	}
 	for _, tag := range tags {
-		body = body + tag.Name + tag.Commit.Hash
+		body = body + tag.Name + tag.Commit.Hash + "\n"
 	}
 	_, err = http.Post(url+"/tags", "", strings.NewReader(body))
 	if err != nil {
@@ -105,7 +105,7 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 		hashes = append(hashes, file.Hash)
 	}
 	encodedFiles := lib.Encode(strings.Join(hashes, " "))
-	body = body + info.Name() + " " + encodedNames + " " + encodedFiles
+	body = body + info.Name() + " " + encodedNames + " " + encodedFiles + "\n"
 	return nil
 }
 func visitCommitsPush(path string, info os.FileInfo, err error) error {
@@ -116,6 +116,6 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	body = body + commit.Hash + " " + commit.Author + " " + commit.Parent + " " + commit.Tree.Hash + " " + commit.Time + " " + lib.Encode(commit.Message)
+	body = body + commit.Hash + " " + commit.Author + " " + commit.Parent + " " + commit.Tree.Hash + " " + commit.Time + " " + lib.Encode(commit.Message) + "\n"
 	return nil
 }

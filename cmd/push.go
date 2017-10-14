@@ -59,7 +59,7 @@ func Push(url string) error {
 		return err
 	}
 	for _, branch := range branches {
-		body = body + branch.Name + branch.Commit.Hash + "\n"
+		body = body + branch.Name + " " + branch.Commit.Hash + "\n"
 	}
 	_, err = http.Post(url+"/branches", "", strings.NewReader(body))
 	if err != nil {
@@ -71,7 +71,7 @@ func Push(url string) error {
 		return err
 	}
 	for _, tag := range tags {
-		body = body + tag.Name + tag.Commit.Hash + "\n"
+		body = body + tag.Name + " " + tag.Commit.Hash + "\n"
 	}
 	_, err = http.Post(url+"/tags", "", strings.NewReader(body))
 	if err != nil {

@@ -132,5 +132,26 @@ func Pull(url string) error {
 			return err
 		}
 	}
+	tagsResponse, err := http.Get(url + "/tags")
+	if err != nil {
+		return err
+	}
+	tagsBytes, err := ioutil.ReadAll(tagsResponse.Body)
+	if err != nil {
+		return err
+	}
+	tagsSplit := strings.Split(string(tagsBytes), "\n")
+	for _, tag := range tagsSplit {
+		if tag == "" {
+			continue
+		}
+		tagSplit := strings.Split(tag, " ")
+		tag, _ := lib.GetTag(tagSplit[0])
+		tag.Remove()
+		err = lib.CreateTag(tagSplit[0], tagSplit[1])
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

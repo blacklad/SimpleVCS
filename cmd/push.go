@@ -35,6 +35,16 @@ func Push(url string) error {
 	if err != nil {
 		return err
 	}
+	body = ""
+	err = filepath.Walk(".svcs/trees", visitTreesPush)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post(url+"/trees", "", strings.NewReader(body))
+	if err != nil {
+		return err
+	}
+	body = ""
 	return nil
 }
 func visitFilesPush(path string, info os.FileInfo, err error) error {
@@ -47,5 +57,22 @@ func visitFilesPush(path string, info os.FileInfo, err error) error {
 	}
 	unzipped, err := lib.Unzip(string(content))
 	body = body + info.Name() + " " + lib.Encode(unzipped) + "\n"
+	return nil
+}
+func visitTreesPush(path string, info os.FileInfo, err error) error {
+	if info.IsDir() {
+		return nil
+	}
+	tree, err := lib.GetTree(info.Name())
+	if err != nil {
+		return err
+	}
+	encodedNames := lib.Encode(strings.Join(tree.Names, " "))
+	var hashes []string
+	for _, file := range tree.Files {
+		hashes = append(hashes, file.Hash)
+	}
+	encodedFiles := lib.Encode(strings.Join(hashes, " "))
+	body = body + info.Name() + " " + encodedNames + " " + encodedFiles
 	return nil
 }

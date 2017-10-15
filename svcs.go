@@ -74,6 +74,8 @@ func main() {
 		err = cmd.Diff(flag.Arg(1), flag.Arg(2))
 	case "stats":
 		err = cmd.ShowStats()
+	case "gc":
+		err = cmd.GarbageCollect()
 	default:
 		fmt.Println("Invalid command, run --help to get a list of the commands.")
 	}

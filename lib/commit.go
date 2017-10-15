@@ -109,11 +109,11 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 }
 
 //Save saves the commit.
-func (commit Commit) Save() (string, error) {
+func (commit *Commit) Save() (string, error) {
 	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree.Hash + "\nmessage " + commit.Message
-	hash := GetChecksum(info)
-	err := createCommitFile(info, hash)
-	return hash, err
+	commit.Hash = GetChecksum(info)
+	err := createCommitFile(info, commit.Hash)
+	return commit.Hash, err
 }
 
 //SetFiles creates a tree.

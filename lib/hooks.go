@@ -19,7 +19,7 @@ func ExecTarget(path string) error {
 
 //ExecHook provides a wrapper above ExecTarget.
 func ExecHook(name string) error {
-	path := ".svcs/hooks/" + name
+	path := ".svcshooks/" + name
 	err := ExecTarget(path)
 	if err != nil {
 		return err

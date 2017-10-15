@@ -100,15 +100,11 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	parent, _, err := ConvertToCommit(head.Branch.Name)
-	if err != nil {
-		return Commit{}, err
-	}
 	currentUser, err := user.Current()
 	if err != nil {
 		return Commit{}, err
 	}
-	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: parent.Hash, Tree: tree, Message: Encode(message)}
+	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: head.Branch.Commit.Hash, Tree: tree, Message: Encode(message)}
 	return commit, nil
 }
 

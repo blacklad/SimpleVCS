@@ -23,10 +23,7 @@ func Status() error {
 		return errors.New("can't view status in detached state")
 	}
 	fmt.Println("branch " + head.Branch.Name)
-	commit, _, err := lib.ConvertToCommit(head.Branch.Name)
-	if err != nil {
-		return err
-	}
+	commit := head.Branch.Commit
 	files, err := commit.GetFiles()
 	if err != nil {
 		return err

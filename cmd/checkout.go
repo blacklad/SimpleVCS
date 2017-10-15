@@ -30,10 +30,7 @@ func Checkout(commitHash string, noHead bool) error {
 	if err != nil {
 		return err
 	}
-	files, err := commit.GetFiles()
-	if err != nil {
-		return err
-	}
+	files := commit.GetFiles()
 	for _, fileEntry := range files {
 		if fileEntry == "" {
 			continue

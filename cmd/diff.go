@@ -17,14 +17,8 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 	if err != nil {
 		return err
 	}
-	fromFiles, err := fromCommit.GetFiles()
-	if err != nil {
-		return err
-	}
-	toFiles, err := toCommit.GetFiles()
-	if err != nil {
-		return err
-	}
+	fromFiles := fromCommit.GetFiles()
+	toFiles := toCommit.GetFiles()
 	var changes []string
 	for _, line := range fromFiles {
 		change := "deleted"

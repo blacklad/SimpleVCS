@@ -6,7 +6,21 @@ import (
 	"strings"
 )
 
-var ignoreList = []string{".svcs", ".git", ".svn", ".hg", "*.o", "*.exe", "*.log", "*.out", "*.gem", "*.zip", "*.tar", "*.jar", "*.war", "*.class", ".idea"}
+var ignoreList = []string{".svcs",
+	".git",
+	".svn",
+	".hg",
+	"*.o",
+	"*.exe",
+	"*.log",
+	"*.out",
+	"*.gem",
+	"*.zip",
+	"*.tar",
+	"*.jar",
+	"*.war",
+	"*.class",
+	".idea"}
 
 //CheckIgnored checks if the file/directory must be ignored.
 func CheckIgnored(file string) (bool, error) {

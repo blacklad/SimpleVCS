@@ -24,10 +24,7 @@ func Status() error {
 	}
 	fmt.Println("branch " + head.Branch.Name)
 	commit := head.Branch.Commit
-	files, err := commit.GetFiles()
-	if err != nil {
-		return err
-	}
+	files := commit.GetFiles()
 	err = filepath.Walk(".", statusVisit)
 	if err != nil {
 		return err

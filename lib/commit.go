@@ -104,13 +104,20 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	commit := Commit{Author: currentUser.Username, Time: GetTime(), Parent: head.Branch.Commit.Hash, Tree: tree, Message: Encode(message)}
+	commit := Commit{Author: currentUser.Username,
+		Time:   GetTime(),
+		Parent: head.Branch.Commit.Hash,
+		Tree:   tree, Message: Encode(message)}
 	return commit, nil
 }
 
 //Save saves the commit.
 func (commit *Commit) Save() (string, error) {
-	info := "author " + commit.Author + "\ntime " + commit.Time + "\nparent " + commit.Parent + "\ntree " + commit.Tree.Hash + "\nmessage " + commit.Message
+	info := "author " + commit.Author +
+		"\ntime " + commit.Time +
+		"\nparent " + commit.Parent +
+		"\ntree " + commit.Tree.Hash +
+		"\nmessage " + commit.Message
 	commit.Hash = GetChecksum(info)
 	err := createCommitFile(info, commit.Hash)
 	return commit.Hash, err

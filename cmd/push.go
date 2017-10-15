@@ -118,6 +118,12 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	body = body + commit.Hash + " " + commit.Author + " " + commit.Parent + " " + commit.Tree.Hash + " " + commit.Time + " " + lib.Encode(commit.Message) + "\n"
+	body = body +
+		commit.Hash + " " +
+		commit.Author + " " +
+		commit.Parent + " " +
+		commit.Tree.Hash + " " +
+		commit.Time + " " +
+		lib.Encode(commit.Message) + "\n"
 	return nil
 }

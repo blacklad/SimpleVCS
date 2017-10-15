@@ -19,11 +19,11 @@ func Status() error {
 	if err != nil {
 		return err
 	}
-	if head == "DETACHED" {
+	if head.Detached {
 		return errors.New("can't view status in detached state")
 	}
-	fmt.Println("branch " + head)
-	commit, _, err := lib.ConvertToCommit(head)
+	fmt.Println("branch " + head.Branch.Name)
+	commit, _, err := lib.ConvertToCommit(head.Branch.Name)
 	if err != nil {
 		return err
 	}

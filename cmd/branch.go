@@ -9,18 +9,14 @@ import (
 
 //CreateBranch creates a branch.
 func CreateBranch(branch string) error {
-	currentBranch, err := lib.GetHead()
+	head, err := lib.GetHead()
 	if err != nil {
 		return err
 	}
-	if currentBranch == "DETACHED" {
+	if head.Detached {
 		return errors.New("can't create branch in detached state")
 	}
-	commit, _, err := lib.ConvertToCommit(currentBranch)
-	if err != nil {
-		return err
-	}
-	err = lib.CreateBranch(branch, commit.Hash)
+	err = lib.CreateBranch(branch, head.Branch.Commit.Hash)
 	return err
 }
 

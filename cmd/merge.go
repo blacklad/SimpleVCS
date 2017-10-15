@@ -12,15 +12,18 @@ func Merge(fromBranchString string) error {
 	if err != nil {
 		return err
 	}
-	toBranchString, err := lib.GetHead()
+	head, err := lib.GetHead()
 	if err != nil {
 		return err
+	}
+	if head.Detached {
+		return errors.New("cannot merge in detached state")
 	}
 	fromBranch, err := lib.GetBranch(fromBranchString)
 	if err != nil {
 		return err
 	}
-	toBranch, err := lib.GetBranch(toBranchString)
+	toBranch, err := lib.GetBranch(head.Branch.Name)
 	if err != nil {
 		return err
 	}

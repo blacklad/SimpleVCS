@@ -100,7 +100,7 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	parent, _, err := ConvertToCommit(head)
+	parent, _, err := ConvertToCommit(head.Branch.Name)
 	if err != nil {
 		return Commit{}, err
 	}

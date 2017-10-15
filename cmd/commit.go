@@ -29,7 +29,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	if head == "DETACHED" {
+	if head.Detached {
 		return errors.New("cannot commit in detached state")
 	}
 	err = lib.ExecHook("precommit")
@@ -45,7 +45,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = lib.UpdateBranch(head, sumString)
+	err = lib.UpdateBranch(head.Branch.Name, sumString)
 	if err != nil {
 		return err
 	}

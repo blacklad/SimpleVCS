@@ -9,8 +9,13 @@ import (
 //Tree is the tree object.
 type Tree struct {
 	Hash  string
-	Files []File
-	Names []string
+	Files []TreeFile
+}
+
+//TreeFile is the object that has a file and a name.
+type TreeFile struct {
+	File File
+	Name string
 }
 
 //GetTree gets a tree
@@ -30,8 +35,7 @@ func GetTree(hash string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	var files []File
-	var names []string
+	var files []TreeFile
 	split := strings.Split(file, "\n")
 	for _, line := range split {
 		if line == "" {
@@ -42,8 +46,7 @@ func GetTree(hash string) (Tree, error) {
 		if err != nil {
 			return Tree{}, err
 		}
-		files = append(files, filesFile)
-		names = append(names, lineSplit[0])
+		files = append(files, TreeFile{File: filesFile, Name: lineSplit[0]})
 	}
-	return Tree{Hash: hash, Files: files, Names: names}, nil
+	return Tree{Hash: hash, Files: files}, nil
 }

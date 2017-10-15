@@ -99,11 +99,13 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	encodedNames := lib.Encode(strings.Join(tree.Names, " "))
+	var names []string
 	var hashes []string
 	for _, file := range tree.Files {
-		hashes = append(hashes, file.Hash)
+		names = append(names, file.Name)
+		hashes = append(hashes, file.File.Hash)
 	}
+	encodedNames := lib.Encode(strings.Join(names, " "))
 	encodedFiles := lib.Encode(strings.Join(hashes, " "))
 	body = body + info.Name() + " " + encodedNames + " " + encodedFiles + "\n"
 	return nil

@@ -64,27 +64,27 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 		switch split[0] {
 		case "changed":
 			fmt.Println("old:")
-			for i, name := range fromCommit.Tree.Names {
-				if name == split[1] {
-					fmt.Println(fromCommit.Tree.Files[i].Content)
+			for _, file := range fromCommit.Tree.Files {
+				if file.Name == split[1] {
+					fmt.Println(file.File.Content)
 				}
 			}
 			fmt.Println("new:")
-			for i, name := range toCommit.Tree.Names {
-				if name == split[1] {
-					fmt.Println(toCommit.Tree.Files[i].Content)
+			for _, file := range toCommit.Tree.Files {
+				if file.Name == split[1] {
+					fmt.Println(file.File.Content)
 				}
 			}
 		case "created":
-			for i, name := range toCommit.Tree.Names {
-				if name == split[1] {
-					fmt.Println(toCommit.Tree.Files[i].Content)
+			for _, file := range toCommit.Tree.Files {
+				if file.Name == split[1] {
+					fmt.Println(file.File.Content)
 				}
 			}
 		case "deleted":
-			for i, name := range fromCommit.Tree.Names {
-				if name == split[1] {
-					fmt.Println(fromCommit.Tree.Files[i].Content)
+			for _, file := range fromCommit.Tree.Files {
+				if file.Name == split[1] {
+					fmt.Println(file.File.Content)
 				}
 			}
 		}

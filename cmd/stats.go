@@ -9,7 +9,8 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-var branches, tags, commits, contributors int
+var branches, tags, commits int
+var contributors []string
 
 //ShowStats displays the repo statistics.
 func ShowStats() error {
@@ -34,16 +35,26 @@ func ShowStats() error {
 	fmt.Println("branches " + strconv.Itoa(branches))
 	fmt.Println("tags " + strconv.Itoa(tags))
 	fmt.Println("commits " + strconv.Itoa(commits))
-	fmt.Println("contributors " + strconv.Itoa(contributors))
+	fmt.Println("contributors " + strconv.Itoa(len(contributors)))
 	return nil
 }
 func visitCommitStats(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	_, err = lib.GetCommit(info.Name())
+	commitObj, err := lib.GetCommit(info.Name())
 	if err != nil {
 		return err
+	}
+	var isInContributors = false
+	for _, cont := range contributors {
+		if cont == commitObj.Author {
+			isInContributors = true
+			break
+		}
+	}
+	if !isInContributors {
+		contributors = append(contributors, commitObj.Author)
 	}
 	commits++
 	return nil

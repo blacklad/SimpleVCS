@@ -49,9 +49,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		mapping := strings.Split(line, " ")
 		changedStatus := "created"
 		for _, parentLine := range parentFilesArr {
-			if line == "" {
-				continue
-			}
 			parentMapping := strings.Split(parentLine, " ")
 			if parentMapping[0] == mapping[0] {
 				if parentMapping[1] == mapping[1] {

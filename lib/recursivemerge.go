@@ -40,18 +40,9 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (Com
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
 func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
-	fromFilesArr, err := fromBranch.Commit.GetFiles()
-	if err != nil {
-		return err
-	}
-	toFilesArr, err := toBranch.Commit.GetFiles()
-	if err != nil {
-		return err
-	}
-	parentFilesArr, err := parent.GetFiles()
-	if err != nil {
-		return err
-	}
+	fromFilesArr := fromBranch.Commit.GetFiles()
+	toFilesArr := toBranch.Commit.GetFiles()
+	parentFilesArr := parent.GetFiles()
 	var toChanges []string
 	var fromChanges []string
 	for _, line := range toFilesArr {

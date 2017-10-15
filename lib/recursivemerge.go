@@ -46,9 +46,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 	var toChanges []string
 	var fromChanges []string
 	for _, line := range toFilesArr {
-		if line == "" {
-			continue
-		}
 		mapping := strings.Split(line, " ")
 		changedStatus := "created"
 		for _, parentLine := range parentFilesArr {
@@ -69,15 +66,9 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		}
 	}
 	for _, line := range parentFilesArr {
-		if line == "" {
-			continue
-		}
 		mapping := strings.Split(line, " ")
 		changedStatus := "deleted"
 		for _, toLine := range toFilesArr {
-			if line == "" {
-				continue
-			}
 			toMapping := strings.Split(toLine, " ")
 			if toMapping[0] == mapping[0] {
 				changedStatus = "same"
@@ -88,15 +79,9 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		}
 	}
 	for _, line := range fromFilesArr {
-		if line == "" {
-			continue
-		}
 		mapping := strings.Split(line, " ")
 		changedStatus := "created"
 		for _, parentLine := range parentFilesArr {
-			if line == "" {
-				continue
-			}
 			parentMapping := strings.Split(parentLine, " ")
 			if parentMapping[0] == mapping[0] {
 				if parentMapping[1] == mapping[1] {
@@ -111,15 +96,9 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		}
 	}
 	for _, line := range parentFilesArr {
-		if line == "" {
-			continue
-		}
 		mapping := strings.Split(line, " ")
 		changedStatus := "deleted"
 		for _, fromLine := range fromFilesArr {
-			if line == "" {
-				continue
-			}
 			fromMapping := strings.Split(fromLine, " ")
 			if fromMapping[0] == mapping[0] {
 				changedStatus = "same"
@@ -143,9 +122,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		mapping := strings.Split(change, " ")
 		if mapping[0] == "created" {
 			for _, file := range toFilesArr {
-				if file == "" {
-					continue
-				}
 				toMapping := strings.Split(file, " ")
 				if mapping[1] == toMapping[0] {
 					filesArr = append(filesArr, file)
@@ -155,18 +131,12 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		if mapping[0] == "changed" {
 			var updatedLine string
 			for _, file := range toFilesArr {
-				if file == "" {
-					continue
-				}
 				toMapping := strings.Split(file, " ")
 				if mapping[1] == toMapping[0] {
 					updatedLine = file
 				}
 			}
 			for i, file := range filesArr {
-				if file == "" {
-					continue
-				}
 				fileMapping := strings.Split(file, " ")
 				if fileMapping[0] == mapping[1] {
 					filesArr[i] = updatedLine
@@ -175,9 +145,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		}
 		if mapping[0] == "deleted" {
 			for i, file := range filesArr {
-				if file == "" {
-					continue
-				}
 				fileMapping := strings.Split(file, " ")
 				if fileMapping[0] == mapping[1] {
 					filesArr = append(filesArr[:i], filesArr[i+1:]...)
@@ -189,9 +156,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		mapping := strings.Split(change, " ")
 		if mapping[0] == "created" {
 			for _, file := range fromFilesArr {
-				if file == "" {
-					continue
-				}
 				fromMapping := strings.Split(file, " ")
 				if mapping[1] == fromMapping[0] {
 					filesArr = append(filesArr, file)
@@ -201,18 +165,12 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		if mapping[0] == "changed" {
 			var updatedLine string
 			for _, file := range fromFilesArr {
-				if file == "" {
-					continue
-				}
 				fromMapping := strings.Split(file, " ")
 				if mapping[1] == fromMapping[0] {
 					updatedLine = file
 				}
 			}
 			for i, file := range filesArr {
-				if file == "" {
-					continue
-				}
 				fileMapping := strings.Split(file, " ")
 				if fileMapping[0] == mapping[1] {
 					filesArr[i] = updatedLine
@@ -221,9 +179,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		}
 		if mapping[0] == "deleted" {
 			for i, file := range filesArr {
-				if file == "" {
-					continue
-				}
 				fileMapping := strings.Split(file, " ")
 				if fileMapping[0] == mapping[1] {
 					filesArr = append(filesArr[:i], filesArr[i+1:]...)
@@ -236,8 +191,5 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 		return err
 	}
 	err = UpdateBranch(toBranch.Name, commitHash)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

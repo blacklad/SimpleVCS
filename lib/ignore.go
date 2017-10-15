@@ -19,10 +19,12 @@ func CheckIgnored(file string) (bool, error) {
 			return true, nil
 		}
 	}
-	ignoreContent, err := ioutil.ReadFile(".svcs/ignore.txt")
+	ignoreContent, err := ioutil.ReadFile(".svcsignore")
 	if err != nil {
-		return false, err
+		return false, nil
 	}
+	ignoreContent = strings.Replace(ignoreContent, "\r\n", "\n", -1)
+	ignoreContent = strings.Replace(ignoreContent, "\r", "\n", -1)
 	ignoreArr := strings.Split(string(ignoreContent), "\n")
 	for _, line := range ignoreArr {
 		match, err := path.Match(line, file)

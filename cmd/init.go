@@ -57,9 +57,5 @@ func InitRepo(repoName string, zipped bool) error {
 		return err
 	}
 	_, err = head.WriteString("master")
-	if err != nil {
-		return err
-	}
-	_, err = os.Create(".svcs/ignore.txt")
 	return err
 }

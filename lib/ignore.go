@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"path"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 var ignoreList = []string{".svcs",
@@ -27,8 +29,7 @@ func CheckIgnored(file string) (bool, error) {
 	ignoreContentBytes, err := ioutil.ReadFile(".svcsignore")
 	if err == nil {
 		ignoreContent := string(ignoreContentBytes)
-		ignoreContent = strings.Replace(ignoreContent, "\r\n", "\n", -1)
-		ignoreContent = strings.Replace(ignoreContent, "\r", "\n", -1)
+		ignoreContent = gotils.NormaliseLineEnding(ignoreContent)
 		ignoreArr := strings.Split(ignoreContent, "\n")
 		for _, line := range ignoreArr {
 			ignoreList = append(ignoreList, line)

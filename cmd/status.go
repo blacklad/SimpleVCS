@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
@@ -84,7 +85,7 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	checksum := lib.GetChecksum(string(currentFileContent))
+	checksum := gotils.GetChecksum(string(currentFileContent))
 	currentPath, err := os.Getwd()
 	if err != nil {
 		return err

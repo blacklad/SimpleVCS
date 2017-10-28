@@ -27,10 +27,6 @@ func InitRepo(repoName string, zipped bool) error {
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(".svcs/hooks", 0700)
-	if err != nil {
-		return err
-	}
 	settingsFile, err := os.Create(".svcs/settings.txt")
 	if err != nil {
 		return err

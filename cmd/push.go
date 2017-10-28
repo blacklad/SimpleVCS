@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
@@ -15,15 +16,11 @@ var body string
 
 //Push pushes the changes to the server.
 func Push(url string) error {
-	systemResponse, err := http.Get(url + "/system")
+	system, err := gotils.GetHTTP(url + "/system")
 	if err != nil {
 		return err
 	}
-	systemBytes, err := ioutil.ReadAll(systemResponse.Body)
-	if err != nil {
-		return err
-	}
-	systemSplit := strings.Split(string(systemBytes), " ")
+	systemSplit := strings.Split(system, " ")
 	if systemSplit[0] != "simplevcs" {
 		return errors.New("unknown server")
 	}

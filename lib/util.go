@@ -1,14 +1,14 @@
 package lib
 
 import (
-	"bytes"
-	"compress/gzip"
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
 	"time"
+
+	gotils "github.com/MSathieu/Gotils"
 )
 
 //VCSExists checks if the .svcs directory exists.
@@ -34,17 +34,7 @@ func Zip(text string) (string, error) {
 	if config == "false" {
 		return text, nil
 	}
-	var compBytes bytes.Buffer
-	comp := gzip.NewWriter(&compBytes)
-	_, err = comp.Write([]byte(text))
-	if err != nil {
-		return "", err
-	}
-	err = comp.Close()
-	if err != nil {
-		return "", err
-	}
-	return compBytes.String(), nil
+	return gotils.GZip(text), nil
 }
 
 //Unzip unzips the argument and returns the normal content.
@@ -56,22 +46,7 @@ func Unzip(text string) (string, error) {
 	if config == "false" {
 		return text, nil
 	}
-	var compBytes bytes.Buffer
-	_, err = compBytes.Write([]byte(text))
-	if err != nil {
-		return "", err
-	}
-	comp, err := gzip.NewReader(&compBytes)
-	if err != nil {
-		return "", err
-	}
-	var outputBytes bytes.Buffer
-	_, err = outputBytes.ReadFrom(comp)
-	if err != nil {
-		return "", err
-	}
-	err = comp.Close()
-	return outputBytes.String(), err
+	return gotils.UnGZip(text), nil
 }
 
 //Encode base64 encodes the string.

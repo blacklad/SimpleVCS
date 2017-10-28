@@ -5,6 +5,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 //File is the file object.
@@ -37,7 +39,7 @@ func (file *File) Save() error {
 	if !strings.HasSuffix(file.Content, "\n") {
 		file.Content = file.Content + "\n"
 	}
-	file.Hash = GetChecksum(file.Content)
+	file.Hash = gotils.GetChecksum(file.Content)
 	path := path.Join(".svcs/files", file.Hash)
 	zippedContent, err := Zip(file.Content)
 	if err != nil {

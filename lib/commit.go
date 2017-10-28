@@ -6,6 +6,8 @@ import (
 	"os/user"
 	"path"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 //Commit is the commit object.
@@ -118,7 +120,7 @@ func (commit *Commit) Save() (string, error) {
 		"\nparent " + commit.Parent +
 		"\ntree " + commit.Tree.Hash +
 		"\nmessage " + commit.Message
-	commit.Hash = GetChecksum(info)
+	commit.Hash = gotils.GetChecksum(info)
 	err := createCommitFile(info, commit.Hash)
 	return commit.Hash, err
 }
@@ -126,7 +128,7 @@ func (commit *Commit) Save() (string, error) {
 //SetFiles creates a tree.
 func SetFiles(files []string) (Tree, error) {
 	content := strings.Join(files, "\n")
-	hash := GetChecksum(content)
+	hash := gotils.GetChecksum(content)
 	file, err := os.Create(path.Join(".svcs/trees", hash))
 	if err != nil {
 		return Tree{}, err

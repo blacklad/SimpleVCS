@@ -2,36 +2,27 @@ package cmd
 
 import (
 	"errors"
-	"io/ioutil"
-	"net/http"
 	"strings"
 
+	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 //Pull pulls the latest changes.
 func Pull(url string) error {
-	systemResponse, err := http.Get(url + "/system")
+	system, err := gotils.GetHTTP(url + "/system")
 	if err != nil {
 		return err
 	}
-	systemBytes, err := ioutil.ReadAll(systemResponse.Body)
-	if err != nil {
-		return err
-	}
-	systemSplit := strings.Split(string(systemBytes), " ")
+	systemSplit := strings.Split(system, " ")
 	if systemSplit[0] != "simplevcs" {
 		return errors.New("unknown server")
 	}
-	filesResponse, err := http.Get(url + "/files")
+	files, err := gotils.GetHTTP(url + "/files")
 	if err != nil {
 		return err
 	}
-	filesBytes, err := ioutil.ReadAll(filesResponse.Body)
-	if err != nil {
-		return err
-	}
-	filesSplit := strings.Split(string(filesBytes), "\n")
+	filesSplit := strings.Split(files, "\n")
 	for _, file := range filesSplit {
 		if file == "" {
 			continue
@@ -51,15 +42,11 @@ func Pull(url string) error {
 			return err
 		}
 	}
-	treesResponse, err := http.Get(url + "/trees")
+	trees, err := gotils.GetHTTP(url + "/trees")
 	if err != nil {
 		return err
 	}
-	treesBytes, err := ioutil.ReadAll(treesResponse.Body)
-	if err != nil {
-		return err
-	}
-	treesSplit := strings.Split(string(treesBytes), "\n")
+	treesSplit := strings.Split(trees, "\n")
 	for _, tree := range treesSplit {
 		if tree == "" {
 			continue
@@ -88,15 +75,11 @@ func Pull(url string) error {
 			return err
 		}
 	}
-	commitsResponse, err := http.Get(url + "/commits")
+	commits, err := gotils.GetHTTP(url + "/commits")
 	if err != nil {
 		return err
 	}
-	commitsBytes, err := ioutil.ReadAll(commitsResponse.Body)
-	if err != nil {
-		return err
-	}
-	commitsSplit := strings.Split(string(commitsBytes), "\n")
+	commitsSplit := strings.Split(commits, "\n")
 	for _, commit := range commitsSplit {
 		if commit == "" {
 			continue
@@ -113,15 +96,11 @@ func Pull(url string) error {
 			return err
 		}
 	}
-	branchesResponse, err := http.Get(url + "/branches")
+	branches, err := gotils.GetHTTP(url + "/branches")
 	if err != nil {
 		return err
 	}
-	branchesBytes, err := ioutil.ReadAll(branchesResponse.Body)
-	if err != nil {
-		return err
-	}
-	branchesSplit := strings.Split(string(branchesBytes), "\n")
+	branchesSplit := strings.Split(branches, "\n")
 	for _, branch := range branchesSplit {
 		if branch == "" {
 			continue
@@ -132,15 +111,11 @@ func Pull(url string) error {
 			return err
 		}
 	}
-	tagsResponse, err := http.Get(url + "/tags")
+	tags, err := gotils.GetHTTP(url + "/tags")
 	if err != nil {
 		return err
 	}
-	tagsBytes, err := ioutil.ReadAll(tagsResponse.Body)
-	if err != nil {
-		return err
-	}
-	tagsSplit := strings.Split(string(tagsBytes), "\n")
+	tagsSplit := strings.Split(tags, "\n")
 	for _, tag := range tagsSplit {
 		if tag == "" {
 			continue

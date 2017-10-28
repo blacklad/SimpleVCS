@@ -1,14 +1,12 @@
 package lib
 
 import (
-	"crypto/sha1"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"os"
 	"time"
 
-	gotils "github.com/MSathieu/Gotils"
+	"github.com/MSathieu/Gotils"
 )
 
 //VCSExists checks if the .svcs directory exists.
@@ -63,14 +61,8 @@ func Decode(encoded string) (string, error) {
 
 //CheckIntegrity checks the integrity.
 func CheckIntegrity(content string, hash string) error {
-	if hash != GetChecksum(content) {
+	if hash != gotils.GetChecksum(content) {
 		return errors.New("data has been tampered with")
 	}
 	return nil
-}
-
-//GetChecksum gets the checksum.
-func GetChecksum(data string) string {
-	checksum := sha1.Sum([]byte(data))
-	return fmt.Sprintf("%x", checksum)
 }

@@ -3,7 +3,6 @@ package lib
 import (
 	"encoding/base64"
 	"os"
-	"time"
 
 	"github.com/MSathieu/Gotils"
 )
@@ -15,11 +14,6 @@ func VCSExists() bool {
 		return false
 	}
 	return true
-}
-
-//GetTime returns the properly formatted date and time.
-func GetTime() string {
-	return time.Now().Format("20060102150405")
 }
 
 //Zip zips the argument and returns the zipped content.

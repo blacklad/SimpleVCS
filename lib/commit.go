@@ -107,7 +107,7 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 		return Commit{}, err
 	}
 	commit := Commit{Author: currentUser.Username,
-		Time:   GetTime(),
+		Time:   gotils.GetTime(),
 		Parent: head.Branch.Commit.Hash,
 		Tree:   tree, Message: Encode(message)}
 	return commit, nil

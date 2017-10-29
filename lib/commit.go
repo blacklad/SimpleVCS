@@ -33,7 +33,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	err = CheckIntegrity(file, hash)
+	err = gotils.CheckIntegrity(file, hash)
 	if err != nil {
 		return Commit{}, err
 	}

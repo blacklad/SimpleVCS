@@ -28,7 +28,7 @@ func GetFile(hash string) (File, error) {
 	if err != nil {
 		return File{}, err
 	}
-	err = CheckIntegrity(file, hash)
+	err = gotils.CheckIntegrity(file, hash)
 	return File{Content: file, Hash: hash}, err
 }
 

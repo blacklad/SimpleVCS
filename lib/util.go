@@ -2,7 +2,6 @@ package lib
 
 import (
 	"encoding/base64"
-	"errors"
 	"os"
 	"time"
 
@@ -57,12 +56,4 @@ func Encode(decoded string) string {
 func Decode(encoded string) (string, error) {
 	decoded, err := base64.StdEncoding.DecodeString(encoded)
 	return string(decoded), err
-}
-
-//CheckIntegrity checks the integrity.
-func CheckIntegrity(content string, hash string) error {
-	if hash != gotils.GetChecksum(content) {
-		return errors.New("data has been tampered with")
-	}
-	return nil
 }

@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"path"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 //Tree is the tree object.
@@ -31,7 +33,7 @@ func GetTree(hash string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	err = CheckIntegrity(file, hash)
+	err = gotils.CheckIntegrity(file, hash)
 	if err != nil {
 		return Tree{}, err
 	}

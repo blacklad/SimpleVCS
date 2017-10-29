@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
@@ -70,7 +71,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = lib.CheckIntegrity(unzippedContent, hash)
+	err = gotils.CheckIntegrity(unzippedContent, hash)
 	if err != nil {
 		log.Fatal(err)
 	}

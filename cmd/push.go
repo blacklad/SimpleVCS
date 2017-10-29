@@ -15,7 +15,7 @@ import (
 var body string
 
 //Push pushes the changes to the server.
-func Push(url string) error {
+func Push(url string, username string, password string) error {
 	system, err := gotils.GetHTTP(url + "/system")
 	if err != nil {
 		return err

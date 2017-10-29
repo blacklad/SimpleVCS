@@ -9,7 +9,7 @@ import (
 )
 
 //Pull pulls the latest changes.
-func Pull(url string) error {
+func Pull(url string, username string, password string) error {
 	system, err := gotils.GetHTTP(url + "/system")
 	if err != nil {
 		return err

@@ -65,9 +65,9 @@ func main() {
 	case "merge":
 		err = cmd.Merge(flag.Arg(1))
 	case "pull":
-		err = cmd.Pull(flag.Arg(1))
+		err = cmd.Pull(flag.Arg(1), username, password)
 	case "push":
-		err = cmd.Push(flag.Arg(1))
+		err = cmd.Push(flag.Arg(1), username, password)
 	case "status":
 		err = cmd.Status()
 	case "diff":

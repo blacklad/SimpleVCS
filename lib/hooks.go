@@ -4,23 +4,23 @@ import (
 	"os"
 	"os/user"
 
-	gake "github.com/MSathieu/Gake/lib"
+	gosh "github.com/MSathieu/Gosh/lib"
 )
 
-//ExecTarget executes a Gake task.
-func ExecTarget(path string) error {
-	_, err := os.Stat(path + ".gake")
+//ExecScript executes a script.
+func ExecScript(path string) error {
+	_, err := os.Stat(path + ".gosh")
 	if err != nil {
 		return nil
 	}
-	gake.Process(path, true, false)
+	gosh.RunFile(path + ".gosh")
 	return nil
 }
 
-//ExecHook provides a wrapper above ExecTarget.
+//ExecHook provides a wrapper above ExecScript.
 func ExecHook(name string) error {
 	path := ".svcshooks/" + name
-	err := ExecTarget(path)
+	err := ExecScript(path)
 	if err != nil {
 		return err
 	}
@@ -29,6 +29,6 @@ func ExecHook(name string) error {
 		return err
 	}
 	userPath := user.HomeDir + "/.svcshooks/" + name
-	err = ExecTarget(userPath)
+	err = ExecScript(userPath)
 	return err
 }

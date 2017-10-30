@@ -4,7 +4,7 @@ import (
 	"os"
 	"os/user"
 
-	gosh "github.com/MSathieu/Gosh/lib"
+	gosh "github.com/MSathieu/Gosh/cmd"
 )
 
 //ExecScript executes a script.

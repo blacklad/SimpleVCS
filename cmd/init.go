@@ -7,31 +7,37 @@ import (
 )
 
 //InitRepo inits the repo.
-func InitRepo(repoName string, zipped bool) error {
+func InitRepo(repoName string, zipped bool, bare bool) error {
 	if repoName == "" {
 		return errors.New("you must specify the repo name")
 	}
-	err := os.Mkdir(".svcs", 0700)
+	var dirName string
+	if bare {
+		dirName = repoName
+	} else {
+		dirName = ".svcs"
+	}
+	err := os.Mkdir(dirName, 0700)
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(".svcs/files", 0700)
+	err = os.Mkdir(dirName+"/files", 0700)
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(".svcs/commits", 0700)
+	err = os.Mkdir(dirName+"/commits", 0700)
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(".svcs/trees", 0700)
+	err = os.Mkdir(dirName+"/trees", 0700)
 	if err != nil {
 		return err
 	}
-	settingsFile, err := os.Create(".svcs/settings.txt")
+	settingsFile, err := os.Create(dirName + "/settings.txt")
 	if err != nil {
 		return err
 	}
-	_, err = settingsFile.WriteString("name " + repoName + "\n")
+	_, err = settingsFile.WriteString("name " + repoName + "\n" + "bare" + "\n")
 	if err != nil {
 		return err
 	}
@@ -39,16 +45,16 @@ func InitRepo(repoName string, zipped bool) error {
 	if err != nil {
 		return err
 	}
-	branchesFile, err := os.Create(".svcs/branches.txt")
+	branchesFile, err := os.Create(dirName + "/branches.txt")
 	if err != nil {
 		return err
 	}
 	branchesFile.WriteString("master ")
-	_, err = os.Create(".svcs/tags.txt")
+	_, err = os.Create(dirName + "/tags.txt")
 	if err != nil {
 		return err
 	}
-	head, err := os.Create(".svcs/head.txt")
+	head, err := os.Create(dirName + "/head.txt")
 	if err != nil {
 		return err
 	}

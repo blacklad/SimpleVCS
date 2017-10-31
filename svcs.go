@@ -13,10 +13,11 @@ import (
 func main() {
 	flag.Usage = usage
 	var branch, username, password string
-	var noHead, zip bool
+	var noHead, zip, bare bool
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")
+	flag.BoolVar(&bare, "bare", false, "Create a bare repository")
 	flag.StringVar(&username, "username", "", "The username for pulling/pushing")
 	flag.StringVar(&password, "password", "", "The password for pulling/pushing")
 	flag.Parse()
@@ -30,7 +31,7 @@ func main() {
 		if lib.VCSExists() {
 			log.Fatal(errors.New("already initialized"))
 		}
-		err = cmd.InitRepo(flag.Arg(1), zip)
+		err = cmd.InitRepo(flag.Arg(1), zip, bare)
 	case "commit":
 		err = cmd.Commit(flag.Arg(1))
 	case "checkout":

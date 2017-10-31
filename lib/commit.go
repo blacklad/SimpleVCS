@@ -57,7 +57,7 @@ func GetCommit(hash string) (Commit, error) {
 			message = lineSplit[1]
 		}
 	}
-	message, err = Decode(message)
+	message, err = gotils.Decode(message)
 	if err != nil {
 		return Commit{}, err
 	}
@@ -109,7 +109,7 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 	commit := Commit{Author: currentUser.Username,
 		Time:   gotils.GetTime(),
 		Parent: head.Branch.Commit.Hash,
-		Tree:   tree, Message: Encode(message)}
+		Tree:   tree, Message: gotils.Encode(message)}
 	return commit, nil
 }
 

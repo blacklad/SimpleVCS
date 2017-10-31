@@ -85,7 +85,7 @@ func visitFilesPush(path string, info os.FileInfo, err error) error {
 		return err
 	}
 	unzipped, err := lib.Unzip(string(content))
-	body = body + info.Name() + " " + lib.Encode(unzipped) + "\n"
+	body = body + info.Name() + " " + gotils.Encode(unzipped) + "\n"
 	return nil
 }
 func visitTreesPush(path string, info os.FileInfo, err error) error {
@@ -102,8 +102,8 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 		names = append(names, file.Name)
 		hashes = append(hashes, file.File.Hash)
 	}
-	encodedNames := lib.Encode(strings.Join(names, " "))
-	encodedFiles := lib.Encode(strings.Join(hashes, " "))
+	encodedNames := gotils.Encode(strings.Join(names, " "))
+	encodedFiles := gotils.Encode(strings.Join(hashes, " "))
 	body = body + info.Name() + " " + encodedNames + " " + encodedFiles + "\n"
 	return nil
 }
@@ -121,6 +121,6 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 		commit.Parent + " " +
 		commit.Tree.Hash + " " +
 		commit.Time + " " +
-		lib.Encode(commit.Message) + "\n"
+		gotils.Encode(commit.Message) + "\n"
 	return nil
 }

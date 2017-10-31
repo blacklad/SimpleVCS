@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"encoding/base64"
 	"os"
 
 	"github.com/MSathieu/Gotils"
@@ -38,16 +37,4 @@ func Unzip(text string) (string, error) {
 		return text, nil
 	}
 	return gotils.UnGZip(text), nil
-}
-
-//Encode base64 encodes the string.
-func Encode(decoded string) string {
-	encoded := base64.StdEncoding.EncodeToString([]byte(decoded))
-	return encoded
-}
-
-//Decode decodes the string.
-func Decode(encoded string) (string, error) {
-	decoded, err := base64.StdEncoding.DecodeString(encoded)
-	return string(decoded), err
 }

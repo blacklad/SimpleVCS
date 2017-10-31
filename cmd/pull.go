@@ -32,7 +32,7 @@ func Pull(url string, username string, password string) error {
 		if err == nil {
 			continue
 		}
-		decodedFile, err := lib.Decode(fileSplit[1])
+		decodedFile, err := gotils.Decode(fileSplit[1])
 		if err != nil {
 			return err
 		}
@@ -56,11 +56,11 @@ func Pull(url string, username string, password string) error {
 		if err == nil {
 			continue
 		}
-		decodedNames, err := lib.Decode(treeSplit[1])
+		decodedNames, err := gotils.Decode(treeSplit[1])
 		if err != nil {
 			return err
 		}
-		decodedFiles, err := lib.Decode(treeSplit[2])
+		decodedFiles, err := gotils.Decode(treeSplit[2])
 		if err != nil {
 			return err
 		}

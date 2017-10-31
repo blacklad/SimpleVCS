@@ -12,11 +12,8 @@ import (
 
 func main() {
 	flag.Usage = usage
-	var branch string
-	var noHead bool
-	var zip bool
-	var username string
-	var password string
+	var branch, username, password string
+	var noHead, zip bool
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")

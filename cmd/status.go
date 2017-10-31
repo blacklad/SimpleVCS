@@ -86,11 +86,6 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 		return err
 	}
 	checksum := gotils.GetChecksum(string(currentFileContent))
-	currentPath, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	relativePath := strings.Replace(fixedPath, currentPath, "", 1)
-	currentFiles = append(currentFiles, relativePath+" "+checksum)
+	currentFiles = append(currentFiles, fixedPath+" "+checksum)
 	return nil
 }

@@ -30,39 +30,7 @@ func Status() error {
 	if err != nil {
 		return err
 	}
-	var changes []string
-	for _, line := range files {
-		change := "deleted"
-		changed := true
-		split := strings.Split(line, " ")
-		for _, currentLine := range currentFiles {
-			currentSplit := strings.Split(currentLine, " ")
-			if split[0] == currentSplit[0] {
-				if split[1] == currentSplit[1] {
-					changed = false
-				} else {
-					change = "changed"
-				}
-			}
-		}
-		if changed {
-			changes = append(changes, change+" "+split[0])
-		}
-	}
-	for _, currentLine := range currentFiles {
-		change := "created"
-		changed := true
-		currentSplit := strings.Split(currentLine, " ")
-		for _, line := range files {
-			split := strings.Split(line, " ")
-			if split[0] == currentSplit[0] {
-				changed = false
-			}
-		}
-		if changed {
-			changes = append(changes, change+" "+currentSplit[0])
-		}
-	}
+	changes := lib.GenerateChange(files, currentFiles)
 	fmt.Println(strings.Join(changes, "\n"))
 	return nil
 }

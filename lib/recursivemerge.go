@@ -43,68 +43,8 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 	fromFilesArr := fromBranch.Commit.GetFiles()
 	toFilesArr := toBranch.Commit.GetFiles()
 	parentFilesArr := parent.GetFiles()
-	var toChanges []string
-	var fromChanges []string
-	for _, line := range toFilesArr {
-		mapping := strings.Split(line, " ")
-		changedStatus := "created"
-		for _, parentLine := range parentFilesArr {
-			parentMapping := strings.Split(parentLine, " ")
-			if parentMapping[0] == mapping[0] {
-				if parentMapping[1] == mapping[1] {
-					changedStatus = "same"
-				} else {
-					changedStatus = "changed"
-				}
-			}
-		}
-		if changedStatus != "same" {
-			toChanges = append(toChanges, changedStatus+" "+mapping[0])
-		}
-	}
-	for _, line := range parentFilesArr {
-		mapping := strings.Split(line, " ")
-		changedStatus := "deleted"
-		for _, toLine := range toFilesArr {
-			toMapping := strings.Split(toLine, " ")
-			if toMapping[0] == mapping[0] {
-				changedStatus = "same"
-			}
-		}
-		if changedStatus != "same" {
-			toChanges = append(toChanges, changedStatus+" "+mapping[0])
-		}
-	}
-	for _, line := range fromFilesArr {
-		mapping := strings.Split(line, " ")
-		changedStatus := "created"
-		for _, parentLine := range parentFilesArr {
-			parentMapping := strings.Split(parentLine, " ")
-			if parentMapping[0] == mapping[0] {
-				if parentMapping[1] == mapping[1] {
-					changedStatus = "same"
-				} else {
-					changedStatus = "changed"
-				}
-			}
-		}
-		if changedStatus != "same" {
-			fromChanges = append(fromChanges, changedStatus+" "+mapping[0])
-		}
-	}
-	for _, line := range parentFilesArr {
-		mapping := strings.Split(line, " ")
-		changedStatus := "deleted"
-		for _, fromLine := range fromFilesArr {
-			fromMapping := strings.Split(fromLine, " ")
-			if fromMapping[0] == mapping[0] {
-				changedStatus = "same"
-			}
-		}
-		if changedStatus != "same" {
-			fromChanges = append(fromChanges, changedStatus+" "+mapping[0])
-		}
-	}
+	toChanges := GenerateChange(parentFilesArr, toFilesArr)
+	fromChanges := GenerateChange(parentFilesArr, fromFilesArr)
 	filesArr := parentFilesArr
 	for _, toChange := range toChanges {
 		toMapping := strings.Split(toChange, " ")

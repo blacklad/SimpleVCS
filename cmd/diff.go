@@ -19,39 +19,7 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 	}
 	fromFiles := fromCommit.GetFiles()
 	toFiles := toCommit.GetFiles()
-	var changes []string
-	for _, line := range fromFiles {
-		change := "deleted"
-		changed := true
-		split := strings.Split(line, " ")
-		for _, toLine := range toFiles {
-			toSplit := strings.Split(toLine, " ")
-			if split[0] == toSplit[0] {
-				if split[1] == toSplit[1] {
-					changed = false
-				} else {
-					change = "changed"
-				}
-			}
-		}
-		if changed {
-			changes = append(changes, change+" "+split[0])
-		}
-	}
-	for _, toLine := range toFiles {
-		change := "created"
-		changed := true
-		toSplit := strings.Split(toLine, " ")
-		for _, line := range fromFiles {
-			split := strings.Split(line, " ")
-			if split[0] == toSplit[0] {
-				changed = false
-			}
-		}
-		if changed {
-			changes = append(changes, change+" "+toSplit[0])
-		}
-	}
+	changes := lib.GenerateChange(fromFiles, toFiles)
 	for _, change := range changes {
 		fmt.Println(change + ":")
 		split := strings.Split(change, " ")

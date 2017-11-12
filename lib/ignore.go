@@ -26,9 +26,9 @@ var ignoreList = []string{".svcs",
 	"*.iml",
 	"*.swp",
 	"*.iso",
-	"*.pid"
+	"*.pid",
 	"*.pid.lock",
-  "dependency-reduced-pom.xml"}
+	"dependency-reduced-pom.xml"}
 
 //CheckIgnored checks if the file/directory must be ignored.
 func CheckIgnored(file string) (bool, error) {

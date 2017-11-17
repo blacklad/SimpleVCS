@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -28,7 +27,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
-	_, err = http.Post(url+"/files", "", strings.NewReader(body))
+	err = gotils.PostHTTP(url+"/files", body, []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -37,7 +36,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
-	_, err = http.Post(url+"/trees", "", strings.NewReader(body))
+	err = gotils.PostHTTP(url+"/trees", body, []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -46,7 +45,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
-	_, err = http.Post(url+"/commits", "", strings.NewReader(body))
+	err = gotils.PostHTTP(url+"/commits", body, []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -58,7 +57,7 @@ func Push(url string, username string, password string) error {
 	for _, branch := range branches {
 		body = body + branch.Name + " " + branch.Commit.Hash + "\n"
 	}
-	_, err = http.Post(url+"/branches", "", strings.NewReader(body))
+	err = gotils.PostHTTP(url+"/branches", body, []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -70,7 +69,7 @@ func Push(url string, username string, password string) error {
 	for _, tag := range tags {
 		body = body + tag.Name + " " + tag.Commit.Hash + "\n"
 	}
-	_, err = http.Post(url+"/tags", "", strings.NewReader(body))
+	err = gotils.PostHTTP(url+"/tags", body, []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}

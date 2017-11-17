@@ -9,8 +9,8 @@ import (
 )
 
 //Pull pulls the latest changes.
-func Pull(url string, username string, password string) error {
-	system, err := gotils.GetHTTP(url + "/system")
+func Pull(url string, password string) error {
+	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func Pull(url string, username string, password string) error {
 	if systemSplit[0] != "simplevcs" {
 		return errors.New("unknown server")
 	}
-	files, err := gotils.GetHTTP(url + "/files")
+	files, err := gotils.GetHTTP(url+"/files", []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	trees, err := gotils.GetHTTP(url + "/trees")
+	trees, err := gotils.GetHTTP(url+"/trees", []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	commits, err := gotils.GetHTTP(url + "/commits")
+	commits, err := gotils.GetHTTP(url+"/commits", []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	branches, err := gotils.GetHTTP(url + "/branches")
+	branches, err := gotils.GetHTTP(url+"/branches", []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	tags, err := gotils.GetHTTP(url + "/tags")
+	tags, err := gotils.GetHTTP(url+"/tags", []string{"PASSWORD=" + password})
 	if err != nil {
 		return err
 	}

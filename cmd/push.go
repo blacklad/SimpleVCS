@@ -16,7 +16,7 @@ var body string
 
 //Push pushes the changes to the server.
 func Push(url string, username string, password string) error {
-	system, err := gotils.GetHTTP(url + "/system")
+	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {
 		return err
 	}

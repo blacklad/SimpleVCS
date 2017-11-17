@@ -12,13 +12,12 @@ import (
 
 func main() {
 	flag.Usage = usage
-	var branch, username, password string
+	var branch, password string
 	var noHead, zip, bare bool
 	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
 	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")
 	flag.BoolVar(&bare, "bare", false, "Create a bare repository")
-	flag.StringVar(&username, "username", "", "The username for pulling/pushing")
 	flag.StringVar(&password, "password", "", "The password for pulling/pushing")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
@@ -63,9 +62,9 @@ func main() {
 	case "merge":
 		err = cmd.Merge(flag.Arg(1))
 	case "pull":
-		err = cmd.Pull(flag.Arg(1), username, password)
+		err = cmd.Pull(flag.Arg(1), password)
 	case "push":
-		err = cmd.Push(flag.Arg(1), username, password)
+		err = cmd.Push(flag.Arg(1), password)
 	case "status":
 		err = cmd.Status()
 	case "diff":

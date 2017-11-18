@@ -73,6 +73,8 @@ func main() {
 		err = cmd.ShowStats()
 	case "gc":
 		err = cmd.GarbageCollect()
+	case "server":
+		err = cmd.Server(password)
 	default:
 		fmt.Println("Invalid command, run --help to get a list of the commands.")
 	}

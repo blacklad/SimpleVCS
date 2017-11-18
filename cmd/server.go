@@ -11,7 +11,7 @@ import (
 var response http.ResponseWriter
 
 //Server starts the SVCS server
-func Server(password string) error {
+func Server() error {
 	http.HandleFunc("/", server)
 	err := http.ListenAndServe("0.0.0.0:333", nil)
 	return err

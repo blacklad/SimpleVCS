@@ -14,7 +14,8 @@ import (
 var body string
 
 //Push pushes the changes to the server.
-func Push(url string, password string) error {
+func Push(url string, username string, password string) error {
+	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
 	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {
 		return err
@@ -27,7 +28,7 @@ func Push(url string, password string) error {
 	if err != nil {
 		return err
 	}
-	err = gotils.PostHTTP(url+"/files", body, []string{"PASSWORD=" + password})
+	err = gotils.PostHTTP(url+"/files", body, authArr)
 	if err != nil {
 		return err
 	}
@@ -36,7 +37,7 @@ func Push(url string, password string) error {
 	if err != nil {
 		return err
 	}
-	err = gotils.PostHTTP(url+"/trees", body, []string{"PASSWORD=" + password})
+	err = gotils.PostHTTP(url+"/trees", body, authArr)
 	if err != nil {
 		return err
 	}
@@ -45,7 +46,7 @@ func Push(url string, password string) error {
 	if err != nil {
 		return err
 	}
-	err = gotils.PostHTTP(url+"/commits", body, []string{"PASSWORD=" + password})
+	err = gotils.PostHTTP(url+"/commits", body, authArr)
 	if err != nil {
 		return err
 	}
@@ -57,7 +58,7 @@ func Push(url string, password string) error {
 	for _, branch := range branches {
 		body = body + branch.Name + " " + branch.Commit.Hash + "\n"
 	}
-	err = gotils.PostHTTP(url+"/branches", body, []string{"PASSWORD=" + password})
+	err = gotils.PostHTTP(url+"/branches", body, authArr)
 	if err != nil {
 		return err
 	}
@@ -69,7 +70,7 @@ func Push(url string, password string) error {
 	for _, tag := range tags {
 		body = body + tag.Name + " " + tag.Commit.Hash + "\n"
 	}
-	err = gotils.PostHTTP(url+"/tags", body, []string{"PASSWORD=" + password})
+	err = gotils.PostHTTP(url+"/tags", body, authArr)
 	if err != nil {
 		return err
 	}

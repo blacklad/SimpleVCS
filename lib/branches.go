@@ -2,9 +2,10 @@ package lib
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 //Branch is the branch object
@@ -75,12 +76,12 @@ func RemoveBranch(branch string) error {
 
 //ReadBranches reads the content of branches.txt into an array.
 func ReadBranches() ([]Branch, error) {
-	branchesContent, err := ioutil.ReadFile(branchesFile)
+	branchesSplit, err := gotils.SplitFileIntoArr(branchesFile)
 	if err != nil {
 		return nil, err
 	}
 	var branches []Branch
-	for _, line := range strings.Split(string(branchesContent), "\n") {
+	for _, line := range branchesSplit {
 		if line == "" {
 			continue
 		}

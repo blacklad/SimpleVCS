@@ -2,9 +2,10 @@ package lib
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/MSathieu/Gotils"
 )
 
 //Tag is the tag object
@@ -68,12 +69,12 @@ func (tag Tag) Remove() error {
 
 //ReadTags reads the tags.txt file into an array
 func ReadTags() ([]Tag, error) {
-	tagsContent, err := ioutil.ReadFile(tagsFile)
+	tagsSplit, err := gotils.SplitFileIntoArr(tagsFile)
 	if err != nil {
 		return nil, err
 	}
 	var tags []Tag
-	for _, line := range strings.Split(string(tagsContent), "\n") {
+	for _, line := range tagsSplit {
 		if line == "" {
 			continue
 		}

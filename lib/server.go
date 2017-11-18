@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"io/ioutil"
 	"strings"
 
 	"github.com/MSathieu/Gotils"
@@ -15,12 +14,10 @@ type Auth struct {
 
 //GetAuth reads the auth file.
 func GetAuth() ([]Auth, error) {
-	authFile, err := ioutil.ReadFile("auth.txt")
+	split, err := gotils.SplitFileIntoArr("auth.txt")
 	if err != nil {
 		return nil, err
 	}
-	auth := gotils.NormaliseLineEnding(string(authFile))
-	split := strings.Split(auth, "\n")
 	var authArr []Auth
 	for _, line := range split {
 		if line == "" {

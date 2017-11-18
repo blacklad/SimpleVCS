@@ -13,14 +13,12 @@ func ExecScript(path string) error {
 	if err != nil {
 		return nil
 	}
-	gosh.RunFile(path + ".gosh")
-	return nil
+	return gosh.RunFile(path + ".gosh")
 }
 
 //ExecHook provides a wrapper above ExecScript.
 func ExecHook(name string) error {
-	path := ".svcshooks/" + name
-	err := ExecScript(path)
+	err := ExecScript(".svcshooks/" + name)
 	if err != nil {
 		return err
 	}
@@ -28,7 +26,5 @@ func ExecHook(name string) error {
 	if err != nil {
 		return err
 	}
-	userPath := user.HomeDir + "/.svcshooks/" + name
-	err = ExecScript(userPath)
-	return err
+	return ExecScript(user.HomeDir + "/.svcshooks/" + name)
 }

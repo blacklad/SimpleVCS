@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -28,7 +29,11 @@ func Log(branch string) error {
 		commits[i], commits[last-i] = commits[last-i], commits[i]
 	}
 	for _, commit := range commits {
-		fmt.Println(commit.Hash + " " + commit.Author + " " + commit.Time)
+		time, err := time.Parse("20060102150405", commit.Time)
+		if err != nil {
+			return err
+		}
+		fmt.Println(commit.Hash + " " + commit.Author + " " + time.String())
 		fmt.Println(commit.Message)
 	}
 	return nil

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/MSathieu/Gotils"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,20 +10,38 @@ import (
 )
 
 var response http.ResponseWriter
+var auths []lib.Auth
 
 //Server starts the SVCS server
 func Server() error {
+	var err error
+	auths, err = lib.GetAuth()
+	if err != nil {
+		return err
+	}
 	http.HandleFunc("/", server)
-	err := http.ListenAndServe("0.0.0.0:333", nil)
+	err = http.ListenAndServe("0.0.0.0:333", nil)
 	return err
 }
 func server(responseWriter http.ResponseWriter, request *http.Request) {
 	response = responseWriter
+	if request.Method == "GET" && request.URL.Path == "/system" {
+		fmt.Fprint(response, "simplevcs 1.0.0")
+	}
+	authed := false
+	for _, auth := range auths {
+		if auth.Username == request.Header.Get("USERNAME") {
+			if auth.Password == gotils.GetChecksum(request.Header.Get("PASSWORD")) {
+				authed = true
+			}
+		}
+	}
+	if !authed {
+		response.WriteHeader(403)
+	}
 	var err error
 	if request.Method == "GET" {
 		switch request.URL.Path {
-		case "/system":
-			fmt.Fprint(response, "simplevcs 1.0.0")
 		case "/files":
 			err = lib.PullFiles(response)
 		case "/trees":

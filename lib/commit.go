@@ -102,11 +102,15 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	currentUser, err := user.Current()
-	if err != nil {
-		return Commit{}, err
+	username := os.Getenv("SVCS_USERNAME")
+	if username == "" {
+		currentUser, err := user.Current()
+		if err != nil {
+			return Commit{}, err
+		}
+		username = currentUser.Name
 	}
-	commit := Commit{Author: currentUser.Username,
+	commit := Commit{Author: username,
 		Time:   gotils.GetTime(),
 		Parent: head.Branch.Commit.Hash,
 		Tree:   tree, Message: gotils.Encode(message)}

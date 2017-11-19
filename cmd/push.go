@@ -19,6 +19,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
+	url = "http://" + url + ":333"
 	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
 	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {

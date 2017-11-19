@@ -28,6 +28,7 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 	response = responseWriter
 	if request.Method == "GET" && request.URL.Path == "/system" {
 		fmt.Fprint(response, "simplevcs 1.0.0")
+		return
 	}
 	authed := false
 	for _, auth := range auths {
@@ -56,6 +57,7 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 			err = lib.PullTags(response)
 		default:
 			response.WriteHeader(404)
+			return
 		}
 	}
 	if request.Method == "POST" {
@@ -72,6 +74,7 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 			err = lib.PushTags(request)
 		default:
 			response.WriteHeader(404)
+			return
 		}
 	}
 	if err != nil {

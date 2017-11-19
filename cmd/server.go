@@ -39,6 +39,7 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 	}
 	if !authed {
 		response.WriteHeader(403)
+		return
 	}
 	var err error
 	if request.Method == "GET" {

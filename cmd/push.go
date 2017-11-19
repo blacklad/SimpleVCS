@@ -15,6 +15,10 @@ var body string
 
 //Push pushes the changes to the server.
 func Push(url string, username string, password string) error {
+	err := lib.ExecHook("prepush")
+	if err != nil {
+		return err
+	}
 	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
 	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {
@@ -74,7 +78,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return lib.ExecHook("postpush")
 }
 func visitFilesPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {

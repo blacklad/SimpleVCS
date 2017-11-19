@@ -10,6 +10,10 @@ import (
 
 //Pull pulls the latest changes.
 func Pull(url string, username string, password string) error {
+	err := lib.ExecHook("prepull")
+	if err != nil {
+		return err
+	}
 	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
 	system, err := gotils.GetHTTP(url+"/system", nil)
 	if err != nil {
@@ -129,5 +133,5 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	return nil
+	return lib.ExecHook("postpull")
 }

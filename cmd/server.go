@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/MSathieu/Gotils"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/lib"
 )
@@ -20,7 +21,7 @@ func Server() error {
 		return err
 	}
 	http.HandleFunc("/", server)
-	err = http.ListenAndServe("0.0.0.0:333", nil)
+	err = http.ListenAndServeTLS("0.0.0.0:333", "svcs.crt", "svcs.key", nil)
 	return err
 }
 func server(responseWriter http.ResponseWriter, request *http.Request) {

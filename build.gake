@@ -1,3 +1,1 @@
-gobuild MSathieu/SimpleVCS
--mv build/SimpleVCS.exe build/svcs
--mv build/SimpleVCS build/svcs
+gobuild MSathieu/SimpleVCS svcs

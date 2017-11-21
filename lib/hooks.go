@@ -13,7 +13,7 @@ func ExecScript(path string) error {
 	if err != nil {
 		return nil
 	}
-	return gosh.RunFile(path + ".gosh")
+	return gosh.RunFile(path+".gosh", nil)
 }
 
 //ExecHook provides a wrapper above ExecScript.

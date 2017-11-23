@@ -27,7 +27,8 @@ func GenPatch(fromSha string, toSha string, filename string) error {
 		}
 		patchFile = patchFile + change.Type + " " + change.Name + " " + gotils.Encode(changedFile.Content) + "\n"
 	}
-	file, err := os.Create(filename)
+	patchFile = gotils.GZip(patchFile)
+	file, err := os.Create(filename + ".patch")
 	if err != nil {
 		return err
 	}

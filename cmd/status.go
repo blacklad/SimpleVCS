@@ -12,7 +12,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 )
 
-var currentFiles []string
+var currentFiles []lib.TreeFile
 
 //Status prints the status.
 func Status() error {
@@ -25,13 +25,14 @@ func Status() error {
 	}
 	fmt.Println("branch " + head.Branch.Name)
 	commit := head.Branch.Commit
-	files := commit.GetFiles()
 	err = filepath.Walk(".", statusVisit)
 	if err != nil {
 		return err
 	}
-	changes := lib.GenerateChange(files, currentFiles)
-	fmt.Println(strings.Join(changes, "\n"))
+	changes := lib.GenerateChange(commit.Tree.Files, currentFiles)
+	for _, change := range changes {
+		fmt.Println(change.Type + " " + change.Name)
+	}
 	return nil
 }
 func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
@@ -54,6 +55,6 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 		return err
 	}
 	checksum := gotils.GetChecksum(string(currentFileContent))
-	currentFiles = append(currentFiles, fixedPath+" "+checksum)
+	currentFiles = append(currentFiles, lib.TreeFile{Name: fixedPath, File: lib.File{Hash: checksum}})
 	return nil
 }

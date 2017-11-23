@@ -39,6 +39,15 @@ func main() {
 		err = cmd.Checkout(flag.Arg(1), noHead)
 	case "log":
 		err = cmd.Log(branch)
+  case "patch":
+    switch flag.Arg(1){
+    case "apply":
+      err = cmd.Apply(flag.Arg(2))
+    case "gen":
+      err = cmd.GenPatch(flag.Arg(2), flag.Arg(3), flag.Arg(4))
+		default:
+			fmt.Println("Invalid command, run --help to get a list of the commands.")
+    }
 	case "tag":
 		switch flag.Arg(1) {
 		case "create":

@@ -19,13 +19,13 @@ func GenPatch(fromSha string, toSha string, filename string) error {
 		return err
 	}
 	changes := lib.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
-	patchFile := "parent " + fromSha
+	patchFile := "parent " + fromSha + "\n"
 	for _, change := range changes {
 		changedFile, err := lib.GetFile(change.Hash)
 		if err != nil {
 			return err
 		}
-		patchFile = patchFile + change.Type + change.Name + gotils.Encode(changedFile.Content) + "\n"
+		patchFile = patchFile + change.Type + " " + change.Name + " " + gotils.Encode(changedFile.Content) + "\n"
 	}
 	file, err := os.Create(filename)
 	if err != nil {

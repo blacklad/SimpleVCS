@@ -1,7 +1,11 @@
 package lib
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
+	"os"
+	"strings"
 )
 
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor.
@@ -44,13 +48,42 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 	filesArr := parent.GetFiles()
 	toChanges := GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
 	fromChanges := GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
-	for _, toChange := range toChanges {
-		for _, fromChange := range fromChanges {
+	for toI, toChange := range toChanges {
+		for fromI, fromChange := range fromChanges {
 			if toChange.Name == fromChange.Name {
-				return errors.New("merge coflict")
+				fmt.Println("Merge conflict in " + toChange.Name + ":use from branch or to branch?[from|to]")
+				reader := bufio.NewReader(os.Stdin)
+				input, err := reader.ReadString('\n')
+				if err != nil {
+					return err
+				}
+				input = strings.Replace(input, "\r\n", "\n", 1)
+				switch input {
+				case "from\n":
+					toChanges[toI] = Change{}
+				case "to\n":
+					fromChanges[fromI] = Change{}
+				default:
+					fmt.Print(input)
+					return errors.New("aborted due to wrong input")
+				}
 			}
 		}
 	}
+	var cleanToChanges []Change
+	for _, change := range toChanges {
+		if change.Type != "" {
+			cleanToChanges = append(cleanToChanges, change)
+		}
+	}
+	toChanges = cleanToChanges
+	var cleanFromChanges []Change
+	for _, change := range fromChanges {
+		if change.Type != "" {
+			cleanFromChanges = append(cleanFromChanges, change)
+		}
+	}
+	fromChanges = cleanFromChanges
 	filesArr = ApplyChange(filesArr, toChanges)
 	filesArr = ApplyChange(filesArr, fromChanges)
 	commitHash, err := CreateCommit("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)

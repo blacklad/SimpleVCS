@@ -9,6 +9,9 @@ func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
 		if currentCommit.Hash == toBranch.Commit.Hash {
 			return true, nil
 		}
+		if currentCommit.Parent == "" {
+			return false, nil
+		}
 		parentCommit, err := GetCommit(currentCommit.Parent)
 		if err != nil {
 			return false, err

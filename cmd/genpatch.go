@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/lib"
@@ -19,20 +17,14 @@ func GenPatch(fromSha string, toSha string, filename string) error {
 		return err
 	}
 	changes := lib.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
-	patchFile := "parent " + fromSha + "\n"
+	patch := lib.Patch{FromHash: fromSha, Changes: []string{}}
 	for _, change := range changes {
 		changedFile, err := lib.GetFile(change.Hash)
 		if err != nil {
 			return err
 		}
-		patchFile = patchFile + change.Type + " " + change.Name + " " + gotils.Encode(changedFile.Content) + "\n"
+		patch.Changes = append(patch.Changes, change.Type+" "+change.Name+" "+gotils.Encode(changedFile.Content))
 	}
-	patchFile = gotils.GZip(patchFile)
-	file, err := os.Create(filename + ".patch")
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	_, err = file.WriteString(patchFile)
+	err = patch.Save(filename)
 	return err
 }

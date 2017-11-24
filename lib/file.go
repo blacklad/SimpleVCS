@@ -35,7 +35,7 @@ func GetFile(hash string) (File, error) {
 //Save saves the file
 func (file *File) Save() error {
 	file.Content = gotils.NormaliseLineEnding(file.Content)
-	if !strings.HasSuffix(file.Content, "\n") {
+	if !strings.HasSuffix(file.Content, "\n") && file.Content != "" {
 		file.Content = file.Content + "\n"
 	}
 	file.Hash = gotils.GetChecksum(file.Content)

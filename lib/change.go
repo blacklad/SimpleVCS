@@ -62,6 +62,7 @@ func ApplyChange(files []string, changes []Change) []string {
 				fileMapping := strings.Split(files[i], " ")
 				if fileMapping[0] == change.Name {
 					files = append(files[:i], files[i+1:]...)
+					break
 				}
 			}
 		}

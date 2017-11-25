@@ -35,7 +35,7 @@ func Push(url string, username string, password string) error {
 		if err != nil {
 			return err
 		}
-		url = url + name + "/"
+		url = url + "/" + name
 	}
 	err = filepath.Walk(".svcs/files", visitFilesPush)
 	if err != nil {

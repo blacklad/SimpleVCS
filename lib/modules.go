@@ -2,6 +2,7 @@ package lib
 
 import (
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/MSathieu/Gotils"
@@ -30,4 +31,39 @@ func GetModules() ([]Module, error) {
 		modules = append(modules, Module{Name: split[0], URL: split[1], Hash: split[2]})
 	}
 	return modules, nil
+}
+
+//InitModules initializes the modules
+func InitModules() error {
+	modules, err := GetModules()
+	if err != nil {
+		return err
+	}
+	for _, module := range modules {
+		err = os.MkdirAll(module.Name, 700)
+		if err != nil {
+			return err
+		}
+		err = os.Chdir(module.Name)
+		if err != nil {
+			return err
+		}
+		err = Init(module.Name, true, false)
+		if err != nil {
+			return err
+		}
+		err = Pull(module.URL, "", "")
+		if err != nil {
+			return err
+		}
+		err = Checkout(module.Hash, false)
+		if err != nil {
+			return err
+		}
+		err = os.Chdir("..")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -9,6 +9,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/MSathieu/SimpleVCS/util"
+
 	"github.com/MSathieu/Gotils"
 )
 
@@ -16,7 +18,7 @@ var wait sync.WaitGroup
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string, noHead bool) error {
-	err := ExecHook("precheckout")
+	err := util.ExecHook("precheckout")
 	if err != nil {
 		return err
 	}
@@ -54,7 +56,7 @@ func Checkout(commitHash string, noHead bool) error {
 		}
 	}
 	wait.Wait()
-	err = ExecHook("postcheckout")
+	err = util.ExecHook("postcheckout")
 	if err != nil {
 		return err
 	}
@@ -66,7 +68,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	unzippedContent, err := Unzip(string(fileContent))
+	unzippedContent, err := util.Unzip(string(fileContent))
 	if err != nil {
 		log.Fatal(err)
 	}

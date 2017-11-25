@@ -5,11 +5,12 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Pull pulls the latest changes.
 func Pull(url string, username string, password string) error {
-	err := ExecHook("prepull")
+	err := util.ExecHook("prepull")
 	if err != nil {
 		return err
 	}
@@ -133,5 +134,5 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
-	return ExecHook("postpull")
+	return util.ExecHook("postpull")
 }

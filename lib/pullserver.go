@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 var response http.ResponseWriter
@@ -26,7 +27,7 @@ func visitFiles(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	unzipped, err := Unzip(string(content))
+	unzipped, err := util.Unzip(string(content))
 	fmt.Fprintln(response, info.Name()+" "+gotils.Encode(unzipped))
 	return nil
 }

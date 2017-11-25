@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Commit is the commit object.
@@ -29,7 +30,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	file, err := Unzip(string(zippedFile))
+	file, err := util.Unzip(string(zippedFile))
 	if err != nil {
 		return Commit{}, err
 	}
@@ -89,7 +90,7 @@ func createCommitFile(info string, hash string) error {
 	if err != nil {
 		return err
 	}
-	zipped, err := Zip(info)
+	zipped, err := util.Zip(info)
 	if err != nil {
 		return err
 	}
@@ -137,7 +138,7 @@ func SetFiles(files []string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	zippedContent, err := Zip(content)
+	zippedContent, err := util.Zip(content)
 	if err != nil {
 		return Tree{}, err
 	}

@@ -4,11 +4,12 @@ import (
 	"errors"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Merge merges two branches.
 func Merge(fromBranchString string) error {
-	err := lib.ExecHook("premerge")
+	err := util.ExecHook("premerge")
 	if err != nil {
 		return err
 	}
@@ -36,7 +37,7 @@ func Merge(fromBranchString string) error {
 		if err != nil {
 			return err
 		}
-		err = lib.ExecHook("postmerge")
+		err = util.ExecHook("postmerge")
 		return err
 	}
 	parent, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
@@ -48,7 +49,7 @@ func Merge(fromBranchString string) error {
 		if err != nil {
 			return err
 		}
-		err = lib.ExecHook("postmerge")
+		err = util.ExecHook("postmerge")
 		return err
 	}
 	return errors.New("could not merge")

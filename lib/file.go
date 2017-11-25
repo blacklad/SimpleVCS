@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //File is the file object.
@@ -24,7 +25,7 @@ func GetFile(hash string) (File, error) {
 	if err != nil {
 		return File{}, err
 	}
-	file, err := Unzip(string(zippedFile))
+	file, err := util.Unzip(string(zippedFile))
 	if err != nil {
 		return File{}, err
 	}
@@ -40,7 +41,7 @@ func (file *File) Save() error {
 	}
 	file.Hash = gotils.GetChecksum(file.Content)
 	path := path.Join(".svcs/files", file.Hash)
-	zippedContent, err := Zip(file.Content)
+	zippedContent, err := util.Zip(file.Content)
 	if err != nil {
 		return err
 	}

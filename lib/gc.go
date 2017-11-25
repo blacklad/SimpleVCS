@@ -2,6 +2,8 @@ package lib
 
 import (
 	"os"
+
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //GCCommits garbage collects all commits
@@ -12,7 +14,7 @@ func GCCommits() error {
 	}
 	for true {
 		var removed bool
-		commitHashes, err := GetAllObjects("commits")
+		commitHashes, err := util.GetAllObjects("commits")
 		if err != nil {
 			return err
 		}
@@ -53,11 +55,11 @@ func GCCommits() error {
 
 //GCTrees garbage collects all trees
 func GCTrees() error {
-	commitHashes, err := GetAllObjects("commits")
+	commitHashes, err := util.GetAllObjects("commits")
 	if err != nil {
 		return err
 	}
-	treeHashes, err := GetAllObjects("trees")
+	treeHashes, err := util.GetAllObjects("trees")
 	if err != nil {
 		return err
 	}
@@ -84,11 +86,11 @@ func GCTrees() error {
 
 //GCFiles garbage collects all files
 func GCFiles() error {
-	treeHashes, err := GetAllObjects("trees")
+	treeHashes, err := util.GetAllObjects("trees")
 	if err != nil {
 		return err
 	}
-	fileHashes, err := GetAllObjects("files")
+	fileHashes, err := util.GetAllObjects("files")
 	if err != nil {
 		return err
 	}

@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 type safeFilesSlice struct {
@@ -32,7 +33,7 @@ func Commit(message string) error {
 	if head.Detached {
 		return errors.New("cannot commit in detached state")
 	}
-	err = lib.ExecHook("precommit")
+	err = util.ExecHook("precommit")
 	if err != nil {
 		return err
 	}
@@ -49,7 +50,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = lib.ExecHook("postcommit")
+	err = util.ExecHook("postcommit")
 	if err != nil {
 		return err
 	}

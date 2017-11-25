@@ -9,13 +9,14 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 var body string
 
 //Push pushes the changes to the server.
 func Push(url string, username string, password string) error {
-	err := lib.ExecHook("prepush")
+	err := util.ExecHook("prepush")
 	if err != nil {
 		return err
 	}
@@ -79,7 +80,7 @@ func Push(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
-	return lib.ExecHook("postpush")
+	return util.ExecHook("postpush")
 }
 func visitFilesPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
@@ -89,7 +90,7 @@ func visitFilesPush(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	unzipped, err := lib.Unzip(string(content))
+	unzipped, err := util.Unzip(string(content))
 	body = body + info.Name() + " " + gotils.Encode(unzipped) + "\n"
 	return nil
 }

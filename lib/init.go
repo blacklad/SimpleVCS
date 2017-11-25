@@ -33,6 +33,10 @@ func Init(repoName string, zipped bool, bare bool) error {
 	if err != nil {
 		return err
 	}
+	err = os.Mkdir(dirName+"/stashes", 0700)
+	if err != nil {
+		return err
+	}
 	settingsFile, err := os.Create(dirName + "/settings.txt")
 	if err != nil {
 		return err

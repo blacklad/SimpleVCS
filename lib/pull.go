@@ -29,7 +29,7 @@ func Pull(url string, username string, password string) error {
 		if err != nil {
 			return err
 		}
-		url = url + name + "/"
+		url = url + "/" + name
 	}
 	files, err := gotils.GetHTTP(url+"/files", authArr)
 	if err != nil {

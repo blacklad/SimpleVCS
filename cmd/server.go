@@ -12,9 +12,11 @@ import (
 
 var response http.ResponseWriter
 var auths []lib.Auth
+var public bool
 
 //Server starts the SVCS server
-func Server() error {
+func Server(publicPull bool) error {
+	public = publicPull
 	var err error
 	auths, err = lib.GetAuth()
 	if err != nil {
@@ -30,7 +32,10 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		fmt.Fprint(response, "simplevcs 1.0.0")
 		return
 	}
-	authed := false
+	var authed bool
+	if request.Method == "GET" && public {
+		authed = true
+	}
 	for _, auth := range auths {
 		if auth.Username == request.Header.Get("USERNAME") {
 			if auth.Password == gotils.GetChecksum(request.Header.Get("PASSWORD")) {

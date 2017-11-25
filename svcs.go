@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/MSathieu/SimpleVCS/cmd"
-	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 func main() {
@@ -24,12 +24,12 @@ func main() {
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
-	if executedCommand != "init" && !lib.VCSExists() {
+	if executedCommand != "init" && !util.VCSExists() {
 		log.Fatal("not initialized")
 	}
 	switch executedCommand {
 	case "init":
-		if lib.VCSExists() {
+		if util.VCSExists() {
 			log.Fatal(errors.New("already initialized"))
 		}
 		err = cmd.InitRepo(flag.Arg(1), zip, bare)
@@ -39,15 +39,15 @@ func main() {
 		err = cmd.Checkout(flag.Arg(1), noHead)
 	case "log":
 		err = cmd.Log(branch)
-  case "patch":
-    switch flag.Arg(1){
-    case "apply":
-      err = cmd.Apply(flag.Arg(2))
-    case "gen":
-      err = cmd.GenPatch(flag.Arg(2), flag.Arg(3), flag.Arg(4))
+	case "patch":
+		switch flag.Arg(1) {
+		case "apply":
+			err = cmd.Apply(flag.Arg(2))
+		case "gen":
+			err = cmd.GenPatch(flag.Arg(2), flag.Arg(3), flag.Arg(4))
 		default:
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
-    }
+		}
 	case "tag":
 		switch flag.Arg(1) {
 		case "create":

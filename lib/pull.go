@@ -24,6 +24,13 @@ func Pull(url string, username string, password string) error {
 	if systemSplit[0] != "simplevcs" {
 		return errors.New("unknown server")
 	}
+	if systemSplit[2] == "multiserver" {
+		name, err := util.GetConfig("name")
+		if err != nil {
+			return err
+		}
+		url = url + name + "/"
+	}
 	files, err := gotils.GetHTTP(url+"/files", authArr)
 	if err != nil {
 		return err

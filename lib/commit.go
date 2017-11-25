@@ -111,6 +111,7 @@ func createCommitInfo(tree Tree, message string) (Commit, error) {
 		}
 		username = currentUser.Name
 	}
+	username = strings.Fields(username)[0]
 	commit := Commit{Author: username,
 		Time:   gotils.GetTime(),
 		Parent: head.Branch.Commit.Hash,

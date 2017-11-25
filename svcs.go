@@ -39,6 +39,17 @@ func main() {
 		err = cmd.Checkout(flag.Arg(1), noHead)
 	case "log":
 		err = cmd.Log(branch)
+	case "stash":
+		switch flag.Arg(1) {
+		case "create":
+			err = cmd.CreateStash(flag.Arg(2))
+		case "checkout":
+			err = cmd.CheckoutStash(flag.Arg(2))
+		case "rm":
+			err = cmd.RemoveStash(flag.Arg(2))
+		default:
+			fmt.Println("Invalid command, run --help to get a list of the commands.")
+		}
 	case "patch":
 		switch flag.Arg(1) {
 		case "apply":

@@ -1,6 +1,8 @@
 package lib
 
-import "os"
+import (
+	"os"
+)
 
 //GCCommits garbage collects all commits
 func GCCommits() error {
@@ -9,6 +11,29 @@ func GCCommits() error {
 
 //GCTrees garbage collects all trees
 func GCTrees() error {
+	commitHashes, err := GetAllObjects("commits")
+	if err != nil {
+		return err
+	}
+	treeHashes, err := GetAllObjects("trees")
+	if err != nil {
+		return err
+	}
+	for _, treeHash := range treeHashes {
+		var exists bool
+		for _, commitHash := range commitHashes {
+			commit, err := GetCommit(commitHash)
+			if err != nil {
+				return err
+			}
+			if commit.Tree.Hash == treeHash {
+				exists = true
+			}
+		}
+		if !exists {
+			os.Remove(".svcs/trees/" + treeHash)
+		}
+	}
 	return nil
 }
 

@@ -12,7 +12,9 @@ var objects []string
 //GetAllObjects gets all stored objects by type
 func GetAllObjects(dir string) ([]string, error) {
 	err := filepath.Walk(".svcs/"+dir, visitObjects)
-	return objects, err
+	objs := objects
+	objects = nil
+	return objs, err
 }
 func visitObjects(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {

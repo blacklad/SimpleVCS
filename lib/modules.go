@@ -48,10 +48,7 @@ func InitModules() error {
 		if err != nil {
 			return err
 		}
-		err = Init(module.Name, true, false)
-		if err != nil {
-			return err
-		}
+		Init(module.Name, true, false)
 		err = Pull(module.URL, "", "")
 		if err != nil {
 			return err

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/MSathieu/Gotils"
 
@@ -33,9 +35,10 @@ func Server(publicPull bool) error {
 func server(responseWriter http.ResponseWriter, request *http.Request) {
 	response = responseWriter
 	if request.Method == "GET" && request.URL.Path == "/system" {
-		if multiserver {
+		switch multiserver {
+		case true:
 			fmt.Fprint(response, "simplevcs 1.0.0 multiserver")
-		} else {
+		case false:
 			fmt.Fprint(response, "simplevcs 1.0.0 normal")
 		}
 		return
@@ -56,42 +59,92 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 	var err error
-	if request.Method == "GET" {
-		switch request.URL.Path {
-		case "/files":
-			err = lib.PullFiles(response)
-		case "/trees":
-			err = lib.PullTrees(response)
-		case "/commits":
-			err = lib.PullCommits(response)
-		case "/branches":
-			err = lib.PullBranches(response)
-		case "/tags":
-			err = lib.PullTags(response)
-		default:
-			response.WriteHeader(404)
+	switch multiserver {
+	case false:
+		switch request.Method {
+		case "GET":
+			switch request.URL.Path {
+			case "/files":
+				err = lib.PullFiles(response)
+			case "/trees":
+				err = lib.PullTrees(response)
+			case "/commits":
+				err = lib.PullCommits(response)
+			case "/branches":
+				err = lib.PullBranches(response)
+			case "/tags":
+				err = lib.PullTags(response)
+			default:
+				response.WriteHeader(404)
+				return
+			}
+		case "POST":
+			switch request.URL.Path {
+			case "/files":
+				err = lib.PushFiles(request)
+			case "/trees":
+				err = lib.PushTrees(request)
+			case "/commits":
+				err = lib.PushCommits(request)
+			case "/branches":
+				err = lib.PushBranches(request)
+			case "/tags":
+				err = lib.PushTags(request)
+			default:
+				response.WriteHeader(404)
+				return
+			}
+		}
+	case true:
+		split := strings.Split(request.URL.Path, "/")
+		if strings.ContainsAny(split[0], "/\\.") {
+			response.WriteHeader(400)
 			return
 		}
-	}
-	if request.Method == "POST" {
-		switch request.URL.Path {
-		case "/files":
-			err = lib.PushFiles(request)
-		case "/trees":
-			err = lib.PushTrees(request)
-		case "/commits":
-			err = lib.PushCommits(request)
-		case "/branches":
-			err = lib.PushBranches(request)
-		case "/tags":
-			err = lib.PushTags(request)
-		default:
-			response.WriteHeader(404)
+		err = os.Chdir(split[1])
+		defer os.Chdir("..")
+		if err != nil {
+			log.Println(err)
+			response.WriteHeader(500)
 			return
+		}
+		switch request.Method {
+		case "GET":
+			switch split[2] {
+			case "files":
+				err = lib.PullFiles(response)
+			case "trees":
+				err = lib.PullTrees(response)
+			case "commits":
+				err = lib.PullCommits(response)
+			case "branches":
+				err = lib.PullBranches(response)
+			case "tags":
+				err = lib.PullTags(response)
+			default:
+				response.WriteHeader(404)
+				return
+			}
+		case "POST":
+			switch split[2] {
+			case "files":
+				err = lib.PushFiles(request)
+			case "trees":
+				err = lib.PushTrees(request)
+			case "commits":
+				err = lib.PushCommits(request)
+			case "branches":
+				err = lib.PushBranches(request)
+			case "tags":
+				err = lib.PushTags(request)
+			default:
+				response.WriteHeader(404)
+				return
+			}
 		}
 	}
 	if err != nil {
-		response.WriteHeader(500)
 		log.Println(err)
+		response.WriteHeader(500)
 	}
 }

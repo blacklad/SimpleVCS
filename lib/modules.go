@@ -19,7 +19,7 @@ type Module struct {
 func GetModules() ([]Module, error) {
 	content, err := ioutil.ReadFile(".svcsmodules")
 	if err != nil {
-		return nil, err
+		return nil, nil
 	}
 	modulesFile := gotils.PreProcess(string(content))
 	var modules []Module

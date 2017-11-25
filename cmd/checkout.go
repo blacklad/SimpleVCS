@@ -6,5 +6,9 @@ import (
 
 //Checkout checks out the specified commit.
 func Checkout(commitHash string, noHead bool) error {
-	return lib.Checkout(commitHash, noHead)
+	err := lib.Checkout(commitHash, noHead)
+	if err != nil {
+		return err
+	}
+	return lib.InitModules()
 }

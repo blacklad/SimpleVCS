@@ -6,6 +6,48 @@ import (
 
 //GCCommits garbage collects all commits
 func GCCommits() error {
+	branches, err := ReadBranches()
+	if err != nil {
+		return err
+	}
+	for true {
+		var removed bool
+		commitHashes, err := GetAllObjects("commits")
+		if err != nil {
+			return err
+		}
+		var referencedCommits []string
+		for _, commitHash := range commitHashes {
+			commit, err := GetCommit(commitHash)
+			if err != nil {
+				return err
+			}
+			if commit.Parent != "" {
+				referencedCommits = append(referencedCommits, commit.Parent)
+			}
+		}
+		for _, branch := range branches {
+			referencedCommits = append(referencedCommits, branch.Commit.Hash)
+		}
+		for _, commitHash := range commitHashes {
+			var exists bool
+			for _, referencedCommit := range referencedCommits {
+				if commitHash == referencedCommit {
+					exists = true
+				}
+			}
+			if !exists {
+				removed = true
+				err = os.Remove(".svcs/commits/" + commitHash)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		if !removed {
+			break
+		}
+	}
 	return nil
 }
 
@@ -31,7 +73,10 @@ func GCTrees() error {
 			}
 		}
 		if !exists {
-			os.Remove(".svcs/trees/" + treeHash)
+			err = os.Remove(".svcs/trees/" + treeHash)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

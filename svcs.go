@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
-	if executedCommand != "init" && !gotils.CheckIfExists(".svcs") {
+	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists(".svcs") {
 		log.Fatal("not initialized")
 	}
 	switch executedCommand {

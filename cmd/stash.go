@@ -1,5 +1,7 @@
 package cmd
 
+import "os"
+
 //CreateStash creates a stash
 func CreateStash(name string) error {
 	return nil
@@ -12,5 +14,5 @@ func CheckoutStash(name string) error {
 
 //RemoveStash removes a stash
 func RemoveStash(name string) error {
-	return nil
+	return os.Remove(".svcs/stashes/" + name)
 }

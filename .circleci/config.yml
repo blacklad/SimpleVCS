@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/MSathieu/SimpleVCS/
     docker:
-      - image: golang:1.9.0
+      - image: golang:1.9.1
     steps:
       - checkout
       - run: go test ./...

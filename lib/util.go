@@ -2,9 +2,25 @@ package lib
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/MSathieu/Gotils"
 )
+
+var objects []string
+
+//GetAllObjects gets all stored objects by type
+func GetAllObjects(dir string) ([]string, error) {
+	err := filepath.Walk(".svcs/"+dir, visitObjects)
+	return objects, err
+}
+func visitObjects(path string, info os.FileInfo, err error) error {
+	if info.IsDir() {
+		return nil
+	}
+	objects = append(objects, info.Name())
+	return nil
+}
 
 //VCSExists checks if the .svcs directory exists.
 func VCSExists() bool {

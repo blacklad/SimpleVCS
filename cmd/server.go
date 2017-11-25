@@ -13,10 +13,14 @@ import (
 var response http.ResponseWriter
 var auths []lib.Auth
 var public bool
+var multiserver bool
 
 //Server starts the SVCS server
 func Server(publicPull bool) error {
 	public = publicPull
+	if !gotils.CheckIfExists(".svcs") {
+		multiserver = true
+	}
 	var err error
 	auths, err = lib.GetAuth()
 	if err != nil {
@@ -29,7 +33,11 @@ func Server(publicPull bool) error {
 func server(responseWriter http.ResponseWriter, request *http.Request) {
 	response = responseWriter
 	if request.Method == "GET" && request.URL.Path == "/system" {
-		fmt.Fprint(response, "simplevcs 1.0.0")
+		if multiserver {
+			fmt.Fprint(response, "simplevcs 1.0.0 multiserver")
+		} else {
+			fmt.Fprint(response, "simplevcs 1.0.0 normal")
+		}
 		return
 	}
 	var authed bool

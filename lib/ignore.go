@@ -43,6 +43,12 @@ func CheckIgnored(file string) (bool, error) {
 			ignoreList = append(ignoreList, line)
 		}
 	}
+	modules, err := GetModules()
+	if err == nil {
+		for _, module := range modules {
+			ignoreList = append(ignoreList, module.Name)
+		}
+	}
 	for _, line := range ignoreList {
 		match, err := path.Match(line, file)
 		if err != nil {

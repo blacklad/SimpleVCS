@@ -102,12 +102,12 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 			return
 		}
 		err = os.Chdir(split[1])
-		defer os.Chdir("..")
 		if err != nil {
 			log.Println(err)
 			response.WriteHeader(500)
 			return
 		}
+		defer os.Chdir("..")
 		switch request.Method {
 		case "GET":
 			switch split[2] {

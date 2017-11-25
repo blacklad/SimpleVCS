@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/cmd"
-	"github.com/MSathieu/SimpleVCS/util"
 )
 
 func main() {
@@ -24,12 +24,12 @@ func main() {
 	flag.Parse()
 	executedCommand := flag.Arg(0)
 	var err error
-	if executedCommand != "init" && !util.VCSExists() {
+	if executedCommand != "init" && !gotils.CheckIfExists(".svcs") {
 		log.Fatal("not initialized")
 	}
 	switch executedCommand {
 	case "init":
-		if util.VCSExists() {
+		if gotils.CheckIfExists(".svcs") {
 			log.Fatal(errors.New("already initialized"))
 		}
 		err = cmd.InitRepo(flag.Arg(1), zip, bare)

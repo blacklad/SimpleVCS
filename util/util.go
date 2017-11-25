@@ -24,15 +24,6 @@ func visitObjects(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-//VCSExists checks if the .svcs directory exists.
-func VCSExists() bool {
-	_, err := os.Stat(".svcs")
-	if err != nil {
-		return false
-	}
-	return true
-}
-
 //Zip zips the argument and returns the zipped content.
 func Zip(text string) (string, error) {
 	config, err := GetConfig("zip")

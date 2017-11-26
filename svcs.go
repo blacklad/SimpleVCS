@@ -23,10 +23,14 @@ func main() {
 	flag.StringVar(&password, "password", "", "The password for pulling/pushing")
 	flag.Parse()
 	executedCommand := flag.Arg(0)
-	var err error
+	if executedCommand == "" {
+		flag.Usage()
+		return
+	}
 	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists(".svcs") {
 		log.Fatal("not initialized")
 	}
+	var err error
 	switch executedCommand {
 	case "init":
 		if gotils.CheckIfExists(".svcs") {

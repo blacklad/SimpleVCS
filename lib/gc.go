@@ -12,6 +12,10 @@ func GCCommits() error {
 	if err != nil {
 		return err
 	}
+	tags, err := ReadTags()
+	if err != nil {
+		return err
+	}
 	for true {
 		var removed bool
 		commitHashes, err := util.GetAllObjects("commits")
@@ -30,6 +34,9 @@ func GCCommits() error {
 		}
 		for _, branch := range branches {
 			referencedCommits = append(referencedCommits, branch.Commit.Hash)
+		}
+		for _, tag := range tags {
+			referencedCommits = append(referencedCommits, tag.Commit.Hash)
 		}
 		for _, commitHash := range commitHashes {
 			var exists bool

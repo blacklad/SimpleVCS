@@ -1,6 +1,7 @@
 # Init
 
 Init initializes a bare repository:
+
 `svcs init <name>`
 
 Arguments:

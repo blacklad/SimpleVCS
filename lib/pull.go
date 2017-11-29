@@ -20,6 +20,12 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 	}
+	if username == "" {
+		username, err = util.GetConfig("username")
+		if err != nil {
+			return err
+		}
+	}
 	url = "https://" + url + ":333"
 	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
 	system, err := gotils.GetHTTP(url+"/system", nil)

@@ -49,7 +49,7 @@ func InitModules() error {
 			return err
 		}
 		Init(module.Name, true, false)
-		err = Pull(module.URL, "", "")
+		err = Pull(module.URL, os.Getenv("SVCS_MODULE_"+module.Name+"_USERNAME"), os.Getenv("SVCS_MODULE_"+module.Name+"_PASSWORD"))
 		if err != nil {
 			return err
 		}

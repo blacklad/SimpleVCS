@@ -39,6 +39,12 @@ func main() {
 		err = cmd.InitRepo(flag.Arg(1), zip, bare)
 	case "commit":
 		err = cmd.Commit(flag.Arg(1))
+	case "config":
+		if flag.Arg(2) == "" {
+			err = cmd.GetConfig(flag.Arg(1))
+		} else {
+			err = cmd.SetConfig(flag.Arg(1), flag.Arg(2))
+		}
 	case "checkout":
 		err = cmd.Checkout(flag.Arg(1), noHead)
 	case "log":

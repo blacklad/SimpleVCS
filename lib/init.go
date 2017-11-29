@@ -49,6 +49,10 @@ func Init(repoName string, zipped bool, bare bool) error {
 	if err != nil {
 		return err
 	}
+	_, err = settingsFile.WriteString("remote " + "\n")
+	if err != nil {
+		return err
+	}
 	branchesFile, err := os.Create(dirName + "/branches.txt")
 	if err != nil {
 		return err

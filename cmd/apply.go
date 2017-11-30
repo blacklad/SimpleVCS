@@ -5,6 +5,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //Apply applies a path.
@@ -27,7 +28,7 @@ func Apply(filename string) error {
 				return err
 			}
 			hash = gotils.GetChecksum(content)
-			fileObj := lib.File{Content: content, Hash: hash}
+			fileObj := vcsfile.File{Content: content, Hash: hash}
 			err = fileObj.Save()
 			if err != nil {
 				return err

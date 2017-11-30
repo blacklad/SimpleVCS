@@ -11,6 +11,7 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 type safeFilesSlice struct {
@@ -81,7 +82,7 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	file := lib.File{Content: string(fileContent)}
+	file := vcsfile.File{Content: string(fileContent)}
 	err = file.Save()
 	if err != nil {
 		log.Fatal(err)

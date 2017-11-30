@@ -8,6 +8,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/cmd"
+	"github.com/MSathieu/SimpleVCS/initialize"
 )
 
 func main() {
@@ -36,7 +37,7 @@ func main() {
 		if gotils.CheckIfExists(".svcs") {
 			log.Fatal(errors.New("already initialized"))
 		}
-		err = cmd.InitRepo(flag.Arg(1), zip, bare)
+		err = initialize.Initialize(flag.Arg(1), zip, bare)
 	case "commit":
 		err = cmd.Commit(flag.Arg(1))
 	case "config":

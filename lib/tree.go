@@ -7,6 +7,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //Tree is the tree object.
@@ -17,7 +18,7 @@ type Tree struct {
 
 //TreeFile is the object that has a file and a name.
 type TreeFile struct {
-	File File
+	File vcsfile.File
 	Name string
 }
 
@@ -45,7 +46,7 @@ func GetTree(hash string) (Tree, error) {
 			continue
 		}
 		lineSplit := strings.Split(line, " ")
-		filesFile, err := GetFile(lineSplit[1])
+		filesFile, err := vcsfile.GetFile(lineSplit[1])
 		if err != nil {
 			return Tree{}, err
 		}

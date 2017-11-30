@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //PushFiles pushes the files.
@@ -20,7 +21,7 @@ func PushFiles(request *http.Request) error {
 			continue
 		}
 		fileSplit := strings.Split(file, " ")
-		_, err := GetFile(fileSplit[0])
+		_, err := vcsfile.GetFile(fileSplit[0])
 		if err == nil {
 			continue
 		}
@@ -28,7 +29,7 @@ func PushFiles(request *http.Request) error {
 		if err != nil {
 			return err
 		}
-		fileObj := File{Hash: fileSplit[0], Content: decodedFile}
+		fileObj := vcsfile.File{Hash: fileSplit[0], Content: decodedFile}
 		err = fileObj.Save()
 		if err != nil {
 			return err

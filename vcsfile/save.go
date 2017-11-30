@@ -1,7 +1,6 @@
-package lib
+package vcsfile
 
 import (
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -9,29 +8,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
 )
-
-//File is the file object.
-type File struct {
-	Content string
-	Hash    string
-}
-
-//GetFile gets a file.
-func GetFile(hash string) (File, error) {
-	if hash == "" {
-		return File{}, nil
-	}
-	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/files", hash))
-	if err != nil {
-		return File{}, err
-	}
-	file, err := util.Unzip(string(zippedFile))
-	if err != nil {
-		return File{}, err
-	}
-	err = gotils.CheckIntegrity(file, hash)
-	return File{Content: file, Hash: hash}, err
-}
 
 //Save saves the file
 func (file *File) Save() error {

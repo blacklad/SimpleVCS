@@ -6,6 +6,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //Pull pulls the latest changes.
@@ -53,7 +54,7 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		fileSplit := strings.Split(file, " ")
-		_, err := GetFile(fileSplit[0])
+		_, err := vcsfile.GetFile(fileSplit[0])
 		if err == nil {
 			continue
 		}
@@ -61,7 +62,7 @@ func Pull(url string, username string, password string) error {
 		if err != nil {
 			return err
 		}
-		fileObj := File{Hash: fileSplit[0], Content: decodedFile}
+		fileObj := vcsfile.File{Hash: fileSplit[0], Content: decodedFile}
 		err = fileObj.Save()
 		if err != nil {
 			return err

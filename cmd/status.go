@@ -10,6 +10,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 var currentFiles []lib.TreeFile
@@ -55,6 +56,6 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 		return err
 	}
 	checksum := gotils.GetChecksum(string(currentFileContent))
-	currentFiles = append(currentFiles, lib.TreeFile{Name: fixedPath, File: lib.File{Hash: checksum}})
+	currentFiles = append(currentFiles, lib.TreeFile{Name: fixedPath, File: vcsfile.File{Hash: checksum}})
 	return nil
 }

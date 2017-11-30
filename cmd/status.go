@@ -14,7 +14,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
-var currentFiles []vcstree.TreeFile
+var currentFiles []vcstree.File
 
 //Status prints the status.
 func Status() error {
@@ -57,6 +57,6 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 		return err
 	}
 	checksum := gotils.GetChecksum(string(currentFileContent))
-	currentFiles = append(currentFiles, vcstree.TreeFile{Name: fixedPath, File: vcsfile.File{Hash: checksum}})
+	currentFiles = append(currentFiles, vcstree.File{Name: fixedPath, File: vcsfile.File{Hash: checksum}})
 	return nil
 }

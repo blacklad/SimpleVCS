@@ -14,7 +14,7 @@ type Change struct {
 }
 
 //GenerateChange returns the changes between two file arrays.
-func GenerateChange(fromFiles []vcstree.TreeFile, toFiles []vcstree.TreeFile) []Change {
+func GenerateChange(fromFiles []vcstree.File, toFiles []vcstree.File) []Change {
 	var changes []Change
 	for _, fromFile := range fromFiles {
 		change := Change{Type: "deleted", Name: fromFile.Name}

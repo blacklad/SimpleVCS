@@ -79,7 +79,7 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		treeSplit := strings.Split(tree, " ")
-		_, err := vcstree.GetTree(treeSplit[0])
+		_, err := vcstree.Get(treeSplit[0])
 		if err == nil {
 			continue
 		}

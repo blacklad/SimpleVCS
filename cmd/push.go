@@ -118,7 +118,7 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	tree, err := vcstree.GetTree(info.Name())
+	tree, err := vcstree.Get(info.Name())
 	if err != nil {
 		return err
 	}

@@ -51,7 +51,7 @@ func PushTrees(request *http.Request) error {
 			continue
 		}
 		treeSplit := strings.Split(tree, " ")
-		_, err := vcstree.GetTree(treeSplit[0])
+		_, err := vcstree.Get(treeSplit[0])
 		if err == nil {
 			continue
 		}

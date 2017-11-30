@@ -104,7 +104,7 @@ func GCFiles() error {
 	}
 	var treeFiles []string
 	for _, treeHash := range treeHashes {
-		tree, err := vcstree.GetTree(treeHash)
+		tree, err := vcstree.Get(treeHash)
 		if err != nil {
 			return err
 		}

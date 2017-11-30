@@ -63,7 +63,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	tree, err := vcstree.GetTree(treeHash)
+	tree, err := vcstree.Get(treeHash)
 	if err != nil {
 		return Commit{}, err
 	}
@@ -148,7 +148,7 @@ func SetFiles(files []string) (vcstree.Tree, error) {
 	if err != nil {
 		return vcstree.Tree{}, nil
 	}
-	tree, err := vcstree.GetTree(hash)
+	tree, err := vcstree.Get(hash)
 	return tree, err
 }
 

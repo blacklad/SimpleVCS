@@ -1,4 +1,4 @@
-package lib
+package vcstree
 
 import (
 	"io/ioutil"

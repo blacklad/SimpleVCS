@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //GCCommits garbage collects all commits
@@ -103,7 +104,7 @@ func GCFiles() error {
 	}
 	var treeFiles []string
 	for _, treeHash := range treeHashes {
-		tree, err := GetTree(treeHash)
+		tree, err := vcstree.GetTree(treeHash)
 		if err != nil {
 			return err
 		}

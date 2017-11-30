@@ -10,6 +10,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 var response http.ResponseWriter
@@ -47,7 +48,7 @@ func visitTrees(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	tree, err := GetTree(info.Name())
+	tree, err := vcstree.GetTree(info.Name())
 	if err != nil {
 		return err
 	}

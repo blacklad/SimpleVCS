@@ -9,6 +9,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //Commit is the commit object.
@@ -16,7 +17,7 @@ type Commit struct {
 	Author  string
 	Time    string
 	Parent  string
-	Tree    Tree
+	Tree    vcstree.Tree
 	Message string
 	Hash    string
 }
@@ -62,7 +63,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	tree, err := GetTree(treeHash)
+	tree, err := vcstree.GetTree(treeHash)
 	if err != nil {
 		return Commit{}, err
 	}
@@ -98,7 +99,7 @@ func createCommitFile(info string, hash string) error {
 	return err
 }
 
-func createCommitInfo(tree Tree, message string) (Commit, error) {
+func createCommitInfo(tree vcstree.Tree, message string) (Commit, error) {
 	head, err := GetHead()
 	if err != nil {
 		return Commit{}, err
@@ -132,22 +133,22 @@ func (commit *Commit) Save() (string, error) {
 }
 
 //SetFiles creates a tree.
-func SetFiles(files []string) (Tree, error) {
+func SetFiles(files []string) (vcstree.Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := gotils.GetChecksum(content)
 	file, err := os.Create(path.Join(".svcs/trees", hash))
 	if err != nil {
-		return Tree{}, err
+		return vcstree.Tree{}, err
 	}
 	zippedContent, err := util.Zip(content)
 	if err != nil {
-		return Tree{}, err
+		return vcstree.Tree{}, err
 	}
 	_, err = file.WriteString(zippedContent)
 	if err != nil {
-		return Tree{}, nil
+		return vcstree.Tree{}, nil
 	}
-	tree, err := GetTree(hash)
+	tree, err := vcstree.GetTree(hash)
 	return tree, err
 }
 

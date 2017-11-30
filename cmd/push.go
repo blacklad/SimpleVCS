@@ -10,6 +10,7 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 var body string
@@ -117,7 +118,7 @@ func visitTreesPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	tree, err := lib.GetTree(info.Name())
+	tree, err := vcstree.GetTree(info.Name())
 	if err != nil {
 		return err
 	}

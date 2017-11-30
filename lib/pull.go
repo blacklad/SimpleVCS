@@ -7,6 +7,7 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
+	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //Pull pulls the latest changes.
@@ -78,7 +79,7 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		treeSplit := strings.Split(tree, " ")
-		_, err := GetTree(treeSplit[0])
+		_, err := vcstree.GetTree(treeSplit[0])
 		if err == nil {
 			continue
 		}
@@ -115,7 +116,7 @@ func Pull(url string, username string, password string) error {
 		if err == nil {
 			continue
 		}
-		commitTree := Tree{Hash: commitSplit[3]}
+		commitTree := vcstree.Tree{Hash: commitSplit[3]}
 		commitObj := Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
 		_, err = commitObj.Save()
 		if err != nil {

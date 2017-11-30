@@ -1,8 +1,8 @@
 package cmd
 
-import "github.com/MSathieu/SimpleVCS/lib"
+import "github.com/MSathieu/SimpleVCS/initialize"
 
 //InitRepo inits the repo.
 func InitRepo(repoName string, zipped bool, bare bool) error {
-	return lib.Init(repoName, zipped, bare)
+	return initialize.Initialize(repoName, zipped, bare)
 }

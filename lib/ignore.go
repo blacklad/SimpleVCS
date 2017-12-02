@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/modules"
 )
 
 var ignoreList = []string{".svcs",
@@ -43,7 +44,7 @@ func CheckIgnored(file string) (bool, error) {
 			ignoreList = append(ignoreList, line)
 		}
 	}
-	modules, err := GetModules()
+	modules, err := modules.Get()
 	if err == nil {
 		for _, module := range modules {
 			ignoreList = append(ignoreList, module.Name)

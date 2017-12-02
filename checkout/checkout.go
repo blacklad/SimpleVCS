@@ -9,7 +9,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
@@ -59,7 +58,7 @@ func Checkout(commitHash string, noHead bool) error {
 		}
 	}
 	wait.Wait()
-	err = lib.InitModules()
+	err = checkoutModules()
 	if err != nil {
 		return err
 	}

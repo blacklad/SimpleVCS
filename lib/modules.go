@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/checkout"
 	"github.com/MSathieu/SimpleVCS/initialize"
 )
 
@@ -54,7 +55,7 @@ func InitModules() error {
 		if err != nil {
 			return err
 		}
-		err = Checkout(module.Hash, false)
+		err = checkout.Checkout(module.Hash, false)
 		if err != nil {
 			return err
 		}

@@ -1,4 +1,4 @@
-package lib
+package checkout
 
 import (
 	"io/ioutil"

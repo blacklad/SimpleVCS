@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/checkout"
 	"github.com/MSathieu/SimpleVCS/cmd"
 	"github.com/MSathieu/SimpleVCS/gc"
 	"github.com/MSathieu/SimpleVCS/initialize"
@@ -53,7 +54,7 @@ func main() {
 			err = cmd.SetConfig(flag.Arg(1), flag.Arg(2))
 		}
 	case "checkout":
-		err = cmd.Checkout(flag.Arg(1), noHead)
+		err = checkout.Checkout(flag.Arg(1), noHead)
 	case "log":
 		err = cmd.Log(branch)
 	case "stash":

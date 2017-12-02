@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
@@ -58,11 +59,11 @@ func Checkout(commitHash string, noHead bool) error {
 		}
 	}
 	wait.Wait()
-	err = util.ExecHook("postcheckout")
+	err = lib.InitModules()
 	if err != nil {
 		return err
 	}
-	return nil
+	return util.ExecHook("postcheckout")
 }
 func concProcessFile(hash string, name string) {
 	copyFrom := path.Join(".svcs/files", hash)

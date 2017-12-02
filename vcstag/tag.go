@@ -39,11 +39,11 @@ func Create(tag string, sha string) error {
 			return errors.New("tag already exists")
 		}
 	}
-	commit, err := vcscommit.Get(sha)
+	commitObj, err := vcscommit.Get(sha)
 	if err != nil {
 		return err
 	}
-	tagsArr = append(tagsArr, Tag{Name: tag, Commit: commit})
+	tagsArr = append(tagsArr, Tag{Name: tag, Commit: commitObj})
 	err = Write(tagsArr)
 	return err
 }

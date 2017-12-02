@@ -40,12 +40,12 @@ func gcCommits() error {
 		}
 		var referencedCommits []string
 		for _, commitHash := range commitHashes {
-			commit, err := vcscommit.Get(commitHash)
+			commitObj, err := vcscommit.Get(commitHash)
 			if err != nil {
 				return err
 			}
-			if commit.Parent != "" {
-				referencedCommits = append(referencedCommits, commit.Parent)
+			if commitObj.Parent != "" {
+				referencedCommits = append(referencedCommits, commitobj.Parent)
 			}
 		}
 		for _, branch := range branches {
@@ -88,11 +88,11 @@ func gcTrees() error {
 	for _, treeHash := range treeHashes {
 		var exists bool
 		for _, commitHash := range commitHashes {
-			commit, err := vcscommit.Get(commitHash)
+			commitObj, err := vcscommit.Get(commitHash)
 			if err != nil {
 				return err
 			}
-			if commit.Tree.Hash == treeHash {
+			if commitObj.Tree.Hash == treeHash {
 				exists = true
 			}
 		}

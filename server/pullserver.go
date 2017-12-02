@@ -65,11 +65,11 @@ func visitCommits(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	commit, err := vcscommit.Get(info.Name())
+	commitObj, err := vcscommit.Get(info.Name())
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(response, commit.Hash+" "+commit.Author+" "+commit.Parent+" "+commit.Tree.Hash+" "+commit.Time+" "+gotils.Encode(commit.Message))
+	fmt.Fprintln(response, commitObj.Hash+" "+commitObj.Author+" "+commitObj.Parent+" "+commitObj.Tree.Hash+" "+commitObj.Time+" "+gotils.Encode(commitObj.Message))
 	return nil
 }
 

@@ -30,11 +30,11 @@ func Checkout(commitHash string, noHead bool) error {
 		return err
 	}
 	commitHash = currentCommit.Hash
-	commit, err := vcscommit.Get(commitHash)
+	commitObj, err := vcscommit.Get(commitHash)
 	if err != nil {
 		return err
 	}
-	files := commit.GetFiles()
+	files := commitObj.GetFiles()
 	for _, fileEntry := range files {
 		if fileEntry == "" {
 			continue

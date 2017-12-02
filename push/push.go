@@ -139,16 +139,16 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	commit, err := vcscommit.Get(info.Name())
+	commitObj, err := vcscommit.Get(info.Name())
 	if err != nil {
 		return err
 	}
 	body = body +
-		commit.Hash + " " +
-		commit.Author + " " +
-		commit.Parent + " " +
-		commit.Tree.Hash + " " +
-		commit.Time + " " +
-		gotils.Encode(commit.Message) + "\n"
+		commitObj.Hash + " " +
+		commitObj.Author + " " +
+		commitObj.Parent + " " +
+		commitObj.Tree.Hash + " " +
+		commitObj.Time + " " +
+		gotils.Encode(commitObj.Message) + "\n"
 	return nil
 }

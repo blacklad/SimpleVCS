@@ -19,11 +19,11 @@ func Read() ([]Tag, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		commit, err := vcscommit.Get(split[1])
+		commitObj, err := vcscommit.Get(split[1])
 		if err != nil {
 			return nil, err
 		}
-		tags = append(tags, Tag{Name: split[0], Commit: commit})
+		tags = append(tags, Tag{Name: split[0], Commit: commitObj})
 	}
 	return tags, nil
 }

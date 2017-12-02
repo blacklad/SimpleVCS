@@ -19,16 +19,16 @@ func Read() ([]Branch, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		var commit vcscommit.Commit
+		var commitObj vcscommit.Commit
 		if len(split) == 2 {
-			commit, err = vcscommit.Get(split[1])
+			commitObj, err = vcscommit.Get(split[1])
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			commit = vcscommit.Commit{}
+			commitObj = vcscommit.Commit{}
 		}
-		branches = append(branches, Branch{Name: split[0], Commit: commit})
+		branches = append(branches, Branch{Name: split[0], Commit: commitObj})
 	}
 	return branches, nil
 }

@@ -29,13 +29,13 @@ func Log(branch string) error {
 	for i := 0; i < len(commits)/2; i++ {
 		commits[i], commits[last-i] = commits[last-i], commits[i]
 	}
-	for _, commit := range commits {
-		time, err := time.Parse("20060102150405", commit.Time)
+	for _, commitObj := range commits {
+		time, err := time.Parse("20060102150405", commitObj.Time)
 		if err != nil {
 			return err
 		}
-		fmt.Println(commit.Hash + " " + commit.Author + " " + time.String())
-		fmt.Println(commit.Message)
+		fmt.Println(commitObj.Hash + " " + commitObj.Author + " " + time.String())
+		fmt.Println(commitObj.Message)
 	}
 	return nil
 }

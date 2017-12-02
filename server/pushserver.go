@@ -84,11 +84,11 @@ func pushCommits(request *http.Request) error {
 		return err
 	}
 	commitsSplit := strings.Split(string(body), "\n")
-	for _, commit := range commitsSplit {
-		if commit == "" {
+	for _, commitObj := range commitsSplit {
+		if commitObj == "" {
 			continue
 		}
-		commitSplit := strings.Split(commit, " ")
+		commitSplit := strings.Split(commitObj, " ")
 		_, err := vcscommit.Get(commitSplit[0])
 		if err == nil {
 			continue

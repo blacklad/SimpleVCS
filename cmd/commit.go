@@ -29,7 +29,7 @@ func Commit(message string) error {
 	if message == "" {
 		return errors.New("you must specify a message")
 	}
-	head, err := lib.GetHead()
+	head, err := util.GetHead()
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = vcsbranch.Update(head.Branch.Name, sumString)
+	err = vcsbranch.Update(head.Branch, sumString)
 	if err != nil {
 		return err
 	}

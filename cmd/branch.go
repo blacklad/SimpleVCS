@@ -4,20 +4,24 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 )
 
 //CreateBranch creates a branch.
 func CreateBranch(branch string) error {
-	head, err := lib.GetHead()
+	head, err := util.GetHead()
 	if err != nil {
 		return err
 	}
 	if head.Detached {
 		return errors.New("can't create branch in detached state")
 	}
-	err = vcsbranch.Create(branch, head.Branch.Commit.Hash)
+	headBranch, err := vcsbranch.Get(head.Branch)
+	if err != nil {
+		return err
+	}
+	err = vcsbranch.Create(branch, headBranch.Commit.Hash)
 	return err
 }
 

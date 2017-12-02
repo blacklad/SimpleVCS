@@ -10,6 +10,8 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
@@ -18,20 +20,23 @@ var currentFiles []vcstree.File
 
 //Status prints the status.
 func Status() error {
-	head, err := lib.GetHead()
+	head, err := util.GetHead()
 	if err != nil {
 		return err
 	}
 	if head.Detached {
 		return errors.New("can't view status in detached state")
 	}
-	fmt.Println("branch " + head.Branch.Name)
-	commit := head.Branch.Commit
+	fmt.Println("branch " + head.Branch)
+	headBranch, err := vcsbranch.Get(head.Branch)
+	if err != nil {
+		return err
+	}
 	err = filepath.Walk(".", statusVisit)
 	if err != nil {
 		return err
 	}
-	changes := lib.GenerateChange(commit.Tree.Files, currentFiles)
+	changes := lib.GenerateChange(headBranch.Commit.Tree.Files, currentFiles)
 	for _, change := range changes {
 		fmt.Println(change.Type + " " + change.Name)
 	}

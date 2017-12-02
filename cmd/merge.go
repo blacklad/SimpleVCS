@@ -14,7 +14,7 @@ func Merge(fromBranchString string) error {
 	if err != nil {
 		return err
 	}
-	head, err := lib.GetHead()
+	head, err := util.GetHead()
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func Merge(fromBranchString string) error {
 	if err != nil {
 		return err
 	}
-	toBranch, err := vcsbranch.Get(head.Branch.Name)
+	toBranch, err := vcsbranch.Get(head.Branch)
 	if err != nil {
 		return err
 	}

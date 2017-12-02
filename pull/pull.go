@@ -114,7 +114,7 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		commitSplit := strings.Split(commitObj, " ")
-		_, err := vcscommit.Get(commitSplit[0])
+		_, err := types.GetCommit(commitSplit[0])
 		if err == nil {
 			continue
 		}

@@ -5,16 +5,15 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcschange"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Generate generates a patch
 func Generate(fromSha string, toSha string, filename string) error {
-	fromCommit, err := vcscommit.Get(fromSha)
+	fromCommit, err := types.GetCommit(fromSha)
 	if err != nil {
 		return err
 	}
-	toCommit, err := vcscommit.Get(toSha)
+	toCommit, err := types.GetCommit(toSha)
 	if err != nil {
 		return err
 	}

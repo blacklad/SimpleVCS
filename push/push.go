@@ -11,7 +11,6 @@ import (
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
@@ -139,7 +138,7 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	commitObj, err := vcscommit.Get(info.Name())
+	commitObj, err := types.GetCommit(info.Name())
 	if err != nil {
 		return err
 	}

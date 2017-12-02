@@ -9,9 +9,9 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 
 	"github.com/MSathieu/Gotils"
 )
@@ -30,7 +30,7 @@ func Checkout(commitHash string, noHead bool) error {
 		return err
 	}
 	commitHash = currentCommit.Hash
-	commitObj, err := vcscommit.Get(commitHash)
+	commitObj, err := types.GetCommit(commitHash)
 	if err != nil {
 		return err
 	}

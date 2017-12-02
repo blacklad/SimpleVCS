@@ -5,7 +5,6 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Read reads the content of branches.txt into an array.
@@ -22,7 +21,7 @@ func Read() ([]Branch, error) {
 		split := strings.Fields(line)
 		var commitObj types.Commit
 		if len(split) == 2 {
-			commitObj, err = vcscommit.Get(split[1])
+			commitObj, err = types.GetCommit(split[1])
 			if err != nil {
 				return nil, err
 			}

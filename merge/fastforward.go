@@ -1,8 +1,8 @@
 package merge
 
 import (
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 func checkForFastForward(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (bool, error) {
@@ -16,7 +16,7 @@ func checkForFastForward(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch)
 		if currentCommit.Parent == "" {
 			return false, nil
 		}
-		parentCommit, err := vcscommit.Get(currentCommit.Parent)
+		parentCommit, err := types.GetCommit(currentCommit.Parent)
 		if err != nil {
 			return false, err
 		}

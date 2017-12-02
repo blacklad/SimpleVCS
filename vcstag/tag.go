@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Tag is the tag object
@@ -40,7 +39,7 @@ func Create(tag string, sha string) error {
 			return errors.New("tag already exists")
 		}
 	}
-	commitObj, err := vcscommit.Get(sha)
+	commitObj, err := types.GetCommit(sha)
 	if err != nil {
 		return err
 	}

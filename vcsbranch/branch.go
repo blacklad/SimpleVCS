@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Branch is the branch object
@@ -40,7 +39,7 @@ func Create(branch string, sha string) error {
 			return errors.New("branch exists")
 		}
 	}
-	commit, err := vcscommit.Get(sha)
+	commit, err := types.GetCommit(sha)
 	if err != nil {
 		return err
 	}
@@ -85,7 +84,7 @@ func ConvertToCommit(convertFrom string) (types.Commit, bool, error) {
 		isBranch = true
 		commit = branch.Commit
 	} else {
-		commit, err = vcscommit.Get(convertFrom)
+		commit, err = types.GetCommit(convertFrom)
 		if err != nil {
 			return types.Commit{}, false, err
 		}

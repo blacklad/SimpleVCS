@@ -3,17 +3,17 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcschange"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Diff shows the diff between two commits.
 func Diff(fromCommitHash string, toCommitHash string) error {
-	fromCommit, err := vcscommit.Get(fromCommitHash)
+	fromCommit, err := types.GetCommit(fromCommitHash)
 	if err != nil {
 		return err
 	}
-	toCommit, err := vcscommit.Get(toCommitHash)
+	toCommit, err := types.GetCommit(toCommitHash)
 	if err != nil {
 		return err
 	}

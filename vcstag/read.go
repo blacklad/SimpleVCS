@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
+	"github.com/MSathieu/SimpleVCS/types"
 )
 
 //Read reads the tags.txt file into an array
@@ -19,7 +19,7 @@ func Read() ([]Tag, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		commitObj, err := vcscommit.Get(split[1])
+		commitObj, err := types.GetCommit(split[1])
 		if err != nil {
 			return nil, err
 		}

@@ -16,7 +16,7 @@ func Apply(filename string) error {
 	if err != nil {
 		return err
 	}
-	fromCommit, err := vcscommit.Get(patchObj.FromHash)
+	fromCommit, err := types.GetCommit(patchObj.FromHash)
 	if err != nil {
 		return err
 	}

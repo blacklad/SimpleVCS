@@ -21,7 +21,7 @@ func checkForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vc
 	for currentCommit := fromBranch.Commit; true; {
 		fromCommits = append(fromCommits, currentCommit.Hash)
 		var err error
-		currentCommit, err = vcscommit.Get(currentCommit.Parent)
+		currentCommit, err = types.GetCommit(currentCommit.Parent)
 		if err != nil {
 			return types.Commit{}, err
 		}
@@ -36,7 +36,7 @@ func checkForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vc
 			}
 		}
 		var err error
-		currentCommit, err = vcscommit.Get(currentCommit.Parent)
+		currentCommit, err = types.GetCommit(currentCommit.Parent)
 		if err != nil {
 			return types.Commit{}, err
 		}

@@ -6,7 +6,6 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Log logs all commits.
@@ -18,7 +17,7 @@ func Log(branch string) error {
 	}
 	for currentCommit := lastCommit; true; {
 		commits = append(commits, currentCommit)
-		currentCommit, err = vcscommit.Get(currentCommit.Parent)
+		currentCommit, err = types.GetCommit(currentCommit.Parent)
 		if err != nil {
 			return err
 		}

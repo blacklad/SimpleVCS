@@ -4,16 +4,17 @@ import (
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //GenPatch generates a patch
 func GenPatch(fromSha string, toSha string, filename string) error {
-	fromCommit, err := lib.GetCommit(fromSha)
+	fromCommit, err := vcscommit.Get(fromSha)
 	if err != nil {
 		return err
 	}
-	toCommit, err := lib.GetCommit(toSha)
+	toCommit, err := vcscommit.Get(toSha)
 	if err != nil {
 		return err
 	}

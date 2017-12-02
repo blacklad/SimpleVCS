@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -25,7 +26,7 @@ func GCCommits() error {
 		}
 		var referencedCommits []string
 		for _, commitHash := range commitHashes {
-			commit, err := GetCommit(commitHash)
+			commit, err := vcscommit.Get(commitHash)
 			if err != nil {
 				return err
 			}
@@ -74,7 +75,7 @@ func GCTrees() error {
 	for _, treeHash := range treeHashes {
 		var exists bool
 		for _, commitHash := range commitHashes {
-			commit, err := GetCommit(commitHash)
+			commit, err := vcscommit.Get(commitHash)
 			if err != nil {
 				return err
 			}

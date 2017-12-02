@@ -6,12 +6,13 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Branch is the branch object
 type Branch struct {
 	Name   string
-	Commit Commit
+	Commit vcscommit.Commit
 }
 
 const branchesFile = ".svcs/branches.txt"
@@ -41,7 +42,7 @@ func CreateBranch(branch string, sha string) error {
 			return errors.New("branch exists")
 		}
 	}
-	commit, err := GetCommit(sha)
+	commit, err := vcscommit.Get(sha)
 	if err != nil {
 		return err
 	}
@@ -86,14 +87,14 @@ func ReadBranches() ([]Branch, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		var commit Commit
+		var commit vcscommit.Commit
 		if len(split) == 2 {
-			commit, err = GetCommit(split[1])
+			commit, err = vcscommit.Get(split[1])
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			commit = Commit{}
+			commit = vcscommit.Commit{}
 		}
 		branches = append(branches, Branch{Name: split[0], Commit: commit})
 	}
@@ -116,20 +117,20 @@ func WriteBranches(branches []Branch) error {
 }
 
 //ConvertToCommit converts a branch to a hash
-func ConvertToCommit(convertFrom string) (Commit, bool, error) {
+func ConvertToCommit(convertFrom string) (vcscommit.Commit, bool, error) {
 	isBranch := false
 	branch, err := GetBranch(convertFrom)
 	if err != nil {
-		return Commit{}, false, err
+		return vcscommit.Commit{}, false, err
 	}
-	var commit Commit
+	var commit vcscommit.Commit
 	if branch.Name != "" {
 		isBranch = true
 		commit = branch.Commit
 	} else {
-		commit, err = GetCommit(convertFrom)
+		commit, err = vcscommit.Get(convertFrom)
 		if err != nil {
-			return Commit{}, false, err
+			return vcscommit.Commit{}, false, err
 		}
 	}
 	return commit, isBranch, nil

@@ -4,15 +4,16 @@ import (
 	"fmt"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Diff shows the diff between two commits.
 func Diff(fromCommitHash string, toCommitHash string) error {
-	fromCommit, err := lib.GetCommit(fromCommitHash)
+	fromCommit, err := vcscommit.Get(fromCommitHash)
 	if err != nil {
 		return err
 	}
-	toCommit, err := lib.GetCommit(toCommitHash)
+	toCommit, err := vcscommit.Get(toCommitHash)
 	if err != nil {
 		return err
 	}

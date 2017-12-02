@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
@@ -69,7 +70,7 @@ func PushTrees(request *http.Request) error {
 		for i := range filesSplit {
 			filesList = append(filesList, namesSplit[i]+" "+filesSplit[i])
 		}
-		_, err = SetFiles(filesList)
+		_, err = vcscommit.SetFiles(filesList)
 		if err != nil {
 			return err
 		}
@@ -89,12 +90,12 @@ func PushCommits(request *http.Request) error {
 			continue
 		}
 		commitSplit := strings.Split(commit, " ")
-		_, err := GetCommit(commitSplit[0])
+		_, err := vcscommit.Get(commitSplit[0])
 		if err == nil {
 			continue
 		}
 		commitTree := vcstree.Tree{Hash: commitSplit[3]}
-		commitObj := Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
+		commitObj := vcscommit.Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
 		_, err = commitObj.Save()
 		if err != nil {
 			return err

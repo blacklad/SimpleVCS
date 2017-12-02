@@ -5,6 +5,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
@@ -14,7 +15,7 @@ func Apply(filename string) error {
 	if err != nil {
 		return err
 	}
-	fromCommit, err := lib.GetCommit(patch.FromHash)
+	fromCommit, err := vcscommit.Get(patch.FromHash)
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func Apply(filename string) error {
 		changes = append(changes, lib.Change{Type: split[0], Name: split[1], Hash: hash})
 	}
 	files := lib.ApplyChange(fromCommit.GetFiles(), changes)
-	commitHash, err := lib.CreateCommit("Applied patch "+filename, files)
+	commitHash, err := vcscommit.Create("Applied patch "+filename, files)
 	if err != nil {
 		return err
 	}

@@ -1,5 +1,7 @@
 package lib
 
+import "github.com/MSathieu/SimpleVCS/vcscommit"
+
 // CheckForFastForward checkis if fastforward merge is possible.
 func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
@@ -12,7 +14,7 @@ func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
 		if currentCommit.Parent == "" {
 			return false, nil
 		}
-		parentCommit, err := GetCommit(currentCommit.Parent)
+		parentCommit, err := vcscommit.Get(currentCommit.Parent)
 		if err != nil {
 			return false, err
 		}

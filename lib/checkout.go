@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 
 	"github.com/MSathieu/Gotils"
 )
@@ -28,7 +29,7 @@ func Checkout(commitHash string, noHead bool) error {
 		return err
 	}
 	commitHash = currentCommit.Hash
-	commit, err := GetCommit(commitHash)
+	commit, err := vcscommit.Get(commitHash)
 	if err != nil {
 		return err
 	}

@@ -6,12 +6,13 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Tag is the tag object
 type Tag struct {
 	Name   string
-	Commit Commit
+	Commit vcscommit.Commit
 }
 
 const tagsFile = ".svcs/tags.txt"
@@ -41,7 +42,7 @@ func CreateTag(tag string, sha string) error {
 			return errors.New("tag already exists")
 		}
 	}
-	commit, err := GetCommit(sha)
+	commit, err := vcscommit.Get(sha)
 	if err != nil {
 		return err
 	}
@@ -79,7 +80,7 @@ func ReadTags() ([]Tag, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		commit, err := GetCommit(split[1])
+		commit, err := vcscommit.Get(split[1])
 		if err != nil {
 			return nil, err
 		}

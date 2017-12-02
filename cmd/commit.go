@@ -11,6 +11,7 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
@@ -43,7 +44,7 @@ func Commit(message string) error {
 		return err
 	}
 	commitWait.Wait()
-	sumString, err := lib.CreateCommit(message, filesStruct.files)
+	sumString, err := vcscommit.Create(message, filesStruct.files)
 	if err != nil {
 		return err
 	}

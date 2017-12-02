@@ -5,18 +5,19 @@ import (
 	"time"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Log logs all commits.
 func Log(branch string) error {
-	var commits []lib.Commit
+	var commits []vcscommit.Commit
 	lastCommit, _, err := lib.ConvertToCommit(branch)
 	if err != nil {
 		return err
 	}
 	for currentCommit := lastCommit; true; {
 		commits = append(commits, currentCommit)
-		currentCommit, err = lib.GetCommit(currentCommit.Parent)
+		currentCommit, err = vcscommit.Get(currentCommit.Parent)
 		if err != nil {
 			return err
 		}

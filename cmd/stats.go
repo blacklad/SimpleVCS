@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 var branches, tags, commits int
@@ -42,7 +43,7 @@ func visitCommitStats(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	commitObj, err := lib.GetCommit(info.Name())
+	commitObj, err := vcscommit.Get(info.Name())
 	if err != nil {
 		return err
 	}

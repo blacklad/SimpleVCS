@@ -6,20 +6,22 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor.
-func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (Commit, error) {
+func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (vcscommit.Commit, error) {
 	var fromCommits []string
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
-		return Commit{}, nil
+		return vcscommit.Commit{}, nil
 	}
 	for currentCommit := fromBranch.Commit; true; {
 		fromCommits = append(fromCommits, currentCommit.Hash)
 		var err error
-		currentCommit, err = GetCommit(currentCommit.Parent)
+		currentCommit, err = vcscommit.Get(currentCommit.Parent)
 		if err != nil {
-			return Commit{}, err
+			return vcscommit.Commit{}, err
 		}
 		if currentCommit.Hash == "" {
 			break
@@ -32,19 +34,19 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (Com
 			}
 		}
 		var err error
-		currentCommit, err = GetCommit(currentCommit.Parent)
+		currentCommit, err = vcscommit.Get(currentCommit.Parent)
 		if err != nil {
-			return Commit{}, err
+			return vcscommit.Commit{}, err
 		}
 		if currentCommit.Hash == "" {
 			break
 		}
 	}
-	return Commit{}, nil
+	return vcscommit.Commit{}, nil
 }
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
-func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
+func PerformRecursive(fromBranch Branch, toBranch Branch, parent vcscommit.Commit) error {
 	filesArr := parent.GetFiles()
 	toChanges := GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
 	fromChanges := GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
@@ -86,7 +88,7 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent Commit) error {
 	fromChanges = cleanFromChanges
 	filesArr = ApplyChange(filesArr, toChanges)
 	filesArr = ApplyChange(filesArr, fromChanges)
-	commitHash, err := CreateCommit("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
+	commitHash, err := vcscommit.Create("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
 	if err != nil {
 		return err
 	}

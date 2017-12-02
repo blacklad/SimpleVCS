@@ -10,6 +10,7 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -137,7 +138,7 @@ func visitCommitsPush(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	commit, err := lib.GetCommit(info.Name())
+	commit, err := vcscommit.Get(info.Name())
 	if err != nil {
 		return err
 	}

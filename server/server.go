@@ -1,4 +1,4 @@
-package cmd
+package server
 
 import (
 	"fmt"
@@ -8,12 +8,10 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-
-	"github.com/MSathieu/SimpleVCS/lib"
 )
 
 var response http.ResponseWriter
-var auths []lib.Auth
+var auths []auth
 var public bool
 var multiserver bool
 
@@ -24,7 +22,7 @@ func Server(publicPull bool) error {
 		multiserver = true
 	}
 	var err error
-	auths, err = lib.GetAuth()
+	auths, err = getAuth()
 	if err != nil {
 		return err
 	}
@@ -65,15 +63,15 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		case "GET":
 			switch request.URL.Path {
 			case "/files":
-				err = lib.PullFiles(response)
+				err = pullFiles(response)
 			case "/trees":
-				err = lib.PullTrees(response)
+				err = pullTrees(response)
 			case "/commits":
-				err = lib.PullCommits(response)
+				err = pullCommits(response)
 			case "/branches":
-				err = lib.PullBranches(response)
+				err = pullBranches(response)
 			case "/tags":
-				err = lib.PullTags(response)
+				err = pullTags(response)
 			default:
 				response.WriteHeader(404)
 				return
@@ -81,15 +79,15 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		case "POST":
 			switch request.URL.Path {
 			case "/files":
-				err = lib.PushFiles(request)
+				err = pushFiles(request)
 			case "/trees":
-				err = lib.PushTrees(request)
+				err = pushTrees(request)
 			case "/commits":
-				err = lib.PushCommits(request)
+				err = pushCommits(request)
 			case "/branches":
-				err = lib.PushBranches(request)
+				err = pushBranches(request)
 			case "/tags":
-				err = lib.PushTags(request)
+				err = pushTags(request)
 			default:
 				response.WriteHeader(404)
 				return
@@ -112,15 +110,15 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		case "GET":
 			switch split[2] {
 			case "files":
-				err = lib.PullFiles(response)
+				err = pullFiles(response)
 			case "trees":
-				err = lib.PullTrees(response)
+				err = pullTrees(response)
 			case "commits":
-				err = lib.PullCommits(response)
+				err = pullCommits(response)
 			case "branches":
-				err = lib.PullBranches(response)
+				err = pullBranches(response)
 			case "tags":
-				err = lib.PullTags(response)
+				err = pullTags(response)
 			default:
 				response.WriteHeader(404)
 				return
@@ -128,15 +126,15 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		case "POST":
 			switch split[2] {
 			case "files":
-				err = lib.PushFiles(request)
+				err = pushFiles(request)
 			case "trees":
-				err = lib.PushTrees(request)
+				err = pushTrees(request)
 			case "commits":
-				err = lib.PushCommits(request)
+				err = pushCommits(request)
 			case "branches":
-				err = lib.PushBranches(request)
+				err = pushBranches(request)
 			case "tags":
-				err = lib.PushTags(request)
+				err = pushTags(request)
 			default:
 				response.WriteHeader(404)
 				return

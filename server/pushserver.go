@@ -1,4 +1,4 @@
-package lib
+package server
 
 import (
 	"io/ioutil"
@@ -13,8 +13,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
-//PushFiles pushes the files.
-func PushFiles(request *http.Request) error {
+func pushFiles(request *http.Request) error {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return err
@@ -42,8 +41,7 @@ func PushFiles(request *http.Request) error {
 	return nil
 }
 
-//PushTrees pushes the trees.
-func PushTrees(request *http.Request) error {
+func pushTrees(request *http.Request) error {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return err
@@ -80,8 +78,7 @@ func PushTrees(request *http.Request) error {
 	return nil
 }
 
-//PushCommits pushes the commits.
-func PushCommits(request *http.Request) error {
+func pushCommits(request *http.Request) error {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return err
@@ -106,8 +103,7 @@ func PushCommits(request *http.Request) error {
 	return nil
 }
 
-//PushBranches pushes the branches
-func PushBranches(request *http.Request) error {
+func pushBranches(request *http.Request) error {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return err
@@ -126,8 +122,7 @@ func PushBranches(request *http.Request) error {
 	return nil
 }
 
-//PushTags pushes the tags
-func PushTags(request *http.Request) error {
+func pushTags(request *http.Request) error {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		return err

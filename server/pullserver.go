@@ -1,4 +1,4 @@
-package lib
+package server
 
 import (
 	"fmt"
@@ -16,10 +16,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
-var response http.ResponseWriter
-
-//PullFiles pulls the files.
-func PullFiles(responseWriter http.ResponseWriter) error {
+func pullFiles(responseWriter http.ResponseWriter) error {
 	response = responseWriter
 	return filepath.Walk(".svcs/files", visitFiles)
 }
@@ -36,14 +33,12 @@ func visitFiles(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-//PullTrees pulls the trees.
-func PullTrees(responseWriter http.ResponseWriter) error {
+func pullTrees(responseWriter http.ResponseWriter) error {
 	response = responseWriter
 	return filepath.Walk(".svcs/trees", visitTrees)
 }
 
-//PullCommits pulls the commits.
-func PullCommits(responseWriter http.ResponseWriter) error {
+func pullCommits(responseWriter http.ResponseWriter) error {
 	response = responseWriter
 	return filepath.Walk(".svcs/commits", visitCommits)
 }
@@ -78,8 +73,7 @@ func visitCommits(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-//PullBranches pulls the branches
-func PullBranches(responseWriter http.ResponseWriter) error {
+func pullBranches(responseWriter http.ResponseWriter) error {
 	branches, err := vcsbranch.Read()
 	if err != nil {
 		return err
@@ -90,8 +84,7 @@ func PullBranches(responseWriter http.ResponseWriter) error {
 	return nil
 }
 
-//PullTags pulls the tags
-func PullTags(responseWriter http.ResponseWriter) error {
+func pullTags(responseWriter http.ResponseWriter) error {
 	tags, err := vcstag.Read()
 	if err != nil {
 		return err

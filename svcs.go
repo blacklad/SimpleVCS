@@ -14,6 +14,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/patch"
 	"github.com/MSathieu/SimpleVCS/pull"
 	"github.com/MSathieu/SimpleVCS/push"
+	"github.com/MSathieu/SimpleVCS/server"
 )
 
 func main() {
@@ -112,7 +113,7 @@ func main() {
 	case "gc":
 		err = gc.GC()
 	case "server":
-		err = cmd.Server(public)
+		err = server.Server(public)
 	default:
 		fmt.Println("Invalid command, run --help to get a list of the commands.")
 	}

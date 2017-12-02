@@ -1,9 +1,8 @@
-package cmd
+package merge
 
 import (
 	"errors"
 
-	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 )
@@ -29,24 +28,24 @@ func Merge(fromBranchString string) error {
 	if err != nil {
 		return err
 	}
-	fastForward, err := lib.CheckForFastForward(fromBranch, toBranch)
+	fastForward, err := checkForFastForward(fromBranch, toBranch)
 	if err != nil {
 		return err
 	}
 	if fastForward {
-		err = lib.PerformFastForward(fromBranch, toBranch)
+		err = performFastForward(fromBranch, toBranch)
 		if err != nil {
 			return err
 		}
 		err = util.ExecHook("postmerge")
 		return err
 	}
-	parent, err := lib.CheckForRecursiveAndGetAncestorSha(fromBranch, toBranch)
+	parent, err := checkForRecursiveAndGetAncestorSha(fromBranch, toBranch)
 	if err != nil {
 		return err
 	}
 	if parent.Hash != "" {
-		err = lib.PerformRecursive(fromBranch, toBranch, parent)
+		err = performRecursive(fromBranch, toBranch, parent)
 		if err != nil {
 			return err
 		}

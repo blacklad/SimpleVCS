@@ -1,4 +1,4 @@
-package lib
+package merge
 
 import (
 	"bufio"
@@ -12,8 +12,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
-//CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor.
-func CheckForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (vcscommit.Commit, error) {
+func checkForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (vcscommit.Commit, error) {
 	var fromCommits []string
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return vcscommit.Commit{}, nil
@@ -47,8 +46,7 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vc
 	return vcscommit.Commit{}, nil
 }
 
-//PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
-func PerformRecursive(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch, parent vcscommit.Commit) error {
+func performRecursive(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch, parent vcscommit.Commit) error {
 	filesArr := parent.GetFiles()
 	toChanges := vcschange.GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
 	fromChanges := vcschange.GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)

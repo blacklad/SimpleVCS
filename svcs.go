@@ -10,6 +10,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/cmd"
 	"github.com/MSathieu/SimpleVCS/gc"
 	"github.com/MSathieu/SimpleVCS/initialize"
+	"github.com/MSathieu/SimpleVCS/merge"
 )
 
 func main() {
@@ -94,7 +95,7 @@ func main() {
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}
 	case "merge":
-		err = cmd.Merge(flag.Arg(1))
+		err = merge.Merge(flag.Arg(1))
 	case "pull":
 		err = cmd.Pull(flag.Arg(1), username, password)
 	case "push":

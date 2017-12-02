@@ -1,4 +1,4 @@
-package lib
+package ignore
 
 import (
 	"io/ioutil"

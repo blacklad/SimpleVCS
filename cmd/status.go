@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
@@ -47,7 +47,7 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
-		ignored, err := lib.CheckIgnored(pathPart)
+		ignored, err := ignore.CheckIgnored(pathPart)
 		if err != nil {
 			return err
 		}

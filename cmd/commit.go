@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
@@ -69,7 +69,7 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
-		ignored, err := lib.CheckIgnored(pathPart)
+		ignored, err := ignore.CheckIgnored(pathPart)
 		if err != nil {
 			log.Fatal(err)
 		}

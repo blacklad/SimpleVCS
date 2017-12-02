@@ -12,6 +12,8 @@ import (
 	"github.com/MSathieu/SimpleVCS/initialize"
 	"github.com/MSathieu/SimpleVCS/merge"
 	"github.com/MSathieu/SimpleVCS/patch"
+	"github.com/MSathieu/SimpleVCS/pull"
+	"github.com/MSathieu/SimpleVCS/push"
 )
 
 func main() {
@@ -98,9 +100,9 @@ func main() {
 	case "merge":
 		err = merge.Merge(flag.Arg(1))
 	case "pull":
-		err = cmd.Pull(flag.Arg(1), username, password)
+		err = pull.Pull(flag.Arg(1), username, password)
 	case "push":
-		err = cmd.Push(flag.Arg(1), username, password)
+		err = push.Push(flag.Arg(1), username, password)
 	case "status":
 		err = cmd.Status()
 	case "diff":

@@ -8,6 +8,7 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/checkout"
 	"github.com/MSathieu/SimpleVCS/initialize"
+	"github.com/MSathieu/SimpleVCS/pull"
 )
 
 //Module is the module object
@@ -51,7 +52,7 @@ func InitModules() error {
 			return err
 		}
 		initialize.Initialize(module.Name, true, false)
-		err = Pull(module.URL, os.Getenv("SVCS_MODULE_"+module.Name+"_USERNAME"), os.Getenv("SVCS_MODULE_"+module.Name+"_PASSWORD"))
+		err = pull.Pull(module.URL, os.Getenv("SVCS_MODULE_"+module.Name+"_USERNAME"), os.Getenv("SVCS_MODULE_"+module.Name+"_PASSWORD"))
 		if err != nil {
 			return err
 		}

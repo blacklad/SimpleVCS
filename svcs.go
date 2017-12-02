@@ -11,6 +11,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/gc"
 	"github.com/MSathieu/SimpleVCS/initialize"
 	"github.com/MSathieu/SimpleVCS/merge"
+	"github.com/MSathieu/SimpleVCS/patch"
 )
 
 func main() {
@@ -66,9 +67,9 @@ func main() {
 	case "patch":
 		switch flag.Arg(1) {
 		case "apply":
-			err = cmd.Apply(flag.Arg(2))
+			err = patch.Apply(flag.Arg(2))
 		case "gen":
-			err = cmd.GenPatch(flag.Arg(2), flag.Arg(3), flag.Arg(4))
+			err = patch.Generate(flag.Arg(2), flag.Arg(3), flag.Arg(4))
 		default:
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}

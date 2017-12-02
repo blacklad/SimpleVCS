@@ -1,4 +1,4 @@
-package lib
+package patch
 
 import (
 	"io/ioutil"
@@ -30,8 +30,8 @@ func (patch Patch) Save(filename string) error {
 	return err
 }
 
-//ReadPatch reads a patch
-func ReadPatch(filename string) (Patch, error) {
+//Read reads a patch
+func Read(filename string) (Patch, error) {
 	contentBytes, err := ioutil.ReadFile(filename + ".patch")
 	if err != nil {
 		return Patch{}, err

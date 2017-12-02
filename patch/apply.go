@@ -1,10 +1,9 @@
-package cmd
+package patch
 
 import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
@@ -13,16 +12,16 @@ import (
 
 //Apply applies a path.
 func Apply(filename string) error {
-	patch, err := lib.ReadPatch(filename)
+	patchObj, err := Read(filename)
 	if err != nil {
 		return err
 	}
-	fromCommit, err := vcscommit.Get(patch.FromHash)
+	fromCommit, err := vcscommit.Get(patchObj.FromHash)
 	if err != nil {
 		return err
 	}
 	var changes []vcschange.Change
-	for _, change := range patch.Changes {
+	for _, change := range patchObj.Changes {
 		split := strings.Split(change, " ")
 		hash := ""
 		if split[0] != "deleted" {

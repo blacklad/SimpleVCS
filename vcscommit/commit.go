@@ -1,13 +1,13 @@
 package vcscommit
 
-import "github.com/MSathieu/SimpleVCS/vcstree"
+import "github.com/MSathieu/SimpleVCS/types"
 
 //Commit is the commit object.
 type Commit struct {
 	Author  string
 	Time    string
 	Parent  string
-	Tree    vcstree.Tree
+	Tree    types.Tree
 	Message string
 	Hash    string
 }

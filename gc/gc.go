@@ -45,7 +45,7 @@ func gcCommits() error {
 				return err
 			}
 			if commitObj.Parent != "" {
-				referencedCommits = append(referencedCommits, commitobj.Parent)
+				referencedCommits = append(referencedCommits, commitObj.Parent)
 			}
 		}
 		for _, branch := range branches {

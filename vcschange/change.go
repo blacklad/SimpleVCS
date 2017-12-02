@@ -3,7 +3,7 @@ package vcschange
 import (
 	"strings"
 
-	"github.com/MSathieu/SimpleVCS/vcstree"
+	"github.com/MSathieu/SimpleVCS/types"
 )
 
 //Change is the change object.
@@ -14,7 +14,7 @@ type Change struct {
 }
 
 //GenerateChange returns the changes between two file arrays.
-func GenerateChange(fromFiles []vcstree.File, toFiles []vcstree.File) []Change {
+func GenerateChange(fromFiles []types.TreeFile, toFiles []types.TreeFile) []Change {
 	var changes []Change
 	for _, fromFile := range fromFiles {
 		change := Change{Type: "deleted", Name: fromFile.Name}

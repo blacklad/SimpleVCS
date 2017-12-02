@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
@@ -32,7 +33,7 @@ func pushFiles(request *http.Request) error {
 		if err != nil {
 			return err
 		}
-		fileObj := vcsfile.File{Hash: fileSplit[0], Content: decodedFile}
+		fileObj := types.File{Hash: fileSplit[0], Content: decodedFile}
 		err = fileObj.Save()
 		if err != nil {
 			return err
@@ -93,7 +94,7 @@ func pushCommits(request *http.Request) error {
 		if err == nil {
 			continue
 		}
-		commitTree := vcstree.Tree{Hash: commitSplit[3]}
+		commitTree := types.Tree{Hash: commitSplit[3]}
 		commitObj := vcscommit.Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
 		_, err = commitObj.Save()
 		if err != nil {

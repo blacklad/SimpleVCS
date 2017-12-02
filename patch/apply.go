@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
-	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //Apply applies a path.
@@ -30,7 +30,7 @@ func Apply(filename string) error {
 				return err
 			}
 			hash = gotils.GetChecksum(content)
-			fileObj := vcsfile.File{Content: content, Hash: hash}
+			fileObj := types.File{Content: content, Hash: hash}
 			err = fileObj.Save()
 			if err != nil {
 				return err

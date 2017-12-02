@@ -10,14 +10,13 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/ignore"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
-	"github.com/MSathieu/SimpleVCS/vcsfile"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
-var currentFiles []vcstree.File
+var currentFiles []types.TreeFile
 
 //Status prints the status.
 func Status() error {
@@ -63,6 +62,6 @@ func statusVisit(filePath string, fileInfo os.FileInfo, err error) error {
 		return err
 	}
 	checksum := gotils.GetChecksum(string(currentFileContent))
-	currentFiles = append(currentFiles, vcstree.File{Name: fixedPath, File: vcsfile.File{Hash: checksum}})
+	currentFiles = append(currentFiles, types.TreeFile{Name: fixedPath, File: types.File{Hash: checksum}})
 	return nil
 }

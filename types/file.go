@@ -1,4 +1,4 @@
-package vcsfile
+package types
 
 import (
 	"os"
@@ -8,6 +8,12 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
 )
+
+//File is the file object.
+type File struct {
+	Content string
+	Hash    string
+}
 
 //Save saves the file
 func (fileObj *File) Save() error {
@@ -25,10 +31,7 @@ func (fileObj *File) Save() error {
 	if err != nil {
 		return err
 	}
+	defer newFile.Close()
 	_, err = newFile.WriteString(zippedContent)
-	if err != nil {
-		return err
-	}
-	err = newFile.Close()
 	return err
 }

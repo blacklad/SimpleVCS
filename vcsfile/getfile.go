@@ -5,22 +5,23 @@ import (
 	"path"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //GetFile gets a file.
-func GetFile(hash string) (File, error) {
+func GetFile(hash string) (types.File, error) {
 	if hash == "" {
-		return File{}, nil
+		return types.File{}, nil
 	}
 	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/files", hash))
 	if err != nil {
-		return File{}, err
+		return types.File{}, err
 	}
 	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
-		return File{}, err
+		return types.File{}, err
 	}
 	err = gotils.CheckIntegrity(fileContent, hash)
-	return File{Content: fileContent, Hash: hash}, err
+	return types.File{Content: fileContent, Hash: hash}, err
 }

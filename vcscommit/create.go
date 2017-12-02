@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
@@ -40,7 +41,7 @@ func createFile(info string, hash string) error {
 	return err
 }
 
-func createInfo(tree vcstree.Tree, message string) (Commit, error) {
+func createInfo(tree types.Tree, message string) (Commit, error) {
 	head, err := util.GetHead()
 	if err != nil {
 		return Commit{}, err
@@ -86,20 +87,20 @@ func (commit *Commit) Save() (string, error) {
 }
 
 //SetFiles creates a tree.
-func SetFiles(files []string) (vcstree.Tree, error) {
+func SetFiles(files []string) (types.Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := gotils.GetChecksum(content)
 	treeFile, err := os.Create(path.Join(".svcs/trees", hash))
 	if err != nil {
-		return vcstree.Tree{}, err
+		return types.Tree{}, err
 	}
 	zippedContent, err := util.Zip(content)
 	if err != nil {
-		return vcstree.Tree{}, err
+		return types.Tree{}, err
 	}
 	_, err = treeFile.WriteString(zippedContent)
 	if err != nil {
-		return vcstree.Tree{}, nil
+		return types.Tree{}, nil
 	}
 	tree, err := vcstree.Get(hash)
 	return tree, err

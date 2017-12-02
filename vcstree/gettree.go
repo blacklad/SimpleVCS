@@ -6,28 +6,29 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
 
 //Get gets a tree
-func Get(hash string) (Tree, error) {
+func Get(hash string) (types.Tree, error) {
 	if hash == "" {
-		return Tree{}, nil
+		return types.Tree{}, nil
 	}
 	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/trees", hash))
 	if err != nil {
-		return Tree{}, err
+		return types.Tree{}, err
 	}
 	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
-		return Tree{}, err
+		return types.Tree{}, err
 	}
 	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
-		return Tree{}, err
+		return types.Tree{}, err
 	}
-	var files []File
+	var files []types.TreeFile
 	split := strings.Split(fileContent, "\n")
 	for _, line := range split {
 		if line == "" {
@@ -36,9 +37,9 @@ func Get(hash string) (Tree, error) {
 		lineSplit := strings.Split(line, " ")
 		filesFile, err := vcsfile.GetFile(lineSplit[1])
 		if err != nil {
-			return Tree{}, err
+			return types.Tree{}, err
 		}
-		files = append(files, File{File: filesFile, Name: lineSplit[0]})
+		files = append(files, types.TreeFile{File: filesFile, Name: lineSplit[0]})
 	}
-	return Tree{Hash: hash, Files: files}, nil
+	return types.Tree{Hash: hash, Files: files}, nil
 }

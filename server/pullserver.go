@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstag"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 func pullFiles(responseWriter http.ResponseWriter) error {
@@ -46,7 +46,7 @@ func visitTrees(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	treeObj, err := vcstree.Get(info.Name())
+	treeObj, err := types.GetTree(info.Name())
 	if err != nil {
 		return err
 	}

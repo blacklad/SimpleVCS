@@ -3,13 +3,14 @@ package vcsbranch
 import (
 	"errors"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Branch is the branch object
 type Branch struct {
 	Name   string
-	Commit vcscommit.Commit
+	Commit types.Commit
 }
 
 const branchesFile = ".svcs/branches.txt"
@@ -73,20 +74,20 @@ func Remove(branch string) error {
 }
 
 //ConvertToCommit converts a branch to a hash
-func ConvertToCommit(convertFrom string) (vcscommit.Commit, bool, error) {
+func ConvertToCommit(convertFrom string) (types.Commit, bool, error) {
 	isBranch := false
 	branch, err := Get(convertFrom)
 	if err != nil {
-		return vcscommit.Commit{}, false, err
+		return types.Commit{}, false, err
 	}
-	var commit vcscommit.Commit
+	var commit types.Commit
 	if branch.Name != "" {
 		isBranch = true
 		commit = branch.Commit
 	} else {
 		commit, err = vcscommit.Get(convertFrom)
 		if err != nil {
-			return vcscommit.Commit{}, false, err
+			return types.Commit{}, false, err
 		}
 	}
 	return commit, isBranch, nil

@@ -9,9 +9,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
-	"github.com/MSathieu/SimpleVCS/vcsfile"
 	"github.com/MSathieu/SimpleVCS/vcstag"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 func pushFiles(request *http.Request) error {
@@ -25,7 +23,7 @@ func pushFiles(request *http.Request) error {
 			continue
 		}
 		fileSplit := strings.Split(fileString, " ")
-		_, err := vcsfile.GetFile(fileSplit[0])
+		_, err := types.GetFile(fileSplit[0])
 		if err == nil {
 			continue
 		}
@@ -53,7 +51,7 @@ func pushTrees(request *http.Request) error {
 			continue
 		}
 		treeSplit := strings.Split(treeString, " ")
-		_, err := vcstree.Get(treeSplit[0])
+		_, err := types.GetTree(treeSplit[0])
 		if err == nil {
 			continue
 		}
@@ -95,7 +93,7 @@ func pushCommits(request *http.Request) error {
 			continue
 		}
 		commitTree := types.Tree{Hash: commitSplit[3]}
-		commitObj := vcscommit.Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
+		commitObj := types.Commit{Hash: commitSplit[0], Author: commitSplit[1], Parent: commitSplit[2], Tree: commitTree, Time: commitSplit[4], Message: commitSplit[5]}
 		_, err = commitObj.Save()
 		if err != nil {
 			return err

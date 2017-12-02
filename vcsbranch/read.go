@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
@@ -19,14 +20,14 @@ func Read() ([]Branch, error) {
 			continue
 		}
 		split := strings.Fields(line)
-		var commitObj vcscommit.Commit
+		var commitObj types.Commit
 		if len(split) == 2 {
 			commitObj, err = vcscommit.Get(split[1])
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			commitObj = vcscommit.Commit{}
+			commitObj = types.Commit{}
 		}
 		branches = append(branches, Branch{Name: split[0], Commit: commitObj})
 	}

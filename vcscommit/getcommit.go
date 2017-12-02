@@ -6,26 +6,26 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //Get gets the commit specified by the hash.
-func Get(hash string) (Commit, error) {
+func Get(hash string) (types.Commit, error) {
 	if hash == "" {
-		return Commit{}, nil
+		return types.Commit{}, nil
 	}
 	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/commits", hash))
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
 	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
 	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
 	split := strings.Split(fileContent, "\n")
 	var author, time, parent, treeHash, message string
@@ -49,11 +49,11 @@ func Get(hash string) (Commit, error) {
 	}
 	message, err = gotils.Decode(message)
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
-	treeObj, err := vcstree.Get(treeHash)
+	treeObj, err := types.GetTree(treeHash)
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
-	return Commit{Author: author, Time: time, Parent: parent, Tree: treeObj, Message: message, Hash: hash}, nil
+	return types.Commit{Author: author, Time: time, Parent: parent, Tree: treeObj, Message: message, Hash: hash}, nil
 }

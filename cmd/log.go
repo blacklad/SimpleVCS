@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Log logs all commits.
 func Log(branch string) error {
-	var commits []vcscommit.Commit
+	var commits []types.Commit
 	lastCommit, _, err := vcsbranch.ConvertToCommit(branch)
 	if err != nil {
 		return err

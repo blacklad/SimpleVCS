@@ -1,6 +1,7 @@
 package types
 
 import (
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -13,6 +14,23 @@ import (
 type File struct {
 	Content string
 	Hash    string
+}
+
+//GetFile gets a file.
+func GetFile(hash string) (File, error) {
+	if hash == "" {
+		return File{}, nil
+	}
+	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/files", hash))
+	if err != nil {
+		return File{}, err
+	}
+	fileContent, err := util.Unzip(string(zippedFile))
+	if err != nil {
+		return File{}, err
+	}
+	err = gotils.CheckIntegrity(fileContent, hash)
+	return File{Content: fileContent, Hash: hash}, err
 }
 
 //Save saves the file

@@ -3,13 +3,14 @@ package vcstag
 import (
 	"errors"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //Tag is the tag object
 type Tag struct {
 	Name   string
-	Commit vcscommit.Commit
+	Commit types.Commit
 }
 
 const tagsFile = ".svcs/tags.txt"

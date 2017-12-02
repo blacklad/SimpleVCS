@@ -3,11 +3,11 @@ package gc
 import (
 	"os"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstag"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //GC garbage collects all objects
@@ -117,7 +117,7 @@ func gcFiles() error {
 	}
 	var treeFiles []string
 	for _, treeHash := range treeHashes {
-		treeObj, err := vcstree.Get(treeHash)
+		treeObj, err := types.GetTree(treeHash)
 		if err != nil {
 			return err
 		}

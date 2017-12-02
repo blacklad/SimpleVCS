@@ -9,7 +9,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //Create creates the commit.
@@ -28,39 +27,27 @@ func Create(message string, files []string) (string, error) {
 	}
 	return sum, err
 }
-func createFile(info string, hash string) error {
-	infoFile, err := os.Create(path.Join(".svcs/commits", hash))
-	if err != nil {
-		return err
-	}
-	zipped, err := util.Zip(info)
-	if err != nil {
-		return err
-	}
-	_, err = infoFile.WriteString(zipped)
-	return err
-}
 
-func createInfo(tree types.Tree, message string) (Commit, error) {
+func createInfo(tree types.Tree, message string) (types.Commit, error) {
 	head, err := util.GetHead()
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
 	username := os.Getenv("SVCS_USERNAME")
 	if username == "" {
 		currentUser, err := user.Current()
 		if err != nil {
-			return Commit{}, err
+			return types.Commit{}, err
 		}
 		username = currentUser.Name
 	}
 	username = strings.Fields(username)[0]
-	commit := Commit{Author: username,
+	commit := types.Commit{Author: username,
 		Time: gotils.GetTime(),
 		Tree: tree, Message: gotils.Encode(message)}
 	branchesSplit, err := gotils.SplitFileIntoArr(".svcs/branches.txt")
 	if err != nil {
-		return Commit{}, err
+		return types.Commit{}, err
 	}
 	for _, line := range branchesSplit {
 		if line == "" {
@@ -72,18 +59,6 @@ func createInfo(tree types.Tree, message string) (Commit, error) {
 		}
 	}
 	return commit, nil
-}
-
-//Save saves the commit.
-func (commit *Commit) Save() (string, error) {
-	info := "author " + commit.Author +
-		"\ntime " + commit.Time +
-		"\nparent " + commit.Parent +
-		"\ntree " + commit.Tree.Hash +
-		"\nmessage " + commit.Message
-	commit.Hash = gotils.GetChecksum(info)
-	err := createFile(info, commit.Hash)
-	return commit.Hash, err
 }
 
 //SetFiles creates a tree.
@@ -102,6 +77,6 @@ func SetFiles(files []string) (types.Tree, error) {
 	if err != nil {
 		return types.Tree{}, nil
 	}
-	tree, err := vcstree.Get(hash)
+	tree, err := types.GetTree(hash)
 	return tree, err
 }

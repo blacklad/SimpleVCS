@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
+	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 var branches, tags, commits int
@@ -23,7 +23,7 @@ func ShowStats() error {
 	for range branchesArr {
 		branches++
 	}
-	tagsArr, err := lib.ReadTags()
+	tagsArr, err := vcstag.Read()
 	if err != nil {
 		return err
 	}

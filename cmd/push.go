@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
+	"github.com/MSathieu/SimpleVCS/vcstag"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -91,7 +91,7 @@ func Push(url string, username string, password string) error {
 		return err
 	}
 	body = ""
-	tags, err := lib.ReadTags()
+	tags, err := vcstag.Read()
 	if err != nil {
 		return err
 	}

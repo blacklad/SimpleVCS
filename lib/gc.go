@@ -6,6 +6,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
+	"github.com/MSathieu/SimpleVCS/vcstag"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -15,7 +16,7 @@ func GCCommits() error {
 	if err != nil {
 		return err
 	}
-	tags, err := ReadTags()
+	tags, err := vcstag.Read()
 	if err != nil {
 		return err
 	}

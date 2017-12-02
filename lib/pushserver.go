@@ -9,6 +9,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
+	"github.com/MSathieu/SimpleVCS/vcstag"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -137,9 +138,9 @@ func PushTags(request *http.Request) error {
 			continue
 		}
 		tagSplit := strings.Split(tag, " ")
-		tag, _ := GetTag(tagSplit[0])
+		tag, _ := vcstag.Get(tagSplit[0])
 		tag.Remove()
-		err = CreateTag(tagSplit[0], tagSplit[1])
+		err = vcstag.Create(tagSplit[0], tagSplit[1])
 		if err != nil {
 			return err
 		}

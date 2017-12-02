@@ -12,6 +12,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
+	"github.com/MSathieu/SimpleVCS/vcstag"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
@@ -91,7 +92,7 @@ func PullBranches(responseWriter http.ResponseWriter) error {
 
 //PullTags pulls the tags
 func PullTags(responseWriter http.ResponseWriter) error {
-	tags, err := ReadTags()
+	tags, err := vcstag.Read()
 	if err != nil {
 		return err
 	}

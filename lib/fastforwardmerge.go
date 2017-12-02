@@ -1,9 +1,12 @@
 package lib
 
-import "github.com/MSathieu/SimpleVCS/vcscommit"
+import (
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
+	"github.com/MSathieu/SimpleVCS/vcscommit"
+)
 
 // CheckForFastForward checkis if fastforward merge is possible.
-func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
+func CheckForFastForward(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (bool, error) {
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return false, nil
 	}
@@ -24,7 +27,7 @@ func CheckForFastForward(fromBranch Branch, toBranch Branch) (bool, error) {
 }
 
 //PerformFastForward performs fastforward merge, before calling this you should call CheckForFastforward.
-func PerformFastForward(fromBranch Branch, toBranch Branch) error {
-	err := UpdateBranch(toBranch.Name, fromBranch.Commit.Hash)
+func PerformFastForward(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) error {
+	err := vcsbranch.Update(toBranch.Name, fromBranch.Commit.Hash)
 	return err
 }

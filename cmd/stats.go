@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
@@ -15,7 +16,7 @@ var contributors []string
 
 //ShowStats displays the repo statistics.
 func ShowStats() error {
-	branchesArr, err := lib.ReadBranches()
+	branchesArr, err := vcsbranch.Read()
 	if err != nil {
 		return err
 	}

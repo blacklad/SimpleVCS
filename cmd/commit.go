@@ -11,6 +11,7 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
@@ -48,7 +49,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = lib.UpdateBranch(head.Branch.Name, sumString)
+	err = vcsbranch.Update(head.Branch.Name, sumString)
 	if err != nil {
 		return err
 	}

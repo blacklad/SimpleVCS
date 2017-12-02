@@ -1,10 +1,14 @@
 package lib
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
+)
 
 //Head is the head object.
 type Head struct {
-	Branch   Branch
+	Branch   vcsbranch.Branch
 	Detached bool
 }
 
@@ -19,7 +23,7 @@ func GetHead() (Head, error) {
 	if head == "DETACHED" {
 		headObj.Detached = true
 	} else {
-		branch, err := GetBranch(head)
+		branch, err := vcsbranch.Get(head)
 		if err != nil {
 			return Head{}, err
 		}

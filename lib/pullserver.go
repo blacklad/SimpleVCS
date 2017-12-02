@@ -10,6 +10,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
@@ -78,7 +79,7 @@ func visitCommits(path string, info os.FileInfo, err error) error {
 
 //PullBranches pulls the branches
 func PullBranches(responseWriter http.ResponseWriter) error {
-	branches, err := ReadBranches()
+	branches, err := vcsbranch.Read()
 	if err != nil {
 		return err
 	}

@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 
 	"github.com/MSathieu/Gotils"
@@ -24,7 +25,7 @@ func Checkout(commitHash string, noHead bool) error {
 		return err
 	}
 	checkoutBranch := commitHash
-	currentCommit, isBranch, err := ConvertToCommit(commitHash)
+	currentCommit, isBranch, err := vcsbranch.ConvertToCommit(commitHash)
 	if err != nil {
 		return err
 	}

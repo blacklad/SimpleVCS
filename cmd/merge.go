@@ -5,6 +5,7 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 )
 
 //Merge merges two branches.
@@ -20,11 +21,11 @@ func Merge(fromBranchString string) error {
 	if head.Detached {
 		return errors.New("cannot merge in detached state")
 	}
-	fromBranch, err := lib.GetBranch(fromBranchString)
+	fromBranch, err := vcsbranch.Get(fromBranchString)
 	if err != nil {
 		return err
 	}
-	toBranch, err := lib.GetBranch(head.Branch.Name)
+	toBranch, err := vcsbranch.Get(head.Branch.Name)
 	if err != nil {
 		return err
 	}

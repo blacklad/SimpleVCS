@@ -4,13 +4,14 @@ import (
 	"os"
 
 	"github.com/MSathieu/SimpleVCS/util"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
 //GCCommits garbage collects all commits
 func GCCommits() error {
-	branches, err := ReadBranches()
+	branches, err := vcsbranch.Read()
 	if err != nil {
 		return err
 	}

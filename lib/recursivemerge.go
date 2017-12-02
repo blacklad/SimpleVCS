@@ -7,11 +7,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 //CheckForRecursiveAndGetAncestorSha checks if recursive merge is possible and return the ancestor.
-func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (vcscommit.Commit, error) {
+func CheckForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (vcscommit.Commit, error) {
 	var fromCommits []string
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return vcscommit.Commit{}, nil
@@ -46,7 +47,7 @@ func CheckForRecursiveAndGetAncestorSha(fromBranch Branch, toBranch Branch) (vcs
 }
 
 //PerformRecursive performs the recursive merge, run CheckForRecursiveAndGetAncestorSha before running this.
-func PerformRecursive(fromBranch Branch, toBranch Branch, parent vcscommit.Commit) error {
+func PerformRecursive(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch, parent vcscommit.Commit) error {
 	filesArr := parent.GetFiles()
 	toChanges := GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
 	fromChanges := GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
@@ -92,6 +93,6 @@ func PerformRecursive(fromBranch Branch, toBranch Branch, parent vcscommit.Commi
 	if err != nil {
 		return err
 	}
-	err = UpdateBranch(toBranch.Name, commitHash)
+	err = vcsbranch.Update(toBranch.Name, commitHash)
 	return err
 }

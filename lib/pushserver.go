@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 	"github.com/MSathieu/SimpleVCS/vcstree"
@@ -116,7 +117,7 @@ func PushBranches(request *http.Request) error {
 			continue
 		}
 		branchSplit := strings.Split(branch, " ")
-		err = UpdateBranch(branchSplit[0], branchSplit[1])
+		err = vcsbranch.Update(branchSplit[0], branchSplit[1])
 		if err != nil {
 			return err
 		}

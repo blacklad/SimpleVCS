@@ -31,11 +31,11 @@ func SetConfig(key string, value string) error {
 			split[i] = mapping[0] + " " + value
 		}
 	}
-	file, err := os.Create(".svcs/settings.txt")
+	fileObj, err := os.Create(".svcs/settings.txt")
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	_, err = file.WriteString(strings.Join(split, "\n"))
+	defer fileObj.Close()
+	_, err = fileObj.WriteString(strings.Join(split, "\n"))
 	return err
 }

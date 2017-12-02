@@ -19,15 +19,15 @@ func Get(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	file, err := util.Unzip(string(zippedFile))
+	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
 		return Commit{}, err
 	}
-	err = gotils.CheckIntegrity(file, hash)
+	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
 		return Commit{}, err
 	}
-	split := strings.Split(file, "\n")
+	split := strings.Split(fileContent, "\n")
 	var author, time, parent, treeHash, message string
 	for _, line := range split {
 		if line == "" {
@@ -51,9 +51,9 @@ func Get(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	tree, err := vcstree.Get(treeHash)
+	treeObj, err := vcstree.Get(treeHash)
 	if err != nil {
 		return Commit{}, err
 	}
-	return Commit{Author: author, Time: time, Parent: parent, Tree: tree, Message: message, Hash: hash}, nil
+	return Commit{Author: author, Time: time, Parent: parent, Tree: treeObj, Message: message, Hash: hash}, nil
 }

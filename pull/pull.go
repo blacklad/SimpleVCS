@@ -53,11 +53,11 @@ func Pull(url string, username string, password string) error {
 		return err
 	}
 	filesSplit := strings.Split(files, "\n")
-	for _, file := range filesSplit {
-		if file == "" {
+	for _, fileString := range filesSplit {
+		if fileString == "" {
 			continue
 		}
-		fileSplit := strings.Split(file, " ")
+		fileSplit := strings.Split(fileString, " ")
 		_, err := vcsfile.GetFile(fileSplit[0])
 		if err == nil {
 			continue
@@ -77,11 +77,11 @@ func Pull(url string, username string, password string) error {
 		return err
 	}
 	treesSplit := strings.Split(trees, "\n")
-	for _, tree := range treesSplit {
-		if tree == "" {
+	for _, treeObj := range treesSplit {
+		if treeObj == "" {
 			continue
 		}
-		treeSplit := strings.Split(tree, " ")
+		treeSplit := strings.Split(treeObj, " ")
 		_, err := vcstree.Get(treeSplit[0])
 		if err == nil {
 			continue

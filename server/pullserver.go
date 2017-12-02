@@ -46,15 +46,15 @@ func visitTrees(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	tree, err := vcstree.Get(info.Name())
+	treeObj, err := vcstree.Get(info.Name())
 	if err != nil {
 		return err
 	}
 	var names []string
 	var hashes []string
-	for _, file := range tree.Files {
-		names = append(names, file.Name)
-		hashes = append(hashes, file.File.Hash)
+	for _, fileObj := range treeObj.Files {
+		names = append(names, fileObj.Name)
+		hashes = append(hashes, fileObj.File.Hash)
 	}
 	encodedNames := gotils.Encode(strings.Join(names, " "))
 	encodedFiles := gotils.Encode(strings.Join(hashes, " "))

@@ -34,7 +34,7 @@ var ignoreList = []string{".svcs",
 	"*.crt"}
 
 //CheckIgnored checks if the file/directory must be ignored.
-func CheckIgnored(file string) (bool, error) {
+func CheckIgnored(fileString string) (bool, error) {
 	ignoreContentBytes, err := ioutil.ReadFile(".svcsignore")
 	if err == nil {
 		ignoreContent := string(ignoreContentBytes)
@@ -51,7 +51,7 @@ func CheckIgnored(file string) (bool, error) {
 		}
 	}
 	for _, line := range ignoreList {
-		match, err := path.Match(line, file)
+		match, err := path.Match(line, fileString)
 		if err != nil {
 			return false, err
 		}

@@ -89,7 +89,7 @@ func (commit *Commit) Save() (string, error) {
 func SetFiles(files []string) (vcstree.Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := gotils.GetChecksum(content)
-	file, err := os.Create(path.Join(".svcs/trees", hash))
+	treeFile, err := os.Create(path.Join(".svcs/trees", hash))
 	if err != nil {
 		return vcstree.Tree{}, err
 	}
@@ -97,7 +97,7 @@ func SetFiles(files []string) (vcstree.Tree, error) {
 	if err != nil {
 		return vcstree.Tree{}, err
 	}
-	_, err = file.WriteString(zippedContent)
+	_, err = treeFile.WriteString(zippedContent)
 	if err != nil {
 		return vcstree.Tree{}, nil
 	}

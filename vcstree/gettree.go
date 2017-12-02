@@ -19,16 +19,16 @@ func Get(hash string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	file, err := util.Unzip(string(zippedFile))
+	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
 		return Tree{}, err
 	}
-	err = gotils.CheckIntegrity(file, hash)
+	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
 		return Tree{}, err
 	}
 	var files []File
-	split := strings.Split(file, "\n")
+	split := strings.Split(fileContent, "\n")
 	for _, line := range split {
 		if line == "" {
 			continue

@@ -21,12 +21,12 @@ func (patch Patch) Save(filename string) error {
 		patchContent = patchContent + change + "\n"
 	}
 	patchContent = gotils.GZip(patchContent)
-	file, err := os.Create(filename + ".patch")
+	patchFile, err := os.Create(filename + ".patch")
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	_, err = file.WriteString(patchContent)
+	defer patchFile.Close()
+	_, err = patchFile.WriteString(patchContent)
 	return err
 }
 

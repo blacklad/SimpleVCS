@@ -84,12 +84,12 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	file := vcsfile.File{Content: string(fileContent)}
-	err = file.Save()
+	fileObj := vcsfile.File{Content: string(fileContent)}
+	err = fileObj.Save()
 	if err != nil {
 		log.Fatal(err)
 	}
 	filesStruct.mutex.Lock()
 	defer filesStruct.mutex.Unlock()
-	filesStruct.files = append(filesStruct.files, fixedPath+" "+file.Hash)
+	filesStruct.files = append(filesStruct.files, fixedPath+" "+fileObj.Hash)
 }

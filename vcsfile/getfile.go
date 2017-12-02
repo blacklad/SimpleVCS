@@ -17,10 +17,10 @@ func GetFile(hash string) (File, error) {
 	if err != nil {
 		return File{}, err
 	}
-	file, err := util.Unzip(string(zippedFile))
+	fileContent, err := util.Unzip(string(zippedFile))
 	if err != nil {
 		return File{}, err
 	}
-	err = gotils.CheckIntegrity(file, hash)
-	return File{Content: file, Hash: hash}, err
+	err = gotils.CheckIntegrity(fileContent, hash)
+	return File{Content: fileContent, Hash: hash}, err
 }

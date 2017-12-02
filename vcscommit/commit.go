@@ -15,8 +15,8 @@ type Commit struct {
 //GetFiles gets the files of a specified commit
 func (commit Commit) GetFiles() []string {
 	var content []string
-	for _, file := range commit.Tree.Files {
-		content = append(content, file.Name+" "+file.File.Hash)
+	for _, fileObj := range commit.Tree.Files {
+		content = append(content, fileObj.Name+" "+fileObj.File.Hash)
 	}
 	return content
 }

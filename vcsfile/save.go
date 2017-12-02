@@ -10,14 +10,14 @@ import (
 )
 
 //Save saves the file
-func (file *File) Save() error {
-	file.Content = gotils.NormaliseLineEnding(file.Content)
-	if !strings.HasSuffix(file.Content, "\n") && file.Content != "" {
-		file.Content = file.Content + "\n"
+func (fileObj *File) Save() error {
+	fileObj.Content = gotils.NormaliseLineEnding(fileObj.Content)
+	if !strings.HasSuffix(fileObj.Content, "\n") && fileObj.Content != "" {
+		fileObj.Content = fileObj.Content + "\n"
 	}
-	file.Hash = gotils.GetChecksum(file.Content)
-	path := path.Join(".svcs/files", file.Hash)
-	zippedContent, err := util.Zip(file.Content)
+	fileObj.Hash = gotils.GetChecksum(fileObj.Content)
+	path := path.Join(".svcs/files", fileObj.Hash)
+	zippedContent, err := util.Zip(fileObj.Content)
 	if err != nil {
 		return err
 	}

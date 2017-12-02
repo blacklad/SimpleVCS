@@ -117,11 +117,11 @@ func gcFiles() error {
 	}
 	var treeFiles []string
 	for _, treeHash := range treeHashes {
-		tree, err := vcstree.Get(treeHash)
+		treeObj, err := vcstree.Get(treeHash)
 		if err != nil {
 			return err
 		}
-		for _, treeFile := range tree.Files {
+		for _, treeFile := range treeObj.Files {
 			var exists bool
 			for _, treeFileVar := range treeFiles {
 				if treeFileVar == treeFile.File.Hash {

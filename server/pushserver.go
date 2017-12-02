@@ -19,11 +19,11 @@ func pushFiles(request *http.Request) error {
 		return err
 	}
 	filesSplit := strings.Split(string(body), "\n")
-	for _, file := range filesSplit {
-		if file == "" {
+	for _, fileString := range filesSplit {
+		if fileString == "" {
 			continue
 		}
-		fileSplit := strings.Split(file, " ")
+		fileSplit := strings.Split(fileString, " ")
 		_, err := vcsfile.GetFile(fileSplit[0])
 		if err == nil {
 			continue
@@ -47,11 +47,11 @@ func pushTrees(request *http.Request) error {
 		return err
 	}
 	treesSplit := strings.Split(string(body), "\n")
-	for _, tree := range treesSplit {
-		if tree == "" {
+	for _, treeString := range treesSplit {
+		if treeString == "" {
 			continue
 		}
-		treeSplit := strings.Split(tree, " ")
+		treeSplit := strings.Split(treeString, " ")
 		_, err := vcstree.Get(treeSplit[0])
 		if err == nil {
 			continue

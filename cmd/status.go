@@ -12,6 +12,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/lib"
 	"github.com/MSathieu/SimpleVCS/util"
 	"github.com/MSathieu/SimpleVCS/vcsbranch"
+	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
@@ -36,7 +37,7 @@ func Status() error {
 	if err != nil {
 		return err
 	}
-	changes := lib.GenerateChange(headBranch.Commit.Tree.Files, currentFiles)
+	changes := vcschange.GenerateChange(headBranch.Commit.Tree.Files, currentFiles)
 	for _, change := range changes {
 		fmt.Println(change.Type + " " + change.Name)
 	}

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
@@ -17,7 +17,7 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 	if err != nil {
 		return err
 	}
-	changes := lib.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
+	changes := vcschange.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
 	for _, change := range changes {
 		fmt.Println(change.Type + ":")
 		switch change.Type {

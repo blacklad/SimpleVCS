@@ -4,6 +4,7 @@ import (
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/lib"
+	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcsfile"
 )
@@ -18,7 +19,7 @@ func GenPatch(fromSha string, toSha string, filename string) error {
 	if err != nil {
 		return err
 	}
-	changes := lib.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
+	changes := vcschange.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
 	patch := lib.Patch{FromHash: fromSha, Changes: []string{}}
 	for _, change := range changes {
 		changedFile, err := vcsfile.GetFile(change.Hash)

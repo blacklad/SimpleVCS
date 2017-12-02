@@ -1,4 +1,4 @@
-package lib
+package gc
 
 import (
 	"os"
@@ -10,8 +10,20 @@ import (
 	"github.com/MSathieu/SimpleVCS/vcstree"
 )
 
-//GCCommits garbage collects all commits
-func GCCommits() error {
+//GC garbage collects all objects
+func GC() error {
+	err := gcCommits()
+	if err != nil {
+		return err
+	}
+	err = gcTrees()
+	if err != nil {
+		return err
+	}
+	err = gcFiles()
+	return err
+}
+func gcCommits() error {
 	branches, err := vcsbranch.Read()
 	if err != nil {
 		return err
@@ -64,8 +76,7 @@ func GCCommits() error {
 	return nil
 }
 
-//GCTrees garbage collects all trees
-func GCTrees() error {
+func gcTrees() error {
 	commitHashes, err := util.GetAllObjects("commits")
 	if err != nil {
 		return err
@@ -95,8 +106,7 @@ func GCTrees() error {
 	return nil
 }
 
-//GCFiles garbage collects all files
-func GCFiles() error {
+func gcFiles() error {
 	treeHashes, err := util.GetAllObjects("trees")
 	if err != nil {
 		return err

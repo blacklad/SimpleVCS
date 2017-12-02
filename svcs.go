@@ -8,6 +8,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/cmd"
+	"github.com/MSathieu/SimpleVCS/gc"
 	"github.com/MSathieu/SimpleVCS/initialize"
 )
 
@@ -105,7 +106,7 @@ func main() {
 	case "stats":
 		err = cmd.ShowStats()
 	case "gc":
-		err = cmd.GarbageCollect()
+		err = gc.GC()
 	case "server":
 		err = cmd.Server(public)
 	default:

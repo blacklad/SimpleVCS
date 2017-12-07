@@ -5,7 +5,6 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
@@ -43,5 +42,5 @@ func Apply(filename string) error {
 	if err != nil {
 		return err
 	}
-	return vcsbranch.Create("patch-"+filename, commitHash)
+	return types.CreateBranch("patch-"+filename, commitHash)
 }

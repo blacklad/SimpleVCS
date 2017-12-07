@@ -8,12 +8,11 @@ import (
 	"strings"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
-func checkForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch) (types.Commit, error) {
+func checkForRecursiveAndGetAncestorSha(fromBranch types.Branch, toBranch types.Branch) (types.Commit, error) {
 	var fromCommits []string
 	if toBranch.Commit.Hash == "" || fromBranch.Commit.Hash == "" {
 		return types.Commit{}, nil
@@ -47,7 +46,7 @@ func checkForRecursiveAndGetAncestorSha(fromBranch vcsbranch.Branch, toBranch vc
 	return types.Commit{}, nil
 }
 
-func performRecursive(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch, parent types.Commit) error {
+func performRecursive(fromBranch types.Branch, toBranch types.Branch, parent types.Commit) error {
 	filesArr := parent.GetFiles()
 	toChanges := vcschange.GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
 	fromChanges := vcschange.GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
@@ -93,6 +92,6 @@ func performRecursive(fromBranch vcsbranch.Branch, toBranch vcsbranch.Branch, pa
 	if err != nil {
 		return err
 	}
-	err = vcsbranch.Update(toBranch.Name, commitHash)
+	err = types.UpdateBranch(toBranch.Name, commitHash)
 	return err
 }

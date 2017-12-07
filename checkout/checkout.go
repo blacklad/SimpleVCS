@@ -11,7 +11,6 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 
 	"github.com/MSathieu/Gotils"
 )
@@ -25,7 +24,7 @@ func Checkout(commitHash string, noHead bool) error {
 		return err
 	}
 	checkoutBranch := commitHash
-	currentCommit, isBranch, err := vcsbranch.ConvertToCommit(commitHash)
+	currentCommit, isBranch, err := types.ConvertToCommit(commitHash)
 	if err != nil {
 		return err
 	}

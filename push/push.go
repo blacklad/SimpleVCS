@@ -10,7 +10,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
@@ -78,7 +77,7 @@ func Push(url string, username string, password string) error {
 		return err
 	}
 	body = ""
-	branches, err := vcsbranch.Read()
+	branches, err := types.ReadBranches()
 	if err != nil {
 		return err
 	}

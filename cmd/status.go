@@ -12,7 +12,6 @@ import (
 	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
@@ -28,7 +27,7 @@ func Status() error {
 		return errors.New("can't view status in detached state")
 	}
 	fmt.Println("branch " + head.Branch)
-	headBranch, err := vcsbranch.Get(head.Branch)
+	headBranch, err := types.GetBranch(head.Branch)
 	if err != nil {
 		return err
 	}

@@ -12,7 +12,6 @@ import (
 	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
@@ -49,7 +48,7 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = vcsbranch.Update(head.Branch, sumString)
+	err = types.UpdateBranch(head.Branch, sumString)
 	if err != nil {
 		return err
 	}

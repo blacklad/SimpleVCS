@@ -7,7 +7,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstag"
 )
@@ -135,7 +134,7 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		branchSplit := strings.Split(branch, " ")
-		err = vcsbranch.Update(branchSplit[0], branchSplit[1])
+		err = types.UpdateBranch(branchSplit[0], branchSplit[1])
 		if err != nil {
 			return err
 		}

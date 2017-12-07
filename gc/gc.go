@@ -5,7 +5,6 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
@@ -23,7 +22,7 @@ func GC() error {
 	return err
 }
 func gcCommits() error {
-	branches, err := vcsbranch.Read()
+	branches, err := types.ReadBranches()
 	if err != nil {
 		return err
 	}

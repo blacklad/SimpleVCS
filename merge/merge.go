@@ -3,8 +3,8 @@ package merge
 import (
 	"errors"
 
+	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcsbranch"
 )
 
 //Merge merges two branches.
@@ -20,11 +20,11 @@ func Merge(fromBranchString string) error {
 	if head.Detached {
 		return errors.New("cannot merge in detached state")
 	}
-	fromBranch, err := vcsbranch.Get(fromBranchString)
+	fromBranch, err := types.GetBranch(fromBranchString)
 	if err != nil {
 		return err
 	}
-	toBranch, err := vcsbranch.Get(head.Branch)
+	toBranch, err := types.GetBranch(head.Branch)
 	if err != nil {
 		return err
 	}

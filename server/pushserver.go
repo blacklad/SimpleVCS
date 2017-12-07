@@ -7,7 +7,6 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
@@ -68,7 +67,7 @@ func pushTrees(request *http.Request) error {
 		for i := range filesSplit {
 			filesList = append(filesList, namesSplit[i]+" "+filesSplit[i])
 		}
-		_, err = vcscommit.SetFiles(filesList)
+		_, err = types.SetFiles(filesList)
 		if err != nil {
 			return err
 		}

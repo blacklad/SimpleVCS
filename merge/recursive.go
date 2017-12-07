@@ -9,7 +9,6 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/vcschange"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 func checkForRecursiveAndGetAncestorSha(fromBranch types.Branch, toBranch types.Branch) (types.Commit, error) {
@@ -88,7 +87,7 @@ func performRecursive(fromBranch types.Branch, toBranch types.Branch, parent typ
 	fromChanges = cleanFromChanges
 	filesArr = vcschange.ApplyChange(filesArr, toChanges)
 	filesArr = vcschange.ApplyChange(filesArr, fromChanges)
-	commitHash, err := vcscommit.Create("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
+	commitHash, err := types.CreateCommit("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
 	if err != nil {
 		return err
 	}

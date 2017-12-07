@@ -12,7 +12,6 @@ import (
 	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcscommit"
 )
 
 type safeFilesSlice struct {
@@ -44,7 +43,7 @@ func Commit(message string) error {
 		return err
 	}
 	commitWait.Wait()
-	sumString, err := vcscommit.Create(message, filesStruct.files)
+	sumString, err := types.CreateCommit(message, filesStruct.files)
 	if err != nil {
 		return err
 	}

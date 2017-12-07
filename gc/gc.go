@@ -5,7 +5,6 @@ import (
 
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 //GC garbage collects all objects
@@ -26,7 +25,7 @@ func gcCommits() error {
 	if err != nil {
 		return err
 	}
-	tags, err := vcstag.Read()
+	tags, err := types.ReadTags()
 	if err != nil {
 		return err
 	}

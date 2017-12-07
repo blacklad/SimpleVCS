@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 var branches, tags, commits int
@@ -22,7 +21,7 @@ func ShowStats() error {
 	for range branchesArr {
 		branches++
 	}
-	tagsArr, err := vcstag.Read()
+	tagsArr, err := types.ReadTags()
 	if err != nil {
 		return err
 	}

@@ -10,7 +10,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 var body string
@@ -89,7 +88,7 @@ func Push(url string, username string, password string) error {
 		return err
 	}
 	body = ""
-	tags, err := vcstag.Read()
+	tags, err := types.ReadTags()
 	if err != nil {
 		return err
 	}

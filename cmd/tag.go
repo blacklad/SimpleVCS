@@ -3,18 +3,18 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/MSathieu/SimpleVCS/vcstag"
+	"github.com/MSathieu/SimpleVCS/types"
 )
 
 //CreateTag creates a tag.
 func CreateTag(tag string, sha string) error {
-	err := vcstag.Create(tag, sha)
+	err := types.CreateTag(tag, sha)
 	return err
 }
 
 //ListTags lists all tags.
 func ListTags() error {
-	tags, err := vcstag.Read()
+	tags, err := types.ReadTags()
 	var list string
 	for _, tag := range tags {
 		list = list + tag.Name + " " + tag.Commit.Hash + "\n"
@@ -25,7 +25,7 @@ func ListTags() error {
 
 //RemoveTag removes a tag.
 func RemoveTag(name string) error {
-	tag, err := vcstag.Get(name)
+	tag, err := types.GetTag(name)
 	if err != nil {
 		return err
 	}

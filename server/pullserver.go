@@ -11,7 +11,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 func pullFiles(responseWriter http.ResponseWriter) error {
@@ -83,7 +82,7 @@ func pullBranches(responseWriter http.ResponseWriter) error {
 }
 
 func pullTags(responseWriter http.ResponseWriter) error {
-	tags, err := vcstag.Read()
+	tags, err := types.ReadTags()
 	if err != nil {
 		return err
 	}

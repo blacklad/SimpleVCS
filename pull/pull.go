@@ -7,7 +7,6 @@ import (
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcstag"
 )
 
 //Pull pulls the latest changes.
@@ -148,9 +147,9 @@ func Pull(url string, username string, password string) error {
 			continue
 		}
 		tagSplit := strings.Split(tag, " ")
-		tag, _ := vcstag.Get(tagSplit[0])
+		tag, _ := types.GetTag(tagSplit[0])
 		tag.Remove()
-		err = vcstag.Create(tagSplit[0], tagSplit[1])
+		err = types.CreateTag(tagSplit[0], tagSplit[1])
 		if err != nil {
 			return err
 		}

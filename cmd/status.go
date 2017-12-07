@@ -12,7 +12,6 @@ import (
 	"github.com/MSathieu/SimpleVCS/ignore"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
-	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
 var currentFiles []types.TreeFile
@@ -35,7 +34,7 @@ func Status() error {
 	if err != nil {
 		return err
 	}
-	changes := vcschange.GenerateChange(headBranch.Commit.Tree.Files, currentFiles)
+	changes := types.GenerateChange(headBranch.Commit.Tree.Files, currentFiles)
 	for _, change := range changes {
 		fmt.Println(change.Type + " " + change.Name)
 	}

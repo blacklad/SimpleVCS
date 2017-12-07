@@ -5,7 +5,6 @@ import (
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
 //Apply applies a path.
@@ -18,7 +17,7 @@ func Apply(filename string) error {
 	if err != nil {
 		return err
 	}
-	var changes []vcschange.Change
+	var changes []types.Change
 	for _, change := range patchObj.Changes {
 		split := strings.Split(change, " ")
 		hash := ""
@@ -34,9 +33,9 @@ func Apply(filename string) error {
 				return err
 			}
 		}
-		changes = append(changes, vcschange.Change{Type: split[0], Name: split[1], Hash: hash})
+		changes = append(changes, types.Change{Type: split[0], Name: split[1], Hash: hash})
 	}
-	files := vcschange.ApplyChange(fromCommit.GetFiles(), changes)
+	files := types.ApplyChange(fromCommit.GetFiles(), changes)
 	commitHash, err := types.CreateCommit("Applied patch "+filename, files)
 	if err != nil {
 		return err

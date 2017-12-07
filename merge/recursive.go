@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
 func checkForRecursiveAndGetAncestorSha(fromBranch types.Branch, toBranch types.Branch) (types.Commit, error) {
@@ -47,8 +46,8 @@ func checkForRecursiveAndGetAncestorSha(fromBranch types.Branch, toBranch types.
 
 func performRecursive(fromBranch types.Branch, toBranch types.Branch, parent types.Commit) error {
 	filesArr := parent.GetFiles()
-	toChanges := vcschange.GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
-	fromChanges := vcschange.GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
+	toChanges := types.GenerateChange(parent.Tree.Files, toBranch.Commit.Tree.Files)
+	fromChanges := types.GenerateChange(parent.Tree.Files, fromBranch.Commit.Tree.Files)
 	for toI, toChange := range toChanges {
 		for fromI, fromChange := range fromChanges {
 			if toChange.Name == fromChange.Name {
@@ -61,9 +60,9 @@ func performRecursive(fromBranch types.Branch, toBranch types.Branch, parent typ
 				input = strings.Replace(input, "\r\n", "\n", 1)
 				switch input {
 				case "from\n":
-					toChanges[toI] = vcschange.Change{}
+					toChanges[toI] = types.Change{}
 				case "to\n":
-					fromChanges[fromI] = vcschange.Change{}
+					fromChanges[fromI] = types.Change{}
 				default:
 					fmt.Print(input)
 					return errors.New("aborted due to wrong input")
@@ -71,22 +70,22 @@ func performRecursive(fromBranch types.Branch, toBranch types.Branch, parent typ
 			}
 		}
 	}
-	var cleanToChanges []vcschange.Change
+	var cleanToChanges []types.Change
 	for _, change := range toChanges {
 		if change.Type != "" {
 			cleanToChanges = append(cleanToChanges, change)
 		}
 	}
 	toChanges = cleanToChanges
-	var cleanFromChanges []vcschange.Change
+	var cleanFromChanges []types.Change
 	for _, change := range fromChanges {
 		if change.Type != "" {
 			cleanFromChanges = append(cleanFromChanges, change)
 		}
 	}
 	fromChanges = cleanFromChanges
-	filesArr = vcschange.ApplyChange(filesArr, toChanges)
-	filesArr = vcschange.ApplyChange(filesArr, fromChanges)
+	filesArr = types.ApplyChange(filesArr, toChanges)
+	filesArr = types.ApplyChange(filesArr, fromChanges)
 	commitHash, err := types.CreateCommit("Merged branch "+fromBranch.Name+"into "+toBranch.Name+".", filesArr)
 	if err != nil {
 		return err

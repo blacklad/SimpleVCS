@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
 //Diff shows the diff between two commits.
@@ -17,7 +16,7 @@ func Diff(fromCommitHash string, toCommitHash string) error {
 	if err != nil {
 		return err
 	}
-	changes := vcschange.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
+	changes := types.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
 	for _, change := range changes {
 		fmt.Println(change.Type + ":")
 		switch change.Type {

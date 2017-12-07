@@ -4,7 +4,6 @@ import (
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/types"
-	"github.com/MSathieu/SimpleVCS/vcschange"
 )
 
 //Generate generates a patch
@@ -17,7 +16,7 @@ func Generate(fromSha string, toSha string, filename string) error {
 	if err != nil {
 		return err
 	}
-	changes := vcschange.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
+	changes := types.GenerateChange(fromCommit.Tree.Files, toCommit.Tree.Files)
 	patchObj := Patch{FromHash: fromSha, Changes: []string{}}
 	for _, change := range changes {
 		changedFile, err := types.GetFile(change.Hash)

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/modules"
+	"github.com/MSathieu/SimpleVCS/cmd/modules"
 )
 
 var ignoreList = []string{".svcs",

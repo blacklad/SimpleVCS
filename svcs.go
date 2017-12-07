@@ -7,22 +7,23 @@ import (
 	"log"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/checkout"
 	"github.com/MSathieu/SimpleVCS/cmd"
-	"github.com/MSathieu/SimpleVCS/gc"
-	"github.com/MSathieu/SimpleVCS/initialize"
-	"github.com/MSathieu/SimpleVCS/merge"
-	"github.com/MSathieu/SimpleVCS/pull"
-	"github.com/MSathieu/SimpleVCS/push"
-	"github.com/MSathieu/SimpleVCS/server"
+	"github.com/MSathieu/SimpleVCS/cmd/branch"
+	"github.com/MSathieu/SimpleVCS/cmd/checkout"
+	"github.com/MSathieu/SimpleVCS/cmd/gc"
+	"github.com/MSathieu/SimpleVCS/cmd/initialize"
+	"github.com/MSathieu/SimpleVCS/cmd/merge"
+	"github.com/MSathieu/SimpleVCS/cmd/pull"
+	"github.com/MSathieu/SimpleVCS/cmd/push"
+	"github.com/MSathieu/SimpleVCS/cmd/server"
 	"github.com/MSathieu/SimpleVCS/types"
 )
 
 func main() {
 	flag.Usage = usage
-	var branch, username, password string
+	var branchVar, username, password string
 	var noHead, zip, bare, public bool
-	flag.StringVar(&branch, "branch", "master", "Specify the branch.")
+	flag.StringVar(&branchVar, "branch", "master", "Specify the branch.")
 	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")
 	flag.BoolVar(&bare, "bare", false, "Create a bare repository")
@@ -56,7 +57,7 @@ func main() {
 	case "checkout":
 		err = checkout.Checkout(flag.Arg(1), noHead)
 	case "log":
-		err = cmd.Log(branch)
+		err = cmd.Log(branchVar)
 	case "stash":
 		switch flag.Arg(1) {
 		case "create":
@@ -91,11 +92,11 @@ func main() {
 	case "branch":
 		switch flag.Arg(1) {
 		case "create":
-			err = cmd.CreateBranch(flag.Arg(2))
+			err = branch.CreateBranch(flag.Arg(2))
 		case "delete":
-			err = cmd.RemoveBranch(flag.Arg(2))
+			err = branch.RemoveBranch(flag.Arg(2))
 		case "list":
-			err = cmd.ListBranches()
+			err = branch.ListBranches()
 		default:
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}

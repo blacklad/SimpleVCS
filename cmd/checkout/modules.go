@@ -3,9 +3,9 @@ package checkout
 import (
 	"os"
 
-	"github.com/MSathieu/SimpleVCS/initialize"
-	"github.com/MSathieu/SimpleVCS/modules"
-	"github.com/MSathieu/SimpleVCS/pull"
+	"github.com/MSathieu/SimpleVCS/cmd/initialize"
+	"github.com/MSathieu/SimpleVCS/cmd/modules"
+	"github.com/MSathieu/SimpleVCS/cmd/pull"
 )
 
 func checkoutModules() error {

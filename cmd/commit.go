@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/MSathieu/SimpleVCS/ignore"
+	"github.com/MSathieu/SimpleVCS/cmd/ignore"
 	"github.com/MSathieu/SimpleVCS/types"
 	"github.com/MSathieu/SimpleVCS/util"
 )

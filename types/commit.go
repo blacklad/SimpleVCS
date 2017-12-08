@@ -1,7 +1,6 @@
 package types
 
 import (
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path"
@@ -26,44 +25,13 @@ func GetCommit(hash string) (Commit, error) {
 	if hash == "" {
 		return Commit{}, nil
 	}
-	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/commits", hash))
+	commit := &util.Commit{}
+	util.DB.Where(&util.Commit{Hash: hash}).First(commit)
+	tree, err := GetTree(commit.Tree)
 	if err != nil {
 		return Commit{}, err
 	}
-	fileContent := gotils.UnGZip(string(zippedFile))
-	err = gotils.CheckIntegrity(fileContent, hash)
-	if err != nil {
-		return Commit{}, err
-	}
-	split := strings.Split(fileContent, "\n")
-	var author, time, parent, treeHash, message string
-	for _, line := range split {
-		if line == "" {
-			continue
-		}
-		lineSplit := strings.Split(line, " ")
-		switch lineSplit[0] {
-		case "author":
-			author = lineSplit[1]
-		case "time":
-			time = lineSplit[1]
-		case "parent":
-			parent = lineSplit[1]
-		case "tree":
-			treeHash = lineSplit[1]
-		case "message":
-			message = lineSplit[1]
-		}
-	}
-	message, err = gotils.Decode(message)
-	if err != nil {
-		return Commit{}, err
-	}
-	treeObj, err := GetTree(treeHash)
-	if err != nil {
-		return Commit{}, err
-	}
-	return Commit{Author: author, Time: time, Parent: parent, Tree: treeObj, Message: message, Hash: hash}, nil
+	return Commit{Author: commit.Author, Time: commit.Time, Parent: commit.Parent, Tree: tree, Message: commit.Message, Hash: commit.Hash}, nil
 }
 
 //GetFiles gets the files of a specified commit
@@ -83,17 +51,8 @@ func (commit *Commit) Save() (string, error) {
 		"\ntree " + commit.Tree.Hash +
 		"\nmessage " + commit.Message
 	commit.Hash = gotils.GetChecksum(info)
-	err := createFile(info, commit.Hash)
-	return commit.Hash, err
-}
-func createFile(info string, hash string) error {
-	infoFile, err := os.Create(path.Join(".svcs/commits", hash))
-	if err != nil {
-		return err
-	}
-	zipped := gotils.GZip(info)
-	_, err = infoFile.WriteString(zipped)
-	return err
+	util.DB.Create(&util.Commit{Hash: commit.Hash, Author: commit.Author, Time: commit.Time, Tree: commit.Tree.Hash, Message: commit.Message})
+	return commit.Hash, nil
 }
 
 //CreateCommit creates the commit.

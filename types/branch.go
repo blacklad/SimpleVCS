@@ -15,7 +15,7 @@ type Branch struct {
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
 	existsBranch := &util.Branch{}
-	util.DB.Where(&util.Branch{Name: "branch"}).First(existsBranch)
+	util.DB.Where(&util.Branch{Name: branch}).First(existsBranch)
 	if existsBranch.Name == branch {
 		return errors.New("branch existed already")
 	}

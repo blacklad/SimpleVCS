@@ -2,10 +2,8 @@ package types
 
 import (
 	"errors"
-	"os"
-	"strings"
 
-	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Branch is the branch object
@@ -14,26 +12,15 @@ type Branch struct {
 	Commit Commit
 }
 
-const branchesFile = ".svcs/branches.txt"
-
 //CreateBranch creates the specified branch
 func CreateBranch(branch string, sha string) error {
-	branchesArr, err := ReadBranches()
-	if err != nil {
-		return err
+	existsBranch := &util.Branch{}
+	util.DB.Where(&util.Branch{Name: "branch"}).First(existsBranch)
+	if existsBranch.Name == branch {
+		return errors.New("branch existed already")
 	}
-	for _, loopBranch := range branchesArr {
-		if loopBranch.Name == branch {
-			return errors.New("branch exists")
-		}
-	}
-	commit, err := GetCommit(sha)
-	if err != nil {
-		return err
-	}
-	branchesArr = append(branchesArr, Branch{Name: branch, Commit: commit})
-	err = WriteBranches(branchesArr)
-	return err
+	util.DB.Create(&util.Branch{Name: branch, Commit: sha})
+	return nil
 }
 
 //UpdateBranch deletes and then creates the specified branch.
@@ -48,16 +35,8 @@ func UpdateBranch(branch string, sha string) error {
 
 //RemoveBranch removes branch.
 func RemoveBranch(branch string) error {
-	var branches []Branch
-	branchesArr, err := ReadBranches()
-	for _, loopBranch := range branchesArr {
-		if loopBranch.Name == branch {
-			continue
-		}
-		branches = append(branches, loopBranch)
-	}
-	WriteBranches(branches)
-	return err
+	util.DB.Delete(&util.Branch{Name: branch})
+	return nil
 }
 
 //ConvertToCommit converts a branch to a hash
@@ -80,57 +59,28 @@ func ConvertToCommit(convertFrom string) (Commit, bool, error) {
 	return commit, isBranch, nil
 }
 
-//ReadBranches reads the content of branches.txt into an array.
-func ReadBranches() ([]Branch, error) {
-	branchesSplit, err := gotils.SplitFileIntoArr(branchesFile)
-	if err != nil {
-		return nil, err
-	}
-	var branches []Branch
-	for _, line := range branchesSplit {
-		if line == "" {
-			continue
-		}
-		split := strings.Fields(line)
-		var commitObj Commit
-		if len(split) == 2 {
-			commitObj, err = GetCommit(split[1])
-			if err != nil {
-				return nil, err
-			}
-		} else {
-			commitObj = Commit{}
-		}
-		branches = append(branches, Branch{Name: split[0], Commit: commitObj})
-	}
-	return branches, nil
-}
-
 //GetBranch gets a branch
 func GetBranch(name string) (Branch, error) {
-	branches, err := ReadBranches()
+	branch := &util.Branch{}
+	util.DB.Where(&util.Branch{Name: "branch"}).First(branch)
+	commit, err := GetCommit(branch.Commit)
 	if err != nil {
 		return Branch{}, err
 	}
-	for _, branch := range branches {
-		if branch.Name == name {
-			return branch, nil
-		}
-	}
-	return Branch{}, nil
+	return Branch{Name: branch.Name, Commit: commit}, nil
 }
 
-//WriteBranches writes the array to branches.txt.
-func WriteBranches(branches []Branch) error {
-	branchesFile, err := os.Create(branchesFile)
-	if err != nil {
-		return err
-	}
+//ReadBranches reads the branches into an array.
+func ReadBranches() ([]Branch, error) {
+	var branches []util.Branch
+	util.DB.Find(branches)
+	var returnedBranches []Branch
 	for _, branch := range branches {
-		_, err = branchesFile.WriteString(branch.Name + " " + branch.Commit.Hash + "\n")
+		commit, err := GetCommit(branch.Name)
 		if err != nil {
-			return err
+			return nil, err
 		}
+		returnedBranches = append(returnedBranches, Branch{Name: branch.Name, Commit: commit})
 	}
-	return nil
+	return returnedBranches, nil
 }

@@ -24,6 +24,8 @@ import (
 	"github.com/MSathieu/SimpleVCS/cmd/status"
 	"github.com/MSathieu/SimpleVCS/cmd/tag"
 	"github.com/MSathieu/SimpleVCS/types"
+	"github.com/MSathieu/SimpleVCS/util"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 func main() {
@@ -36,6 +38,10 @@ func main() {
 	flag.BoolVar(&public, "public-pull", false, "Make pulling from server public")
 	flag.StringVar(&password, "password", "", "The password for pulling/pushing")
 	flag.Parse()
+	err := util.InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 	executedCommand := flag.Arg(0)
 	if executedCommand == "" {
 		flag.Usage()
@@ -44,7 +50,6 @@ func main() {
 	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists(".svcs") {
 		log.Fatal("not initialized")
 	}
-	var err error
 	switch executedCommand {
 	case "init":
 		if gotils.CheckIfExists(".svcs") {

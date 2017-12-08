@@ -47,12 +47,12 @@ func main() {
 		flag.Usage()
 		return
 	}
-	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists(".svcs") {
+	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists("svcs.db") {
 		log.Fatal("not initialized")
 	}
 	switch executedCommand {
 	case "init":
-		if gotils.CheckIfExists(".svcs") {
+		if gotils.CheckIfExists("svcs.db") {
 			log.Fatal(errors.New("already initialized"))
 		}
 		err = initialize.Initialize(flag.Arg(1))

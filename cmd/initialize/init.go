@@ -2,7 +2,8 @@ package initialize
 
 import (
 	"errors"
-	"os"
+
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Initialize initializes the repo
@@ -10,27 +11,10 @@ func Initialize(repoName string) error {
 	if repoName == "" {
 		return errors.New("you must specify the repo name")
 	}
-	err := initDirs()
-	if err != nil {
-		return err
-	}
-	err = initConfig(repoName)
-	if err != nil {
-		return err
-	}
-	branchesFile, err := os.Create(".svcs/branches.txt")
-	if err != nil {
-		return err
-	}
-	branchesFile.WriteString("master ")
-	_, err = os.Create(".svcs/tags.txt")
-	if err != nil {
-		return err
-	}
-	head, err := os.Create(".svcs/head.txt")
-	if err != nil {
-		return err
-	}
-	_, err = head.WriteString("master")
-	return err
+	util.DB.Create(&util.Config{Name: "name", Value: repoName})
+	util.DB.Create(&util.Config{Name: "username"})
+	util.DB.Create(&util.Config{Name: "remote"})
+	util.DB.Create(&util.Branch{Name: "master"})
+	util.DB.Create(&util.Config{Name: "head", Value: "master"})
+	return nil
 }

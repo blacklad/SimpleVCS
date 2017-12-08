@@ -107,7 +107,7 @@ func visitFilesPush(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	unzipped, err := util.Unzip(string(content))
+	unzipped := gotils.UnGZip(string(content))
 	body = body + info.Name() + " " + gotils.Encode(unzipped) + "\n"
 	return nil
 }

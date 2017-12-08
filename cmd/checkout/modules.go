@@ -22,7 +22,7 @@ func checkoutModules() error {
 		if err != nil {
 			return err
 		}
-		initialize.Initialize(module.Name, true, false)
+		initialize.Initialize(module.Name)
 		err = pull.Pull(module.URL, os.Getenv("SVCS_MODULE_"+module.Name+"_USERNAME"), os.Getenv("SVCS_MODULE_"+module.Name+"_PASSWORD"))
 		if err != nil {
 			return err

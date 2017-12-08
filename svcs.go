@@ -29,11 +29,9 @@ import (
 func main() {
 	flag.Usage = usage
 	var branchVar, username, password string
-	var noHead, zip, bare, public bool
+	var noHead, public bool
 	flag.StringVar(&branchVar, "branch", "master", "Specify the branch.")
-	flag.BoolVar(&zip, "zip", true, "Specify if you want to zip everything when creating a project.")
 	flag.BoolVar(&noHead, "no-head", false, "Don't move head.")
-	flag.BoolVar(&bare, "bare", false, "Create a bare repository")
 	flag.StringVar(&username, "username", "", "The username for pulling/pushing")
 	flag.BoolVar(&public, "public-pull", false, "Make pulling from server public")
 	flag.StringVar(&password, "password", "", "The password for pulling/pushing")
@@ -52,7 +50,7 @@ func main() {
 		if gotils.CheckIfExists(".svcs") {
 			log.Fatal(errors.New("already initialized"))
 		}
-		err = initialize.Initialize(flag.Arg(1), zip, bare)
+		err = initialize.Initialize(flag.Arg(1))
 	case "commit":
 		err = commit.Commit(flag.Arg(1))
 	case "config":

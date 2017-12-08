@@ -6,34 +6,28 @@ import (
 )
 
 //Initialize initializes the repo
-func Initialize(repoName string, zipped bool, bare bool) error {
+func Initialize(repoName string) error {
 	if repoName == "" {
 		return errors.New("you must specify the repo name")
 	}
-	var dirName string
-	if bare {
-		dirName = repoName
-	} else {
-		dirName = ".svcs"
-	}
-	err := initDirs(dirName)
+	err := initDirs()
 	if err != nil {
 		return err
 	}
-	err = initConfig(repoName, zipped, bare, dirName)
+	err = initConfig(repoName)
 	if err != nil {
 		return err
 	}
-	branchesFile, err := os.Create(dirName + "/branches.txt")
+	branchesFile, err := os.Create(".svcs/branches.txt")
 	if err != nil {
 		return err
 	}
 	branchesFile.WriteString("master ")
-	_, err = os.Create(dirName + "/tags.txt")
+	_, err = os.Create(".svcs/tags.txt")
 	if err != nil {
 		return err
 	}
-	head, err := os.Create(dirName + "/head.txt")
+	head, err := os.Create(".svcs/head.txt")
 	if err != nil {
 		return err
 	}

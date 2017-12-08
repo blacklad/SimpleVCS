@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //Tree is the tree object.
@@ -30,10 +29,7 @@ func GetTree(hash string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	fileContent, err := util.Unzip(string(zippedFile))
-	if err != nil {
-		return Tree{}, err
-	}
+	fileContent := gotils.UnGZip(string(zippedFile))
 	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
 		return Tree{}, err

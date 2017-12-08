@@ -12,7 +12,6 @@ import (
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/cmd/commit"
-	"github.com/MSathieu/SimpleVCS/util"
 )
 
 var wait sync.WaitGroup
@@ -30,10 +29,7 @@ func CreateStash(name string) error {
 	}
 	defer stashFile.Close()
 	stashFileContent := strings.Join(commit.FilesStruct.Files, "\n")
-	stashFileContent, err = util.Zip(stashFileContent)
-	if err != nil {
-		return err
-	}
+	stashFileContent = gotils.GZip(stashFileContent)
 	_, err = stashFile.WriteString(stashFileContent)
 	return err
 }
@@ -44,10 +40,7 @@ func CheckoutStash(name string) error {
 	if err != nil {
 		return err
 	}
-	stashContent, err := util.Unzip(string(stash))
-	if err != nil {
-		return err
-	}
+	stashContent := gotils.UnGZip(string(stash))
 	stashArr := strings.Split(stashContent, "\n")
 	for _, fileEntry := range stashArr {
 		if fileEntry == "" {
@@ -66,10 +59,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	unzippedContent, err := util.Unzip(string(fileContent))
-	if err != nil {
-		log.Fatal(err)
-	}
+	unzippedContent := gotils.UnGZip(string(fileContent))
 	err = gotils.CheckIntegrity(unzippedContent, hash)
 	if err != nil {
 		log.Fatal(err)

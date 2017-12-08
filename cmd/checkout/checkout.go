@@ -69,10 +69,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	unzippedContent, err := util.Unzip(string(fileContent))
-	if err != nil {
-		log.Fatal(err)
-	}
+	unzippedContent := gotils.UnGZip(string(fileContent))
 	err = gotils.CheckIntegrity(unzippedContent, hash)
 	if err != nil {
 		log.Fatal(err)

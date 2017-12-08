@@ -30,10 +30,7 @@ func GetCommit(hash string) (Commit, error) {
 	if err != nil {
 		return Commit{}, err
 	}
-	fileContent, err := util.Unzip(string(zippedFile))
-	if err != nil {
-		return Commit{}, err
-	}
+	fileContent := gotils.UnGZip(string(zippedFile))
 	err = gotils.CheckIntegrity(fileContent, hash)
 	if err != nil {
 		return Commit{}, err
@@ -94,10 +91,7 @@ func createFile(info string, hash string) error {
 	if err != nil {
 		return err
 	}
-	zipped, err := util.Zip(info)
-	if err != nil {
-		return err
-	}
+	zipped := gotils.GZip(info)
 	_, err = infoFile.WriteString(zipped)
 	return err
 }
@@ -160,10 +154,7 @@ func SetFiles(files []string) (Tree, error) {
 	if err != nil {
 		return Tree{}, err
 	}
-	zippedContent, err := util.Zip(content)
-	if err != nil {
-		return Tree{}, err
-	}
+	zippedContent := gotils.GZip(content)
 	_, err = treeFile.WriteString(zippedContent)
 	if err != nil {
 		return Tree{}, nil

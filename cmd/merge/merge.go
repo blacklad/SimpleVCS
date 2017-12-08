@@ -13,10 +13,7 @@ func Merge(fromBranchString string) error {
 	if err != nil {
 		return err
 	}
-	head, err := util.GetHead()
-	if err != nil {
-		return err
-	}
+	head := util.GetHead()
 	if head.Detached {
 		return errors.New("cannot merge in detached state")
 	}

@@ -31,14 +31,11 @@ func Commit(message string) error {
 	if message == "" {
 		return errors.New("you must specify a message")
 	}
-	head, err := util.GetHead()
-	if err != nil {
-		return err
-	}
+	head := util.GetHead()
 	if head.Detached {
 		return errors.New("cannot commit in detached state")
 	}
-	err = util.ExecHook("precommit")
+	err := util.ExecHook("precommit")
 	if err != nil {
 		return err
 	}

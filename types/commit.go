@@ -114,10 +114,7 @@ func CreateCommit(message string, files []string) (string, error) {
 }
 
 func createInfo(tree Tree, message string) (Commit, error) {
-	head, err := util.GetHead()
-	if err != nil {
-		return Commit{}, err
-	}
+	head := util.GetHead()
 	username := os.Getenv("SVCS_USERNAME")
 	if username == "" {
 		currentUser, err := user.Current()

@@ -18,10 +18,7 @@ var currentFiles []types.TreeFile
 
 //Status prints the status.
 func Status() error {
-	head, err := util.GetHead()
-	if err != nil {
-		return err
-	}
+	head := util.GetHead()
 	if head.Detached {
 		return errors.New("can't view status in detached state")
 	}

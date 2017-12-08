@@ -1,7 +1,5 @@
 package util
 
-import "io/ioutil"
-
 //Head is the head object.
 type Head struct {
 	Branch   string
@@ -9,17 +7,14 @@ type Head struct {
 }
 
 //GetHead returns the head.
-func GetHead() (Head, error) {
-	headBytes, err := ioutil.ReadFile(".svcs/head.txt")
-	if err != nil {
-		return Head{}, err
-	}
-	head := string(headBytes)
+func GetHead() Head {
+	config := &Config{}
+	DB.Where(&Config{Name: "head"}).First(config)
 	headObj := Head{Detached: false}
-	if head == "DETACHED" {
+	if config.Value == "DETACHED" {
 		headObj.Detached = true
 	} else {
-		headObj.Branch = head
+		headObj.Branch = config.Value
 	}
-	return headObj, nil
+	return headObj
 }

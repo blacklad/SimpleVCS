@@ -10,10 +10,7 @@ import (
 
 //CreateBranch creates a branch.
 func CreateBranch(branch string) error {
-	head, err := util.GetHead()
-	if err != nil {
-		return err
-	}
+	head := util.GetHead()
 	if head.Detached {
 		return errors.New("can't create branch in detached state")
 	}

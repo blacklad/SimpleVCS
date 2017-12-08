@@ -7,15 +7,22 @@ import (
 	"log"
 
 	"github.com/MSathieu/Gotils"
-	"github.com/MSathieu/SimpleVCS/cmd"
 	"github.com/MSathieu/SimpleVCS/cmd/branch"
 	"github.com/MSathieu/SimpleVCS/cmd/checkout"
+	"github.com/MSathieu/SimpleVCS/cmd/commit"
+	"github.com/MSathieu/SimpleVCS/cmd/config"
+	"github.com/MSathieu/SimpleVCS/cmd/diff"
 	"github.com/MSathieu/SimpleVCS/cmd/gc"
 	"github.com/MSathieu/SimpleVCS/cmd/initialize"
+	"github.com/MSathieu/SimpleVCS/cmd/log"
 	"github.com/MSathieu/SimpleVCS/cmd/merge"
 	"github.com/MSathieu/SimpleVCS/cmd/pull"
 	"github.com/MSathieu/SimpleVCS/cmd/push"
 	"github.com/MSathieu/SimpleVCS/cmd/server"
+	"github.com/MSathieu/SimpleVCS/cmd/stash"
+	"github.com/MSathieu/SimpleVCS/cmd/stats"
+	"github.com/MSathieu/SimpleVCS/cmd/status"
+	"github.com/MSathieu/SimpleVCS/cmd/tag"
 	"github.com/MSathieu/SimpleVCS/types"
 )
 
@@ -47,25 +54,25 @@ func main() {
 		}
 		err = initialize.Initialize(flag.Arg(1), zip, bare)
 	case "commit":
-		err = cmd.Commit(flag.Arg(1))
+		err = commit.Commit(flag.Arg(1))
 	case "config":
 		if flag.Arg(2) == "" {
-			err = cmd.GetConfig(flag.Arg(1))
+			err = config.GetConfig(flag.Arg(1))
 		} else {
-			err = cmd.SetConfig(flag.Arg(1), flag.Arg(2))
+			err = config.SetConfig(flag.Arg(1), flag.Arg(2))
 		}
 	case "checkout":
 		err = checkout.Checkout(flag.Arg(1), noHead)
 	case "log":
-		err = cmd.Log(branchVar)
+		err = vcslog.Log(branchVar)
 	case "stash":
 		switch flag.Arg(1) {
 		case "create":
-			err = cmd.CreateStash(flag.Arg(2))
+			err = stash.CreateStash(flag.Arg(2))
 		case "checkout":
-			err = cmd.CheckoutStash(flag.Arg(2))
+			err = stash.CheckoutStash(flag.Arg(2))
 		case "rm":
-			err = cmd.RemoveStash(flag.Arg(2))
+			err = stash.RemoveStash(flag.Arg(2))
 		default:
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}
@@ -81,11 +88,11 @@ func main() {
 	case "tag":
 		switch flag.Arg(1) {
 		case "create":
-			err = cmd.CreateTag(flag.Arg(2), flag.Arg(3))
+			err = tag.Create(flag.Arg(2), flag.Arg(3))
 		case "delete":
-			err = cmd.RemoveTag(flag.Arg(2))
+			err = tag.Remove(flag.Arg(2))
 		case "list":
-			err = cmd.ListTags()
+			err = tag.List()
 		default:
 			fmt.Println("Invalid command, run --help to get a list of the commands.")
 		}
@@ -107,11 +114,11 @@ func main() {
 	case "push":
 		err = push.Push(flag.Arg(1), username, password)
 	case "status":
-		err = cmd.Status()
+		err = status.Status()
 	case "diff":
-		err = cmd.Diff(flag.Arg(1), flag.Arg(2))
+		err = diff.Diff(flag.Arg(1), flag.Arg(2))
 	case "stats":
-		err = cmd.ShowStats()
+		err = stats.ShowStats()
 	case "gc":
 		err = gc.GC()
 	case "server":

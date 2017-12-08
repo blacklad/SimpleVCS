@@ -1,4 +1,4 @@
-package cmd
+package tag
 
 import (
 	"fmt"
@@ -6,14 +6,14 @@ import (
 	"github.com/MSathieu/SimpleVCS/types"
 )
 
-//CreateTag creates a tag.
-func CreateTag(tag string, sha string) error {
+//Create creates a tag.
+func Create(tag string, sha string) error {
 	err := types.CreateTag(tag, sha)
 	return err
 }
 
-//ListTags lists all tags.
-func ListTags() error {
+//List lists all tags.
+func List() error {
 	tags, err := types.ReadTags()
 	var list string
 	for _, tag := range tags {
@@ -23,8 +23,8 @@ func ListTags() error {
 	return err
 }
 
-//RemoveTag removes a tag.
-func RemoveTag(name string) error {
+//Remove removes a tag.
+func Remove(name string) error {
 	tag, err := types.GetTag(name)
 	if err != nil {
 		return err

@@ -1,4 +1,4 @@
-package cmd
+package commit
 
 import (
 	"errors"
@@ -14,13 +14,17 @@ import (
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
-type safeFilesSlice struct {
-	files []string
+//SafeFilesSlice is the files slice object
+type SafeFilesSlice struct {
+	Files []string
 	mutex sync.Mutex
 }
 
-var filesStruct safeFilesSlice
-var commitWait sync.WaitGroup
+//FilesStruct is the filesstruct var
+var FilesStruct SafeFilesSlice
+
+//CommitWait is the commit waitgroup
+var CommitWait sync.WaitGroup
 
 //Commit commits the current directory.
 func Commit(message string) error {
@@ -38,12 +42,12 @@ func Commit(message string) error {
 	if err != nil {
 		return err
 	}
-	err = filepath.Walk(".", commitVisit)
+	err = filepath.Walk(".", CommitVisit)
 	if err != nil {
 		return err
 	}
-	commitWait.Wait()
-	sumString, err := types.CreateCommit(message, filesStruct.files)
+	CommitWait.Wait()
+	sumString, err := types.CreateCommit(message, FilesStruct.Files)
 	if err != nil {
 		return err
 	}
@@ -57,13 +61,15 @@ func Commit(message string) error {
 	}
 	return nil
 }
-func commitVisit(filePath string, fileInfo os.FileInfo, err error) error {
-	commitWait.Add(1)
+
+//CommitVisit visits the directory and creates the files
+func CommitVisit(filePath string, fileInfo os.FileInfo, err error) error {
+	CommitWait.Add(1)
 	go concCommitVisit(filePath, fileInfo)
 	return nil
 }
 func concCommitVisit(filePath string, fileInfo os.FileInfo) {
-	defer commitWait.Done()
+	defer CommitWait.Done()
 	fixedPath := filepath.ToSlash(filePath)
 	pathArr := strings.Split(fixedPath, "/")
 	for _, pathPart := range pathArr {
@@ -87,7 +93,7 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	filesStruct.mutex.Lock()
-	defer filesStruct.mutex.Unlock()
-	filesStruct.files = append(filesStruct.files, fixedPath+" "+fileObj.Hash)
+	FilesStruct.mutex.Lock()
+	defer FilesStruct.mutex.Unlock()
+	FilesStruct.Files = append(FilesStruct.Files, fixedPath+" "+fileObj.Hash)
 }

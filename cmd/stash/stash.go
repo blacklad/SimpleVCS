@@ -1,4 +1,4 @@
-package cmd
+package stash
 
 import (
 	"io/ioutil"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/MSathieu/Gotils"
 
+	"github.com/MSathieu/SimpleVCS/cmd/commit"
 	"github.com/MSathieu/SimpleVCS/util"
 )
 
@@ -18,17 +19,17 @@ var wait sync.WaitGroup
 
 //CreateStash creates a stash
 func CreateStash(name string) error {
-	err := filepath.Walk(".", commitVisit)
+	err := filepath.Walk(".", commit.CommitVisit)
 	if err != nil {
 		return err
 	}
-	commitWait.Wait()
+	commit.CommitWait.Wait()
 	stashFile, err := os.Create(".svcs/stashes/" + name)
 	if err != nil {
 		return err
 	}
 	defer stashFile.Close()
-	stashFileContent := strings.Join(filesStruct.files, "\n")
+	stashFileContent := strings.Join(commit.FilesStruct.Files, "\n")
 	stashFileContent, err = util.Zip(stashFileContent)
 	if err != nil {
 		return err

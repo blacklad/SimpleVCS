@@ -1,4 +1,4 @@
-package cmd
+package diff
 
 import (
 	"fmt"

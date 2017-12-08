@@ -20,3 +20,13 @@ func GetConfig(key string) (string, error) {
 	}
 	return "", nil
 }
+
+//Initialized checks whether the repo is initialized
+func Initialized() bool {
+	config := &Config{}
+	DB.Where(&Config{Name: "name"}).First(config)
+	if config.Value == "" {
+		return false
+	}
+	return true
+}

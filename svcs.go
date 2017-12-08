@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/cmd/branch"
 	"github.com/MSathieu/SimpleVCS/cmd/checkout"
 	"github.com/MSathieu/SimpleVCS/cmd/commit"
@@ -47,12 +46,12 @@ func main() {
 		flag.Usage()
 		return
 	}
-	if executedCommand != "init" && executedCommand != "server" && !gotils.CheckIfExists("svcs.db") {
+	if executedCommand != "init" && executedCommand != "server" && !util.Initialized() {
 		log.Fatal("not initialized")
 	}
 	switch executedCommand {
 	case "init":
-		if gotils.CheckIfExists("svcs.db") {
+		if util.Initialized() {
 			log.Fatal(errors.New("already initialized"))
 		}
 		err = initialize.Initialize(flag.Arg(1))

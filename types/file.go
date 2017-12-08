@@ -1,12 +1,10 @@
 package types
 
 import (
-	"io/ioutil"
-	"os"
-	"path"
 	"strings"
 
 	"github.com/MSathieu/Gotils"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 //File is the file object.
@@ -20,29 +18,18 @@ func GetFile(hash string) (File, error) {
 	if hash == "" {
 		return File{}, nil
 	}
-	zippedFile, err := ioutil.ReadFile(path.Join(".svcs/files", hash))
-	if err != nil {
-		return File{}, err
-	}
-	fileContent := gotils.UnGZip(string(zippedFile))
-	err = gotils.CheckIntegrity(fileContent, hash)
-	return File{Content: fileContent, Hash: hash}, err
+	file := &util.File{}
+	util.DB.Where(&File{Hash: hash}).First(file)
+	err := gotils.CheckIntegrity(file.Content, file.Hash)
+	return File{Content: file.Content, Hash: file.Hash}, err
 }
 
 //Save saves the file
-func (fileObj *File) Save() error {
+func (fileObj *File) Save() {
 	fileObj.Content = gotils.NormaliseLineEnding(fileObj.Content)
 	if !strings.HasSuffix(fileObj.Content, "\n") && fileObj.Content != "" {
 		fileObj.Content = fileObj.Content + "\n"
 	}
 	fileObj.Hash = gotils.GetChecksum(fileObj.Content)
-	path := path.Join(".svcs/files", fileObj.Hash)
-	zippedContent := gotils.GZip(fileObj.Content)
-	newFile, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer newFile.Close()
-	_, err = newFile.WriteString(zippedContent)
-	return err
+	util.DB.Create(&util.File{Hash: fileObj.Hash, Content: fileObj.Content})
 }

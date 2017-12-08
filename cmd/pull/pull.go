@@ -52,10 +52,7 @@ func Pull(url string, username string, password string) error {
 			return err
 		}
 		fileObj := types.File{Hash: fileSplit[0], Content: decodedFile}
-		err = fileObj.Save()
-		if err != nil {
-			return err
-		}
+		fileObj.Save()
 	}
 	trees, err := gotils.GetHTTP(url+"/trees", authArr)
 	if err != nil {

@@ -29,10 +29,7 @@ func pushFiles(request *http.Request) error {
 			return err
 		}
 		fileObj := types.File{Hash: fileSplit[0], Content: decodedFile}
-		err = fileObj.Save()
-		if err != nil {
-			return err
-		}
+		fileObj.Save()
 	}
 	return nil
 }

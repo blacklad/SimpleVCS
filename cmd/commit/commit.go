@@ -86,10 +86,7 @@ func concCommitVisit(filePath string, fileInfo os.FileInfo) {
 		log.Fatal(err)
 	}
 	fileObj := types.File{Content: string(fileContent)}
-	err = fileObj.Save()
-	if err != nil {
-		log.Fatal(err)
-	}
+	fileObj.Save()
 	FilesStruct.mutex.Lock()
 	defer FilesStruct.mutex.Unlock()
 	FilesStruct.Files = append(FilesStruct.Files, fixedPath+" "+fileObj.Hash)

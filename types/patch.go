@@ -96,10 +96,7 @@ func ApplyPatch(filename string) error {
 			}
 			hash = gotils.GetChecksum(content)
 			fileObj := File{Content: content, Hash: hash}
-			err = fileObj.Save()
-			if err != nil {
-				return err
-			}
+			fileObj.Save()
 		}
 		changes = append(changes, Change{Type: split[0], Name: split[1], Hash: hash})
 	}

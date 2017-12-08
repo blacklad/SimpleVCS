@@ -13,14 +13,10 @@ import (
 var response http.ResponseWriter
 var auths []auth
 var public bool
-var multiserver bool
 
 //Server starts the SVCS server
 func Server(publicPull bool) error {
 	public = publicPull
-	if !gotils.CheckIfExists(".svcs") {
-		multiserver = true
-	}
 	var err error
 	auths, err = getAuth()
 	if err != nil {
@@ -33,13 +29,7 @@ func Server(publicPull bool) error {
 func server(responseWriter http.ResponseWriter, request *http.Request) {
 	response = responseWriter
 	if request.Method == "GET" && request.URL.Path == "/system" {
-		switch multiserver {
-		case true:
-			fmt.Fprint(response, "simplevcs 1.0.0 multiserver")
-		case false:
-			fmt.Fprint(response, "simplevcs 1.0.0 normal")
-		}
-		return
+		fmt.Fprint(response, "simplevcs 1.0.0")
 	}
 	var authed bool
 	if request.Method == "GET" && public {
@@ -56,89 +46,50 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 		response.WriteHeader(403)
 		return
 	}
-	var err error
-	switch multiserver {
-	case false:
-		switch request.Method {
-		case "GET":
-			switch request.URL.Path {
-			case "/files":
-				err = pullFiles(response)
-			case "/trees":
-				err = pullTrees(response)
-			case "/commits":
-				err = pullCommits(response)
-			case "/branches":
-				err = pullBranches(response)
-			case "/tags":
-				err = pullTags(response)
-			default:
-				response.WriteHeader(404)
-				return
-			}
-		case "POST":
-			switch request.URL.Path {
-			case "/files":
-				err = pushFiles(request)
-			case "/trees":
-				err = pushTrees(request)
-			case "/commits":
-				err = pushCommits(request)
-			case "/branches":
-				err = pushBranches(request)
-			case "/tags":
-				err = pushTags(request)
-			default:
-				response.WriteHeader(404)
-				return
-			}
-		}
-	case true:
-		split := strings.Split(request.URL.Path, "/")
-		if strings.ContainsAny(split[0], "/\\.") {
-			response.WriteHeader(400)
+	split := strings.Split(request.URL.Path, "/")
+	if strings.ContainsAny(split[0], "/\\.") {
+		response.WriteHeader(400)
+		return
+	}
+	err := os.Chdir(split[1])
+	if err != nil {
+		log.Println(err)
+		response.WriteHeader(500)
+		return
+	}
+	defer os.Chdir("..")
+	switch request.Method {
+	case "GET":
+		switch split[2] {
+		case "files":
+			err = pullFiles(response)
+		case "trees":
+			err = pullTrees(response)
+		case "commits":
+			err = pullCommits(response)
+		case "branches":
+			err = pullBranches(response)
+		case "tags":
+			err = pullTags(response)
+		default:
+			response.WriteHeader(404)
 			return
 		}
-		err = os.Chdir(split[1])
-		if err != nil {
-			log.Println(err)
-			response.WriteHeader(500)
+	case "POST":
+		switch split[2] {
+		case "files":
+			err = pushFiles(request)
+		case "trees":
+			err = pushTrees(request)
+		case "commits":
+			err = pushCommits(request)
+		case "branches":
+			err = pushBranches(request)
+		case "tags":
+			err = pushTags(request)
+		default:
+			response.WriteHeader(404)
 			return
-		}
-		defer os.Chdir("..")
-		switch request.Method {
-		case "GET":
-			switch split[2] {
-			case "files":
-				err = pullFiles(response)
-			case "trees":
-				err = pullTrees(response)
-			case "commits":
-				err = pullCommits(response)
-			case "branches":
-				err = pullBranches(response)
-			case "tags":
-				err = pullTags(response)
-			default:
-				response.WriteHeader(404)
-				return
-			}
-		case "POST":
-			switch split[2] {
-			case "files":
-				err = pushFiles(request)
-			case "trees":
-				err = pushTrees(request)
-			case "commits":
-				err = pushCommits(request)
-			case "branches":
-				err = pushBranches(request)
-			case "tags":
-				err = pushTags(request)
-			default:
-				response.WriteHeader(404)
-				return
-			}
 		}
 	}
 	if err != nil {

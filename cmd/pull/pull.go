@@ -16,16 +16,10 @@ func Pull(url string, username string, password string) error {
 		return err
 	}
 	if url == "" {
-		url, err = util.GetConfig("remote")
-		if err != nil {
-			return err
-		}
+		url = util.GetConfig("remote")
 	}
 	if username == "" {
-		username, err = util.GetConfig("username")
-		if err != nil {
-			return err
-		}
+		username = util.GetConfig("username")
 	}
 	url = "https://" + url + ":333"
 	authArr := []string{"USERNAME=" + username, "PASSWORD=" + password}
@@ -37,10 +31,7 @@ func Pull(url string, username string, password string) error {
 	if systemSplit[0] != "simplevcs" {
 		return errors.New("unknown server")
 	}
-	name, err := util.GetConfig("name")
-	if err != nil {
-		return err
-	}
+	name := util.GetConfig("name")
 	url = url + "/" + name
 	files, err := gotils.GetHTTP(url+"/files", authArr)
 	if err != nil {

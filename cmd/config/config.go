@@ -11,10 +11,7 @@ import (
 
 //GetConfig prints the value of a config
 func GetConfig(key string) error {
-	config, err := util.GetConfig(key)
-	if err != nil {
-		return err
-	}
+	config := util.GetConfig(key)
 	fmt.Println(config)
 	return nil
 }

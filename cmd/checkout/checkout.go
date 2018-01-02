@@ -1,10 +1,8 @@
 package checkout
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -43,17 +41,10 @@ func Checkout(commitHash string, noHead bool) error {
 		go concProcessFile(mapping[1], mapping[0])
 	}
 	if !noHead {
-		head, err := os.Create(".svcs/head.txt")
-		if err != nil {
-			return err
-		}
 		if isBranch {
-			_, err = head.WriteString(checkoutBranch)
+			util.DB.Where(&util.Config{Name: "head"}).First(&util.Config{}).Update("value", checkoutBranch)
 		} else {
-			_, err = head.WriteString("DETACHED")
-		}
-		if err != nil {
-			return err
+			util.DB.Where(&util.Config{Name: "head"}).First(&util.Config{}).Update("value", "DETACHED")
 		}
 	}
 	wait.Wait()
@@ -64,13 +55,10 @@ func Checkout(commitHash string, noHead bool) error {
 	return util.ExecHook("postcheckout")
 }
 func concProcessFile(hash string, name string) {
-	copyFrom := path.Join(".svcs/files", hash)
-	fileContent, err := ioutil.ReadFile(copyFrom)
-	if err != nil {
-		log.Fatal(err)
-	}
-	unzippedContent := gotils.UnGZip(string(fileContent))
-	err = gotils.CheckIntegrity(unzippedContent, hash)
+	defer wait.Done()
+	var file util.File
+	util.DB.Where(&util.File{Hash: hash}).First(&file)
+	err := gotils.CheckIntegrity(file.Content, hash)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,13 +67,9 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	newFile.WriteString(unzippedContent)
+	defer newFile.Close()
+	newFile.WriteString(file.Content)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = newFile.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	wait.Done()
 }

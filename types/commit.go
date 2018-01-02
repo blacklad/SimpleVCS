@@ -3,7 +3,6 @@ package types
 import (
 	"os"
 	"os/user"
-	"path"
 	"strings"
 
 	"github.com/MSathieu/Gotils"
@@ -86,19 +85,9 @@ func createInfo(tree Tree, message string) (Commit, error) {
 	commit := Commit{Author: username,
 		Time: gotils.GetTime(),
 		Tree: tree, Message: gotils.Encode(message)}
-	branchesSplit, err := gotils.SplitFileIntoArr(".svcs/branches.txt")
-	if err != nil {
-		return Commit{}, err
-	}
-	for _, line := range branchesSplit {
-		if line == "" {
-			continue
-		}
-		split := strings.Fields(line)
-		if split[0] == head.Branch {
-			commit.Parent = split[1]
-		}
-	}
+	var branch util.Branch
+	util.DB.Where(&util.Branch{Name: head.Branch}).First(&branch)
+	commit.Parent = branch.Commit
 	return commit, nil
 }
 
@@ -106,15 +95,7 @@ func createInfo(tree Tree, message string) (Commit, error) {
 func SetFiles(files []string) (Tree, error) {
 	content := strings.Join(files, "\n")
 	hash := gotils.GetChecksum(content)
-	treeFile, err := os.Create(path.Join(".svcs/trees", hash))
-	if err != nil {
-		return Tree{}, err
-	}
-	zippedContent := gotils.GZip(content)
-	_, err = treeFile.WriteString(zippedContent)
-	if err != nil {
-		return Tree{}, nil
-	}
+	util.DB.Create(&util.Tree{Hash: hash, Files: content})
 	tree, err := GetTree(hash)
 	return tree, err
 }

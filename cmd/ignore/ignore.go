@@ -9,7 +9,7 @@ import (
 	"github.com/MSathieu/SimpleVCS/cmd/modules"
 )
 
-var ignoreList = []string{".svcs",
+var ignoreList = []string{"svcs.db",
 	".git",
 	".svn",
 	".hg",

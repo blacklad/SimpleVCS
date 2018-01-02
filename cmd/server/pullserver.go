@@ -2,70 +2,49 @@ package server
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/MSathieu/Gotils"
 	"github.com/MSathieu/SimpleVCS/types"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
-func pullFiles(responseWriter http.ResponseWriter) error {
-	response = responseWriter
-	return filepath.Walk(".svcs/files", visitFiles)
-}
-func visitFiles(path string, info os.FileInfo, err error) error {
-	if info.IsDir() {
-		return nil
+func pullFiles(responseWriter http.ResponseWriter) {
+	var files []util.File
+	util.DB.Find(&files)
+	for _, file := range files {
+		fmt.Println(responseWriter, file.Hash+" "+gotils.Encode(file.Content))
 	}
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		return err
-	}
-	unzipped := gotils.UnGZip(string(content))
-	fmt.Fprintln(response, info.Name()+" "+gotils.Encode(unzipped))
-	return nil
 }
 
 func pullTrees(responseWriter http.ResponseWriter) error {
-	response = responseWriter
-	return filepath.Walk(".svcs/trees", visitTrees)
+	var trees []util.Tree
+	util.DB.Find(&trees)
+	for _, tree := range trees {
+		treeObj, err := types.GetTree(tree.Hash)
+		if err != nil {
+			return err
+		}
+		var names []string
+		var hashes []string
+		for _, fileObj := range treeObj.Files {
+			names = append(names, fileObj.Name)
+			hashes = append(hashes, fileObj.File.Hash)
+		}
+		encodedNames := gotils.Encode(strings.Join(names, " "))
+		encodedFiles := gotils.Encode(strings.Join(hashes, " "))
+		fmt.Fprintln(responseWriter, tree.Hash+" "+encodedNames+" "+encodedFiles)
+	}
+	return nil
 }
 
 func pullCommits(responseWriter http.ResponseWriter) error {
-	response = responseWriter
-	return filepath.Walk(".svcs/commits", visitCommits)
-}
-func visitTrees(path string, info os.FileInfo, err error) error {
-	if info.IsDir() {
-		return nil
+	var commits []util.Commit
+	util.DB.Find(&commits)
+	for _, commit := range commits {
+		fmt.Println(responseWriter, commit.Hash+" "+commit.Author+" "+commit.Parent+" "+commit.Tree+" "+commit.Time+" "+gotils.Encode(commit.Message))
 	}
-	treeObj, err := types.GetTree(info.Name())
-	if err != nil {
-		return err
-	}
-	var names []string
-	var hashes []string
-	for _, fileObj := range treeObj.Files {
-		names = append(names, fileObj.Name)
-		hashes = append(hashes, fileObj.File.Hash)
-	}
-	encodedNames := gotils.Encode(strings.Join(names, " "))
-	encodedFiles := gotils.Encode(strings.Join(hashes, " "))
-	fmt.Fprintln(response, info.Name()+" "+encodedNames+" "+encodedFiles)
-	return nil
-}
-func visitCommits(path string, info os.FileInfo, err error) error {
-	if info.IsDir() {
-		return nil
-	}
-	commitObj, err := types.GetCommit(info.Name())
-	if err != nil {
-		return err
-	}
-	fmt.Fprintln(response, commitObj.Hash+" "+commitObj.Author+" "+commitObj.Parent+" "+commitObj.Tree.Hash+" "+commitObj.Time+" "+gotils.Encode(commitObj.Message))
 	return nil
 }
 

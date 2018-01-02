@@ -62,7 +62,7 @@ func server(responseWriter http.ResponseWriter, request *http.Request) {
 	case "GET":
 		switch split[2] {
 		case "files":
-			err = pullFiles(response)
+			pullFiles(response)
 		case "trees":
 			err = pullTrees(response)
 		case "commits":

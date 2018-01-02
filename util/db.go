@@ -42,6 +42,12 @@ type Tag struct {
 	Commit string
 }
 
+//Stash is the stash struct
+type Stash struct {
+	Name  string
+	Files string
+}
+
 //DB is the database var
 var DB *gorm.DB
 
@@ -52,6 +58,6 @@ func InitDB() error {
 	if err != nil {
 		return err
 	}
-	DB.AutoMigrate(&Config{}, &File{}, &Tree{}, &Commit{}, &Branch{}, &Tag{})
+	DB.AutoMigrate(&Config{}, &File{}, &Tree{}, &Commit{}, &Branch{}, &Tag{}, &Stash{})
 	return nil
 }

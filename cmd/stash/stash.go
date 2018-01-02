@@ -1,10 +1,8 @@
 package stash
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -12,6 +10,7 @@ import (
 	"github.com/MSathieu/Gotils"
 
 	"github.com/MSathieu/SimpleVCS/cmd/commit"
+	"github.com/MSathieu/SimpleVCS/util"
 )
 
 var wait sync.WaitGroup
@@ -23,25 +22,16 @@ func CreateStash(name string) error {
 		return err
 	}
 	commit.CommitWait.Wait()
-	stashFile, err := os.Create(".svcs/stashes/" + name)
-	if err != nil {
-		return err
-	}
-	defer stashFile.Close()
 	stashFileContent := strings.Join(commit.FilesStruct.Files, "\n")
-	stashFileContent = gotils.GZip(stashFileContent)
-	_, err = stashFile.WriteString(stashFileContent)
-	return err
+	util.DB.Create(&util.Stash{Name: name, Files: stashFileContent})
+	return nil
 }
 
 //CheckoutStash checkouts a stash
 func CheckoutStash(name string) error {
-	stash, err := ioutil.ReadFile(".svcs/stashes/" + name)
-	if err != nil {
-		return err
-	}
-	stashContent := gotils.UnGZip(string(stash))
-	stashArr := strings.Split(stashContent, "\n")
+	var stash util.Stash
+	util.DB.Where(&util.Stash{Name: name}).First(&stash)
+	stashArr := strings.Split(stash.Files, "\n")
 	for _, fileEntry := range stashArr {
 		if fileEntry == "" {
 			continue
@@ -54,13 +44,9 @@ func CheckoutStash(name string) error {
 	return nil
 }
 func concProcessFile(hash string, name string) {
-	copyFrom := path.Join(".svcs/files", hash)
-	fileContent, err := ioutil.ReadFile(copyFrom)
-	if err != nil {
-		log.Fatal(err)
-	}
-	unzippedContent := gotils.UnGZip(string(fileContent))
-	err = gotils.CheckIntegrity(unzippedContent, hash)
+	var file util.File
+	util.DB.Where(&util.File{Hash: hash}).First(&file)
+	err := gotils.CheckIntegrity(file.Content, hash)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,7 +55,7 @@ func concProcessFile(hash string, name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	newFile.WriteString(unzippedContent)
+	newFile.WriteString(file.Content)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,5 +68,6 @@ func concProcessFile(hash string, name string) {
 
 //RemoveStash removes a stash
 func RemoveStash(name string) error {
-	return os.Remove(".svcs/stashes/" + name)
+	util.DB.Delete(&util.Stash{Name: name})
+	return nil
 }
